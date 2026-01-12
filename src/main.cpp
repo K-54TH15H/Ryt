@@ -1,5 +1,8 @@
 #include <iostream>
 
+#include <graphics/color.hpp>
+#include <math/vec3.hpp>
+
 int main()
 {
     int img_w = 256;
@@ -16,15 +19,8 @@ int main()
 
 	for(int j = 0; j < img_w; j++)
 	{
-	    auto r = double(i) / (img_w - 1);
-	    auto g = double(j) / (img_h - 1);
-	    auto b  = 0.0;
-
-	    int ir = int(255.999 * r);
-	    int ig = int(255.999 * g);
-	    int ib = int(255.999 * b);
-
-	    std::cout << ir << ' ' << ig << ' ' << ib << std::endl;
+	    auto pixel_color = rt::color(double(j)/(img_w-1), double(i)/(img_h-1), 0);
+	    write_color(std::cout, pixel_color);
 	}
     }
 
