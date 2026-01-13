@@ -1,3 +1,4 @@
+#include <cmath>
 #include <iostream>
 
 #include <ryt/graphics/color.hpp>
@@ -5,7 +6,7 @@
 #include <ryt/math/ray.hpp>
 
 
-bool hit_sphere(const ryt::vec3& center, double radius, const ryt::ray& r)
+double hit_sphere(const ryt::vec3& center, double radius, const ryt::ray& r)
 {
 
     // discriminant = (b^2 - 4ac)/ => a = d.d | b = -2d.(C - Q) | c = (C-Q).(C-Q) - r^2
@@ -19,14 +20,24 @@ bool hit_sphere(const ryt::vec3& center, double radius, const ryt::ray& r)
     
     auto discriminant = b*b - 4*a*c; // b^2 - 4ac
 
-    return (discriminant >= 0);
+    if(discriminant < 0)
+    {
+	return -1.0;
+    }
+    else
+    {
+	return ( -b - std::sqrt(discriminant) ) / (2.0 * a);
+    }
 }
 
 ryt::color ray_color(const ryt::ray& r)
 {
-    if(hit_sphere(ryt::vec3(0, 0, -1), 0.5, r))
+    double t = hit_sphere(ryt::vec3(0, 0, -1), 0.5, r);
+
+    if(t > 0.0)
     {
-	return ryt::color(0.3 , 0.3, 0.3);	
+	ryt::vec3 N = unit_vector(r.at(t) - ryt::vec3(0, 0, -1));
+	return ( 0.5 * ( ryt::color(N.x()+1, N.y()+1, N.z()+1) ) );
     }
 
     ryt::vec3 unit_direction = ryt::unit_vector(r.direction());
