@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 4.2.0)
-project(rayt)
+project(ryt)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 

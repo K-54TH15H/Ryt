@@ -22,6 +22,11 @@ namespace ryt
 		return orig;
 	    }
 
+	    const vec3& direction() const
+	    {
+		return dir;
+	    }
+
 	    vec3 at(double t) const
 	    {
 		return orig + (t * dir);
