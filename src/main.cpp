@@ -4,8 +4,31 @@
 #include <ryt/math/vec3.hpp>
 #include <ryt/math/ray.hpp>
 
+
+bool hit_sphere(const ryt::vec3& center, double radius, const ryt::ray& r)
+{
+
+    // discriminant = (b^2 - 4ac)/ => a = d.d | b = -2d.(C - Q) | c = (C-Q).(C-Q) - r^2
+    // if discriminant > 0 then it is part of a sphere
+
+    ryt::vec3 CQ = center - r.origin();
+
+    auto a = ryt::dot(r.direction(), r.direction()); // a = d.d
+    auto b = -2.0 * ryt::dot(r.direction(), CQ); // b = -2d * (C-Q)
+    auto c = ryt::dot(CQ, CQ) - (radius * radius); // c = (C-Q).(C-Q) - r^2
+    
+    auto discriminant = b*b - 4*a*c; // b^2 - 4ac
+
+    return (discriminant >= 0);
+}
+
 ryt::color ray_color(const ryt::ray& r)
 {
+    if(hit_sphere(ryt::vec3(0, 0, -1), 0.5, r))
+    {
+	return ryt::color(0.3 , 0.3, 0.3);	
+    }
+
     ryt::vec3 unit_direction = ryt::unit_vector(r.direction());
     auto a = 0.5 * (unit_direction.y() + 1.0);
     
@@ -16,7 +39,7 @@ int main()
 {
     auto aspect_ratio = 16.0 / 9.0;
 
-    int img_w = 1028;
+    int img_w = 720;
 
     // calculate img_h and clamp to > 1
     int img_h = int(img_w / aspect_ratio);
