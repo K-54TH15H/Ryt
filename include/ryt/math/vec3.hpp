@@ -66,7 +66,7 @@ namespace ryt
 
     inline std::ostream& operator<<(std::ostream& os, const vec3& v)
     {
-	return os << v.e[0] << ' ' << v.e[1] << v.e[2];
+	return os << v.e[0] << ' ' << v.e[1] << ' ' << v.e[2];
     }
 
     inline vec3 operator+(const vec3& u, const vec3& v)
