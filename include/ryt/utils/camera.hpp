@@ -75,7 +75,7 @@ namespace ryt
 		img_h = (img_h < 1) ? 1 : img_h;
 
 		center = vec3(0, 0, 0);
-		samples_per_pixels = 100; // anti-aliasing on by default
+		samples_per_pixels = 10; // anti-aliasing on by default
 		pixel_samples_scale = 1.0 / samples_per_pixels;
 
 		double focal_length = 1.0;
