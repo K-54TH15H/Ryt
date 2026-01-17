@@ -15,32 +15,6 @@ namespace ryt
 
     class Hittable
     {
-	private:
-
-	    void destroy()
-	    {
-		switch(type)
-		{
-		    case SPHERE:
-			((Data.sphere)).~Sphere(); // Calling Destructor Call Explicitly
-			break;
-
-		    default: // None
-			break;
-		}
-	    }
-
-	    bool hit_data(const ray& r, double ray_tmin, double ray_tmax, Hit_Record& rec)
-	    {
-		switch(type)
-		{
-		    case SPHERE:
-			return ((Data.sphere)).hit(r, ray_tmin, ray_tmax, rec);
-			
-		    default: // Hit None 
-			return false;
-		}
-	    }
 
 	public:
 	    GeometryType type;
@@ -69,12 +43,28 @@ namespace ryt
 
 	    ~Hittable()
 	    {
-		destroy();
+		switch(type)
+		{
+		    case SPHERE:
+			((Data.sphere)).~Sphere(); // Calling Destructor Call Explicitly
+			break;
+
+		    default: // None
+			break;
+		}
+ 
 	    }
 	     
 	    bool hit(const ray& r, double ray_tmin, double ray_tmax, Hit_Record& rec)
 	    {
-		return hit_data(r, ray_tmin, ray_tmax, rec);
+		switch(type)
+		{
+		    case SPHERE:
+			return ((Data.sphere)).hit(r, ray_tmin, ray_tmax, rec);
+			
+		    default: // Hit None 
+			return false;
+		}	 
 	    }
     };
 }
