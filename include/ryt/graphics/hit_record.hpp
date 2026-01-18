@@ -1,20 +1,19 @@
 #ifndef HIT_RECORD_H
 #define HIT_RECORD_H
 
-#include <ryt/graphics/material/base.hpp>
-
 #include <ryt/math/vec3.hpp>
 #include <ryt/math/ray.hpp>
 
 namespace ryt
 {
+    class Material; // Forward Declaration
 
     class Hit_Record
     {
 	public:
 	    vec3 p;
 	    vec3 normal;
-	    Material mat; 
+	    Material* mat; // This Doesn't Own the Material just points to it.
 	    double t;
 	    bool front_face;
 

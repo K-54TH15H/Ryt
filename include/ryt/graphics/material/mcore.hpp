@@ -16,7 +16,7 @@ namespace ryt
 	public:
 	    Lambertian(const color& albedo) : albedo(albedo) {}
 
-	    bool scatter(const ray& r_in, const Hit_Record& rec, color& attenuation, ray& scattered)
+	    bool scatter(const ray& r_in, const Hit_Record& rec, color& attenuation, ray& scattered) const
 	    {
 		vec3 scatter_direction = rec.normal + random_unit_vector();
 
@@ -25,6 +25,24 @@ namespace ryt
 		scattered = ray(rec.p, scatter_direction);
 		attenuation = albedo;
 
+		return true;
+	    }
+    };
+
+    class Metal
+    {
+	private:
+	    color albedo;
+	
+	public:
+	    Metal(const color& albedo) : albedo(albedo) {}
+
+	    bool scatter(const ray& r_in, const Hit_Record& rec, color& attenuation, ray& scattered) const 
+	    {
+		vec3 reflected = reflect(r_in.direction(), rec.normal);
+		scattered = ray(rec.p, reflected);
+		attenuation = albedo;
+		
 		return true;
 	    }
     };

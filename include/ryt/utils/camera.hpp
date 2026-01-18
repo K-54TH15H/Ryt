@@ -5,6 +5,7 @@
 #include <ryt/math/interval.hpp>
 #include <ryt/math/vec3.hpp>
 
+#include <ryt/graphics/material/base.hpp>
 #include <ryt/graphics/color.hpp>
 #include <ryt/graphics/hit_record.hpp>
 #include <ryt/graphics/rtcontext.hpp>
@@ -32,7 +33,7 @@ namespace ryt
 		    for(int j = 0; j < img_w; j++)
 		    {
 			color pixel_color(0, 0, 0);
-			
+
 			for(int sample = 0; sample < samples_per_pixels; sample++)
 			{
 			    ray r = get_ray(j, i);
@@ -55,7 +56,7 @@ namespace ryt
 	    vec3 pixel00_loc; // Location of pixel - [0, 0]
 	    vec3 pixel_delta_u; // Offset for pixel to the right
 	    vec3 pixel_delta_v; // Offset for pixel to the bottom
-	    
+
 	    int samples_per_pixels; // Count of random samples per pixels
 	    double pixel_samples_scale;
 	    int max_depth; // Maximum no of ray bounces into scene
@@ -63,14 +64,14 @@ namespace ryt
 	    void Initialize()
 	    {
 		aspect_ratio = 16.0 / 9.0;
-		img_w = 1440;
+		img_w = 800;
 
 		// calculate img_h and clamp to 1
 		img_h = int(img_w / aspect_ratio);
 		img_h = (img_h < 1) ? 1 : img_h;
 
 		center = vec3(0, 0, 0);
-		samples_per_pixels = 100; // anti-aliasing on by default
+		samples_per_pixels = 10; // anti-aliasing on by default
 		pixel_samples_scale = 1.0 / samples_per_pixels;
 		max_depth = 10;
 
@@ -89,7 +90,7 @@ namespace ryt
 		vec3 viewport_upper_left = center - vec3(0, 0, focal_length) - (viewport_u/2) - (viewport_v / 2);
 		pixel00_loc = viewport_upper_left + 0.5 * ( pixel_delta_u + pixel_delta_v );
 	    }
-	    
+
 	    vec3 sample_square() const
 	    {
 		return vec3(random_double() - 0.5, random_double() - 0.5, 0);
@@ -100,8 +101,8 @@ namespace ryt
 	    {
 		vec3 offset = sample_square();
 		vec3 pixel_sample = pixel00_loc 
-				    + ((i + offset.x) * pixel_delta_u)
-				    + ((j + offset.y) * pixel_delta_v);
+		    + ((i + offset.x) * pixel_delta_u)
+		    + ((j + offset.y) * pixel_delta_v);
 
 		vec3 ray_origin = center;
 		vec3 ray_direction = pixel_sample - ray_origin;
@@ -114,19 +115,23 @@ namespace ryt
 		ray current_ray = r;
 
 		color accumulated_light(0, 0, 0);
-		double throughput = 1.0;
-		
+		color throughput(1.0, 1.0, 1.0);
+
 		for(int i = 0; i < max_depth; i++)
 		{
 		    Hit_Record rec;
 
 		    if(HitWorld(world, current_ray, Interval(0.001, infinity), rec))
 		    {
-			vec3 direction = random_unit_vector() + rec.normal;
-			
-			throughput *= 0.5;
+			ray scattered;
+			color attenuation;
 
-			current_ray = ray(rec.p, direction);
+			if(rec.mat->scatter(current_ray, rec, attenuation, scattered))
+			{
+			    throughput = throughput * attenuation;
+			    current_ray = scattered;
+			}
+			else return color(0, 0, 0);
 
 		    }
 		    else

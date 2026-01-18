@@ -140,6 +140,11 @@ namespace ryt
 	if(dot(on_unit_sphere, normal) > 0.0) return on_unit_sphere;
 	else return -on_unit_sphere;
     }
+
+    inline vec3 reflect(const vec3& v, const vec3& n)
+    {
+	return v - (2 * dot(v,n) * n);
+    }
 }
 
 #endif

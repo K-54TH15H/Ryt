@@ -1,10 +1,12 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
-#include "ryt/math/interval.hpp"
+#include <ryt/math/interval.hpp>
 #include <ryt/math/ray.hpp>
 #include <ryt/math/vec3.hpp>
+
 #include <ryt/graphics/hit_record.hpp>
+#include <ryt/graphics/material/base.hpp>
 
 namespace ryt
 {
@@ -16,7 +18,7 @@ namespace ryt
 	    Material mat;
 
 	public:
-	    Sphere(const vec3& center, double radius) : center(center), radius(std::fmax(0, radius))
+	    Sphere(const vec3& center, double radius, Material mat) : center(center), radius(std::fmax(0, radius)), mat(mat)
 	    {}
 
 	    bool hit(const ray& r, Interval t, Hit_Record& rec)
@@ -48,7 +50,7 @@ namespace ryt
 
 		vec3 outward_normal = (rec.p - center) / radius;
 		rec.set_face_normal(r, outward_normal);
-		rec.mat = mat;
+		rec.mat = &mat;
 
 		return true;
 	    }
