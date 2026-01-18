@@ -36,7 +36,7 @@ namespace ryt
 			for(int sample = 0; sample < samples_per_pixels; sample++)
 			{
 			    ray r = get_ray(j, i);
-			    pixel_color += ray_color(r, world);
+			    pixel_color += ray_color(r, max_depth, world);
 			}
 			write_color(std::cout, pixel_samples_scale * pixel_color);
 		    }
@@ -56,8 +56,9 @@ namespace ryt
 	    vec3 pixel_delta_u; // Offset for pixel to the right
 	    vec3 pixel_delta_v; // Offset for pixel to the bottom
 	    
-	    int samples_per_pixels;
+	    int samples_per_pixels; // Count of random samples per pixels
 	    double pixel_samples_scale;
+	    int max_depth; // Maximum no of ray bounces into scene
 
 	    void Initialize()
 	    {
@@ -69,8 +70,9 @@ namespace ryt
 		img_h = (img_h < 1) ? 1 : img_h;
 
 		center = vec3(0, 0, 0);
-		samples_per_pixels = 10; // anti-aliasing on by default
+		samples_per_pixels = 100; // anti-aliasing on by default
 		pixel_samples_scale = 1.0 / samples_per_pixels;
+		max_depth = 10;
 
 		double focal_length = 1.0;
 		double viewport_height = 2.0;
@@ -107,15 +109,16 @@ namespace ryt
 		return ray(ray_origin, ray_direction);
 	    }
 
-	    color ray_color(const ray& r, const RaytracingContext* world) const
+	    color ray_color(const ray& r, int depth, const RaytracingContext* world) const
 	    {
+		if(depth <= 0) return color(0, 0, 0); // if exceeded limit then no light is accumulated
 		Hit_Record rec;
 
 		if(HitWorld(world, r, Interval(0, infinity), rec))
 		{
 		    vec3 direction = random_on_hemisphere(rec.normal);
 
-		    return 0.5 * ray_color(ray(rec.p, direction), world);
+		    return 0.5 * ray_color(ray(rec.p, direction), depth -1,  world);
 		}
 
 		vec3 unit_direction = unit_vector(r.direction());
