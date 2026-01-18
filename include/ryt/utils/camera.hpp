@@ -4,7 +4,6 @@
 
 #include <ryt/math/interval.hpp>
 #include <ryt/math/vec3.hpp>
-#include <ryt/math/random.hpp>
 
 #include <ryt/graphics/color.hpp>
 #include <ryt/graphics/hit_record.hpp>
@@ -37,7 +36,7 @@ namespace ryt
 			for(int sample = 0; sample < samples_per_pixels; sample++)
 			{
 			    ray r = get_ray(j, i);
-			    pixel_color += ray_color(r, world);
+			    pixel_color += ray_color(r, max_depth, world);
 			}
 			write_color(std::cout, pixel_samples_scale * pixel_color);
 		    }
@@ -57,8 +56,9 @@ namespace ryt
 	    vec3 pixel_delta_u; // Offset for pixel to the right
 	    vec3 pixel_delta_v; // Offset for pixel to the bottom
 	    
-	    int samples_per_pixels;
+	    int samples_per_pixels; // Count of random samples per pixels
 	    double pixel_samples_scale;
+	    int max_depth; // Maximum no of ray bounces into scene
 
 	    void Initialize()
 	    {
@@ -70,8 +70,9 @@ namespace ryt
 		img_h = (img_h < 1) ? 1 : img_h;
 
 		center = vec3(0, 0, 0);
-		samples_per_pixels = 10; // anti-aliasing on by default
+		samples_per_pixels = 100; // anti-aliasing on by default
 		pixel_samples_scale = 1.0 / samples_per_pixels;
+		max_depth = 10;
 
 		double focal_length = 1.0;
 		double viewport_height = 2.0;
@@ -108,19 +109,41 @@ namespace ryt
 		return ray(ray_origin, ray_direction);
 	    }
 
-	    color ray_color(const ray& r, const RaytracingContext* world) const
+	    color ray_color(const ray& r, int depth, const RaytracingContext* world) const
 	    {
-		Hit_Record rec;
+		ray current_ray = r;
 
-		if(HitWorld(world, r, Interval(0, infinity), rec))
+		color accumulated_light(0, 0, 0);
+		double throughput = 1.0;
+		
+		for(int i = 0; i < max_depth; i++)
 		{
-		    return 0.5 * (rec.normal + color(1, 1, 1));
+		    Hit_Record rec;
+
+		    if(HitWorld(world, current_ray, Interval(0.001, infinity), rec))
+		    {
+			vec3 direction = random_unit_vector() + rec.normal;
+			
+			throughput *= 0.5;
+
+			current_ray = ray(rec.p, direction);
+
+		    }
+		    else
+		    {
+			vec3 unit_direction = unit_vector(current_ray.direction());
+			double a = 0.5 * (unit_direction.y + 1.0);
+
+			color sky_color = (1.0 - a) * color(1.0, 1.0, 1.0) + a * color(0.5, 0.7, 1.0);
+
+			accumulated_light = throughput * sky_color;
+
+			return accumulated_light;
+		    }
 		}
 
-		vec3 unit_direction = unit_vector(r.direction());
-		double a = 0.5 * (unit_direction.y + 1.0);
-
-		return (1.0 - a) * color(1, 1, 1) + a * color(0.5, 0.7, 1.0);
+		//ray is absorbed(trapped) [returns black]
+		return color(0, 0, 0); 	    
 	    }
     };
 }

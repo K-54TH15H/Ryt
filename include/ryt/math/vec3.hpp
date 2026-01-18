@@ -1,6 +1,8 @@
 #ifndef VEC3_H
 #define VEC3_H
 
+#include <ryt/math/random.hpp>
+
 #include <cmath>
 #include <iostream>
 
@@ -52,6 +54,16 @@ namespace ryt
 	    }
 
 	    double length() const { return std::sqrt(length_squared()); }
+
+	    static vec3 random()
+	    {
+		return vec3(random_double(), random_double(), random_double());
+	    }
+
+	    static vec3 random(double min, double max)
+	    {
+		return vec3(random_double(min, max), random_double(min, max), random_double(min, max));
+	    }
     };
 
     // vector utility functions
@@ -102,6 +114,25 @@ namespace ryt
     inline vec3 unit_vector(const vec3& v)
     {
 	return v/v.length();
+    }
+
+    inline vec3 random_unit_vector()
+    {
+	while(true)
+	{
+	    vec3 p = vec3::random(-1, 1);
+	    double len_sq = p.length_squared();
+
+	    if(1e-160 < len_sq && len_sq <= 1) return (p / sqrt(len_sq));
+	}
+    }
+
+    inline vec3 random_on_hemisphere(const vec3& normal)
+    {
+	vec3 on_unit_sphere = random_unit_vector();
+
+	if(dot(on_unit_sphere, normal) > 0.0) return on_unit_sphere;
+	else return -on_unit_sphere;
     }
 }
 
