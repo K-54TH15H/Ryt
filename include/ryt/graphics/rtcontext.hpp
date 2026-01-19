@@ -40,7 +40,7 @@ namespace ryt
 	return &(context->hittables[context->hittableSize++]);
     }
 
-    inline bool HitWorld(const RaytracingContext* context, const ray& r, Interval t, Hit_Record& rec)
+    inline bool HitWorld(const RaytracingContext* context, const Ray& r, Interval t, Hit_Record& rec)
     {	
 	Hit_Record temp_rec;
 	bool hit_anything = false;

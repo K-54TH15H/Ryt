@@ -36,8 +36,8 @@ namespace ryt
 
 			for(int sample = 0; sample < samples_per_pixels; sample++)
 			{
-			    ray r = get_ray(j, i);
-			    pixel_color += ray_color(r, max_depth, world);
+			    Ray r = get_Ray(j, i);
+			    pixel_color += Ray_color(r, max_depth, world);
 			}
 			write_color(std::cout, pixel_samples_scale * pixel_color);
 		    }
@@ -59,7 +59,7 @@ namespace ryt
 
 	    int samples_per_pixels; // Count of random samples per pixels
 	    double pixel_samples_scale;
-	    int max_depth; // Maximum no of ray bounces into scene
+	    int max_depth; // Maximum no of Ray bounces into scene
 
 	    void Initialize()
 	    {
@@ -96,23 +96,23 @@ namespace ryt
 		return Vec3(random_double() - 0.5, random_double() - 0.5, 0);
 	    }
 
-	    // Constructs a camera ray from origin to a randomly sampled pt i, j
-	    ray get_ray(int i, int j) const
+	    // Constructs a camera Ray from origin to a randomly sampled pt i, j
+	    Ray get_Ray(int i, int j) const
 	    {
 		Vec3 offset = sample_square();
 		Vec3 pixel_sample = pixel00_loc 
 		    + ((i + offset.x) * pixel_delta_u)
 		    + ((j + offset.y) * pixel_delta_v);
 
-		Vec3 ray_origin = center;
-		Vec3 ray_direction = pixel_sample - ray_origin;
+		Vec3 Ray_origin = center;
+		Vec3 Ray_direction = pixel_sample - Ray_origin;
 
-		return ray(ray_origin, ray_direction);
+		return Ray(Ray_origin, Ray_direction);
 	    }
 
-	    color ray_color(const ray& r, int depth, const RaytracingContext* world) const
+	    color Ray_color(const Ray& r, int depth, const RaytracingContext* world) const
 	    {
-		ray current_ray = r;
+		Ray current_Ray = r;
 
 		color accumulated_light(0, 0, 0);
 		color throughput(1.0, 1.0, 1.0);
@@ -121,22 +121,22 @@ namespace ryt
 		{
 		    Hit_Record rec;
 
-		    if(HitWorld(world, current_ray, Interval(0.001, infinity), rec))
+		    if(HitWorld(world, current_Ray, Interval(0.001, infinity), rec))
 		    {
-			ray scattered;
+			Ray scattered;
 			color attenuation;
 
-			if(rec.mat->scatter(current_ray, rec, attenuation, scattered))
+			if(rec.mat->scatter(current_Ray, rec, attenuation, scattered))
 			{
 			    throughput = throughput * attenuation;
-			    current_ray = scattered;
+			    current_Ray = scattered;
 			}
 			else return color(0, 0, 0);
 
 		    }
 		    else
 		    {
-			Vec3 unit_direction = unit_vector(current_ray.direction());
+			Vec3 unit_direction = unit_vector(current_Ray.direction());
 			double a = 0.5 * (unit_direction.y + 1.0);
 
 			color sky_color = (1.0 - a) * color(1.0, 1.0, 1.0) + a * color(0.5, 0.7, 1.0);
@@ -147,7 +147,7 @@ namespace ryt
 		    }
 		}
 
-		//ray is absorbed(trapped) [returns black]
+		//Ray is absorbed(trapped) [returns black]
 		return color(0, 0, 0); 	    
 	    }
     };

@@ -22,13 +22,13 @@ namespace ryt
 	public:
 	    Lambertian(const color& albedo) : albedo(albedo) {}
 
-	    bool scatter(const ray& r_in, const Hit_Record& rec, color& attenuation, ray& scattered) const
+	    bool scatter(const Ray& r_in, const Hit_Record& rec, color& attenuation, Ray& scattered) const
 	    {
 		Vec3 scatter_direction = rec.normal + random_unit_vector();
 
 		if(scatter_direction.near_zero()) scatter_direction = rec.normal;
 
-		scattered = ray(rec.p, scatter_direction);
+		scattered = Ray(rec.p, scatter_direction);
 		attenuation = albedo;
 
 		return true;
@@ -44,12 +44,12 @@ namespace ryt
 	public:
 	    Metal(const color& albedo, double fuzz) : albedo(albedo), fuzz(fuzz) {}
 
-	    bool scatter(const ray& r_in, const Hit_Record& rec, color& attenuation, ray& scattered) const 
+	    bool scatter(const Ray& r_in, const Hit_Record& rec, color& attenuation, Ray& scattered) const 
 	    {
 		Vec3 reflected = reflect(r_in.direction(), rec.normal);
 		reflected = (unit_vector(reflected)) + (fuzz * random_unit_vector());
 
-		scattered = ray(rec.p, reflected);
+		scattered = Ray(rec.p, reflected);
 		attenuation = albedo;
 
 		return (dot(scattered.direction(), rec.normal) > 0);
@@ -97,7 +97,7 @@ namespace ryt
 		}
 	    }
 
-	    bool scatter(const ray& r_in, const Hit_Record& rec, color& attenuation, ray& scattered) const 
+	    bool scatter(const Ray& r_in, const Hit_Record& rec, color& attenuation, Ray& scattered) const 
 	    {
 		switch(type)
 		{

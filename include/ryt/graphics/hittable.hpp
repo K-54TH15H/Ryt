@@ -56,7 +56,7 @@ namespace ryt
  
 	    }
 	     
-	    bool hit(const ray& r, Interval t, Hit_Record& rec)
+	    bool hit(const Ray& r, Interval t, Hit_Record& rec)
 	    {
 		switch(type)
 		{

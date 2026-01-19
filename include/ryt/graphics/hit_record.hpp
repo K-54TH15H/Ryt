@@ -17,7 +17,7 @@ namespace ryt
 	    double t;
 	    bool front_face;
 
-	    void set_face_normal(const ray& r, const Vec3& outward_normal)
+	    void set_face_normal(const Ray& r, const Vec3& outward_normal)
 	    {
 		front_face = dot(r.direction(), outward_normal) < 0;
 

@@ -5,7 +5,7 @@
 
 namespace ryt
 {
-    class ray
+    class Ray
     {
 	private:
 		Vec3 orig;
@@ -13,8 +13,8 @@ namespace ryt
 	public:
 	    
 	    // constructors
-	    ray() {}
-	    ray(const Vec3& origin, const Vec3& direction) : orig(origin), dir(direction) {}
+	    Ray() {}
+	    Ray(const Vec3& origin, const Vec3& direction) : orig(origin), dir(direction) {}
 	    
 	    // getters
 	    const Vec3& origin() const

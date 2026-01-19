@@ -21,7 +21,7 @@ namespace ryt
 	    Sphere(const Vec3& center, double radius, Material mat) : center(center), radius(std::fmax(0, radius)), mat(mat)
 	    {}
 
-	    bool hit(const ray& r, Interval t, Hit_Record& rec)
+	    bool hit(const Ray& r, Interval t, Hit_Record& rec)
 	    {
 		Vec3 CQ = center - r.origin();
 		auto a = r.direction().length_squared();
