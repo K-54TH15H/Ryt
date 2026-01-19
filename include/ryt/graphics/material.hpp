@@ -14,46 +14,15 @@ namespace ryt
 	METAL
     };
 
-    class Lambertian
+    struct Lambertian
     {
-	private:
-	    Color albedo;
-
-	public:
-	    Lambertian(const Color& albedo) : albedo(albedo) {}
-
-	    bool Scatter(const Ray& rIn, const HitRecord& rec, Color& attenuation, Ray& scattered) const
-	    {
-		Vec3 scatterDirection = rec.normal + RandomUnitVector();
-
-		if(scatterDirection.NearZero()) scatterDirection = rec.normal;
-
-		scattered = Ray(rec.p, scatterDirection);
-		attenuation = albedo;
-
-		return true;
-	    }
+	Color albedo;
     };
 
-    class Metal
+    struct Metal
     {
-	private:
-	    Color albedo;
-	    double roughness;
-
-	public:
-	    Metal(const Color& albedo, double roughness) : albedo(albedo), roughness(roughness) {}
-
-	    bool Scatter(const Ray& rIn, const HitRecord& rec, Color& attenuation, Ray& scattered) const 
-	    {
-		Vec3 reflected = Reflect(rIn.Direction(), rec.normal);
-		reflected = (UnitVector(reflected)) + (roughness * RandomUnitVector());
-
-		scattered = Ray(rec.p, reflected);
-		attenuation = albedo;
-
-		return (Dot(scattered.Direction(), rec.normal) > 0);
-	    }
+	Color albedo;
+        double roughness;
     };
 
     class Material
@@ -70,15 +39,39 @@ namespace ryt
 		~MemberData() {}
 
 	    } data;
+	    
+	    bool ScatterLambertian(const Ray& rIn, const HitRecord& rec, Color& attenuation, Ray& scattered) const
+	    {
+		Vec3 scatterDirection = rec.normal + RandomUnitVector();
+
+		if(scatterDirection.NearZero()) scatterDirection = rec.normal;
+
+		scattered = Ray(rec.p, scatterDirection);
+		attenuation = data.lambertian.albedo;
+
+		return true;
+	    }
+
+	    bool ScatterMetal(const Ray& rIn, const HitRecord& rec, Color& attenuation, Ray& scattered) const
+	    {
+		Vec3 reflected = Reflect(rIn.Direction(), rec.normal);
+		reflected = (UnitVector(reflected)) + (data.metal.roughness * RandomUnitVector());
+
+		scattered = Ray(rec.p, reflected);
+		attenuation = data.metal.albedo;
+
+		return (Dot(scattered.Direction(), rec.normal) > 0);
+
+	    }
 
 	public:
 
-	    Material(const Lambertian lambertian) : type(LAMBERTIAN)
+	    Material(const Lambertian lambertian) : type(LAMBERTIAN) 
 	    {
 		data.lambertian = lambertian;
 	    }
 
-	    Material(const Metal metal) : type(METAL)
+	    Material(const Metal metal) : type(METAL) 
 	    {
 		data.metal = metal;
 	    }
@@ -102,10 +95,10 @@ namespace ryt
 		switch(type)
 		{
 		    case LAMBERTIAN:
-			return data.lambertian.Scatter(rIn, rec, attenuation, scattered);
+			return this->ScatterLambertian(rIn, rec, attenuation, scattered);
 
 		    case METAL:
-			return data.metal.Scatter(rIn, rec, attenuation, scattered);
+			return this->ScatterMetal(rIn, rec, attenuation, scattered);
 
 		    default:
 			return false;
