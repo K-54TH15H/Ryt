@@ -21,25 +21,25 @@ namespace ryt
 	    {
 		Initialize();
 
-		std::cout << "P3" << std::endl << img_w << ' ' << img_h << std::endl << 255 << std::endl;
+		std::cout << "P3" << std::endl << imgW << ' ' << imgH << std::endl << 255 << std::endl;
 
-		for(int i = 0; i < img_h; i++)
+		for(int i = 0; i < imgH; i++)
 		{
 		    // clear up line
 		    std::clog << '\r' << std::string(25, ' ') << '\r';
 		    // write progress
-		    std::clog << "Progress : " << ((((double)i)/(img_h-1)) * 100) << '%';
+		    std::clog << "Progress : " << ((((double)i)/(imgH-1)) * 100) << '%';
 
-		    for(int j = 0; j < img_w; j++)
+		    for(int j = 0; j < imgW; j++)
 		    {
-			Color pixel_color(0, 0, 0);
+			Color pixelColor(0, 0, 0);
 
-			for(int sample = 0; sample < samples_per_pixels; sample++)
+			for(int sample = 0; sample < samplesPerPixels; sample++)
 			{
 			    Ray r = GetRay(j, i);
-			    pixel_color += RayColor(r, max_depth, world);
+			    pixelColor += RayColor(r, maxDepth, world);
 			}
-			WriteColor(std::cout, pixel_samples_scale * pixel_color);
+			WriteColor(std::cout, pixelSamplesScale * pixelColor);
 		    }
 		}
 
@@ -48,47 +48,47 @@ namespace ryt
 
 	private:
 
-	    double aspect_ratio; // Ratio of image width to height
-	    int img_w; // Rendered image width
-	    int img_h; // Rendered image height
+	    double aspectRatio; // Ratio of image width to height
+	    int imgW; // Rendered image width
+	    int imgH; // Rendered image height
 
 	    Vec3 center; // Camera center
-	    Vec3 pixel00_loc; // Location of pixel - [0, 0]
-	    Vec3 pixel_delta_u; // Offset for pixel to the right
-	    Vec3 pixel_delta_v; // Offset for pixel to the bottom
+	    Vec3 pixel00Loc; // Location of pixel - [0, 0]
+	    Vec3 pixelDeltaU; // Offset for pixel to the right
+	    Vec3 pixelDeltaV; // Offset for pixel to the bottom
 
-	    int samples_per_pixels; // Count of random samples per pixels
-	    double pixel_samples_scale;
-	    int max_depth; // Maximum no of Ray bounces into scene
+	    int samplesPerPixels; // Count of random samples per pixels
+	    double pixelSamplesScale;
+	    int maxDepth; // Maximum no of Ray bounces into scene
 
 	    void Initialize()
 	    {
-		aspect_ratio = 16.0 / 9.0;
-		img_w = 800;
+		aspectRatio = 16.0 / 9.0;
+		imgW = 800;
 
 		// calculate img_h and clamp to 1
-		img_h = int(img_w / aspect_ratio);
-		img_h = (img_h < 1) ? 1 : img_h;
+		imgH = int(imgW / aspectRatio);
+		imgH = (imgH < 1) ? 1 : imgH;
 
 		center = Vec3(0, 0, 0);
-		samples_per_pixels = 10; // anti-aliasing on by default
-		pixel_samples_scale = 1.0 / samples_per_pixels;
-		max_depth = 10;
+		samplesPerPixels = 10; // anti-aliasing on by default
+		pixelSamplesScale = 1.0 / samplesPerPixels;
+		maxDepth = 10;
 
-		double focal_length = 1.0;
-		double viewport_height = 2.0;
-		double viewport_width = viewport_height * (double(img_w) / img_h);
+		double focalLength = 1.0;
+		double viewportHeight = 2.0;
+		double viewportWidth = viewportHeight * (double(imgW) / imgH);
 
 		// Calculate vecs accross horizontal and vertical viewport edges
-		Vec3 viewport_u = Vec3(viewport_width, 0, 0);
-		Vec3 viewport_v = Vec3(0, -viewport_height, 0);
+		Vec3 viewportU = Vec3(viewportWidth, 0, 0);
+		Vec3 viewportV = Vec3(0, -viewportHeight, 0);
 
 		// Calculate Offset vecs
-		pixel_delta_u = viewport_u / img_w;
-		pixel_delta_v = viewport_v / img_h;
+		pixelDeltaU = viewportU / imgW;
+		pixelDeltaV = viewportV / imgH;
 
-		Vec3 viewport_upper_left = center - Vec3(0, 0, focal_length) - (viewport_u/2) - (viewport_v / 2);
-		pixel00_loc = viewport_upper_left + 0.5 * ( pixel_delta_u + pixel_delta_v );
+		Vec3 viewportUpperLeft = center - Vec3(0, 0, focalLength) - (viewportU/2) - (viewportV / 2);
+		pixel00Loc = viewportUpperLeft + 0.5 * ( pixelDeltaU + pixelDeltaV );
 	    }
 
 	    Vec3 SampleSquare() const
@@ -100,50 +100,50 @@ namespace ryt
 	    Ray GetRay(int i, int j) const
 	    {
 		Vec3 offset = SampleSquare();
-		Vec3 pixel_sample = pixel00_loc 
-		    + ((i + offset.x) * pixel_delta_u)
-		    + ((j + offset.y) * pixel_delta_v);
+		Vec3 pixelSample = pixel00Loc 
+		    + ((i + offset.x) * pixelDeltaU)
+		    + ((j + offset.y) * pixelDeltaV);
 
-		Vec3 Ray_origin = center;
-		Vec3 Ray_direction = pixel_sample - Ray_origin;
+		Vec3 rayOrigin = center;
+		Vec3 rayDirection = pixelSample - rayOrigin;
 
-		return Ray(Ray_origin, Ray_direction);
+		return Ray(rayOrigin, rayDirection);
 	    }
 
 	    Color RayColor(const Ray& r, int depth, const RaytracingContext* world) const
 	    {
-		Ray current_Ray = r;
+		Ray currentRay = r;
 
-		Color accumulated_light(0, 0, 0);
+		Color accumulatedLight(0, 0, 0);
 		Color throughput(1.0, 1.0, 1.0);
 
-		for(int i = 0; i < max_depth; i++)
+		for(int i = 0; i < maxDepth; i++)
 		{
 		    HitRecord rec;
 
-		    if(HitWorld(world, current_Ray, Interval(0.001, infinity), rec))
+		    if(HitWorld(world, currentRay, Interval(0.001, infinity), rec))
 		    {
 			Ray scattered;
 			Color attenuation;
 
-			if(rec.mat->Scatter(current_Ray, rec, attenuation, scattered))
+			if(rec.mat->Scatter(currentRay, rec, attenuation, scattered))
 			{
 			    throughput = throughput * attenuation;
-			    current_Ray = scattered;
+			    currentRay = scattered;
 			}
 			else return Color(0, 0, 0);
 
 		    }
 		    else
 		    {
-			Vec3 unit_direction = UnitVector(current_Ray.Direction());
-			double a = 0.5 * (unit_direction.y + 1.0);
+			Vec3 unitDirection = UnitVector(currentRay.Direction());
+			double a = 0.5 * (unitDirection.y + 1.0);
 
-			Color sky_color = (1.0 - a) * Color(1.0, 1.0, 1.0) + a * Color(0.5, 0.7, 1.0);
+			Color skyColor = (1.0 - a) * Color(1.0, 1.0, 1.0) + a * Color(0.5, 0.7, 1.0);
 
-			accumulated_light = throughput * sky_color;
+			accumulatedLight = throughput * skyColor;
 
-			return accumulated_light;
+			return accumulatedLight;
 		    }
 		}
 

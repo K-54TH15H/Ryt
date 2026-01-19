@@ -12,16 +12,16 @@ namespace ryt
 {
     using Color = Vec3; // alias for rt::Vec3 as color as an context - might need to modify
 
-    inline void LinearToGamma(double& linear_component)
+    inline void LinearToGamma(double& linearComponent)
     {
-	linear_component = (linear_component > 0) ? std::sqrt(linear_component) : 0;
+	linearComponent = (linearComponent > 0) ? std::sqrt(linearComponent) : 0;
     }
 
-    inline void WriteColor(std::ostream& os, const Color& pixel_color)
+    inline void WriteColor(std::ostream& os, const Color& pixelColor)
     {
-	auto r = pixel_color.x;
-	auto g = pixel_color.y;
-	auto b = pixel_color.z;
+	auto r = pixelColor.x;
+	auto g = pixelColor.y;
+	auto b = pixelColor.z;
 	
 	// Gamma correction
 	LinearToGamma(r);

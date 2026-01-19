@@ -19,16 +19,16 @@ int main()
     ryt::RaytracingContext world;
     ryt::InitializeRaytracingContext(&world, 16);
     
-    ryt::Lambertian material_ground(ryt::Color(0.8, 0.8, 0.0));
-    ryt::Lambertian material_center(ryt::Color(0.7, 0.1, 0.2));
-    ryt::Metal metal_left(ryt::Color(0.8, 0.8, 0.8), 0.0);
-    ryt::Metal metal_right(ryt::Color(0.8, 0.6, 0.2), 1.0);
+    ryt::Lambertian materialGround(ryt::Color(0.8, 0.8, 0.0));
+    ryt::Lambertian materialCenter(ryt::Color(0.2, 0.1, 0.7));
+    ryt::Metal metalLeft(ryt::Color(0.8, 0.8, 0.8), 0.0);
+    ryt::Metal metalRight(ryt::Color(0.8, 0.6, 0.2), 1.0);
 
     
-    ryt::PushHittable(&world, ryt::Sphere(ryt::Vec3(0, 0, -1.2), 0.5, material_center));
-    ryt::PushHittable(&world, ryt::Sphere(ryt::Vec3(0, -100.5, -1), 100, material_ground));
-    ryt::PushHittable(&world, ryt::Sphere(ryt::Vec3(-1, 0, -1), 0.5, metal_left));
-    ryt::PushHittable(&world, ryt::Sphere(ryt::Vec3(1, 0, -1.0), 0.5, metal_right));
+    ryt::PushHittable(&world, ryt::Sphere(ryt::Vec3(0, 0, -1.2), 0.5, materialCenter));
+    ryt::PushHittable(&world, ryt::Sphere(ryt::Vec3(0, -100.5, -1), 100, materialGround));
+    ryt::PushHittable(&world, ryt::Sphere(ryt::Vec3(-1, 0, -1), 0.5, metalLeft));
+    ryt::PushHittable(&world, ryt::Sphere(ryt::Vec3(1, 0, -1.0), 0.5, metalRight));
 
     ryt::Camera cam;
 

@@ -15,13 +15,13 @@ namespace ryt
 	    Vec3 normal;
 	    Material* mat; // This Doesn't Own the Material just points to it.
 	    double t;
-	    bool front_face;
+	    bool frontFace;
 
-	    void SetFaceNormal(const Ray& r, const Vec3& outward_normal)
+	    void SetFaceNormal(const Ray& r, const Vec3& outwardNormal)
 	    {
-		front_face = Dot(r.Direction(), outward_normal) < 0;
+		frontFace = Dot(r.Direction(), outwardNormal) < 0;
 
-		normal = (front_face) ? outward_normal : -outward_normal;
+		normal = (frontFace) ? outwardNormal : -outwardNormal;
 	    }
     };
 }

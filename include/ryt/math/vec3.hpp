@@ -127,18 +127,18 @@ namespace ryt
 	while(true)
 	{
 	    Vec3 p = Vec3::Random(-1, 1);
-	    double len_sq = p.LengthSquared();
+	    double lenSq = p.LengthSquared();
 
-	    if(1e-160 < len_sq && len_sq <= 1) return (p / sqrt(len_sq));
+	    if(1e-160 < lenSq && lenSq <= 1) return (p / sqrt(lenSq));
 	}
     }
 
     inline Vec3 RandomOnHemisphere(const Vec3& normal)
     {
-	Vec3 on_unit_sphere = RandomUnitVector();
+	Vec3 onUnitSphere = RandomUnitVector();
 
-	if(Dot(on_unit_sphere, normal) > 0.0) return on_unit_sphere;
-	else return -on_unit_sphere;
+	if(Dot(onUnitSphere, normal) > 0.0) return onUnitSphere;
+	else return -onUnitSphere;
     }
 
     inline Vec3 Reflect(const Vec3& v, const Vec3& n)

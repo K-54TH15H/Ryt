@@ -42,22 +42,22 @@ namespace ryt
 
     inline bool HitWorld(const RaytracingContext* context, const Ray& r, Interval t, HitRecord& rec)
     {	
-	HitRecord temp_rec;
-	bool hit_anything = false;
-	double closest_so_far = t.max;
+	HitRecord tempRec;
+	bool hitAnything = false;
+	double closestSoFar = t.max;
 	
 	// Loop through all objects of the World
 	for(size_t i = 0; i < context->hittableSize; i++)
 	{
-	    if((context->hittables[i]).Hit(r, Interval(t.min, closest_so_far), temp_rec))
+	    if((context->hittables[i]).Hit(r, Interval(t.min, closestSoFar), tempRec))
 	    {
-		hit_anything = true;
-		closest_so_far = temp_rec.t;
-		rec = temp_rec;
+		hitAnything = true;
+		closestSoFar = tempRec.t;
+		rec = tempRec;
 	    }
 	}
 
-	return hit_anything;
+	return hitAnything;
     }
 }
 #endif
