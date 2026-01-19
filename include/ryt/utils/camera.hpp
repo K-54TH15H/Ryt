@@ -93,7 +93,7 @@ namespace ryt
 
 	    Vec3 sample_square() const
 	    {
-		return Vec3(random_double() - 0.5, random_double() - 0.5, 0);
+		return Vec3(RandomDouble() - 0.5, RandomDouble() - 0.5, 0);
 	    }
 
 	    // Constructs a camera Ray from origin to a randomly sampled pt i, j
