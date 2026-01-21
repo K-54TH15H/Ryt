@@ -38,18 +38,18 @@ namespace RYT
     };
 
     // vector utility functions
-    inline std::ostream& operator<<(std::ostream& os, const Vec3& v);
-    inline Vec3 operator+(const Vec3& u, const Vec3& v);
-    inline Vec3 operator-(const Vec3& u, const Vec3& v);
-    inline Vec3 operator*(double t, const Vec3& v);
-    inline Vec3 operator*(const Vec3& u, const Vec3& v);
-    inline Vec3 operator/(const Vec3& v, double t);
-    inline double Dot(const Vec3& u, const Vec3& v);
-    inline Vec3 Cross(const Vec3& u, const Vec3& v);
-    inline Vec3 UnitVector(const Vec3& v);
-    inline Vec3 RandomUnitVector();
-    inline Vec3 RandomOnHemisphere(const Vec3& normal);
-    inline Vec3 Reflect(const Vec3& v, const Vec3& n);
+    std::ostream& operator<<(std::ostream& os, const Vec3& v);
+    Vec3 operator+(const Vec3& u, const Vec3& v);
+    Vec3 operator-(const Vec3& u, const Vec3& v);
+    Vec3 operator*(double t, const Vec3& v);
+    Vec3 operator*(const Vec3& u, const Vec3& v);
+    Vec3 operator/(const Vec3& v, double t);
+    double Dot(const Vec3& u, const Vec3& v);
+    Vec3 Cross(const Vec3& u, const Vec3& v);
+    Vec3 UnitVector(const Vec3& v);
+    Vec3 RandomUnitVector();
+    Vec3 RandomOnHemisphere(const Vec3& normal);
+    Vec3 Reflect(const Vec3& v, const Vec3& n);
     
     // ********** RAY ********** //
     class Ray

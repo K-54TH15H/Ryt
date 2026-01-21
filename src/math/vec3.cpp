@@ -3,7 +3,8 @@
 
 namespace RYT
 {
-    // ********** MEMBER FUNCTIONS **********
+    // ********** MEMBER FUNCTIONS ********** //
+
     // constructors
     Vec3::Vec3(): x(0), y(0), z(0) {}
     Vec3::Vec3(double x, double y, double z) : x(x), y(y), z(z) {}
@@ -36,7 +37,8 @@ namespace RYT
     {
 	return *this *= 1/t;
     }
-
+    
+    // Length functions
     double Vec3::LengthSquared() const
     {
 	return ( (x*x) + (y*y) + (z*z) );
