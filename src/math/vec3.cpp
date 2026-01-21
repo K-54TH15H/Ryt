@@ -65,42 +65,42 @@ namespace RYT
 	return Vec3(RandomDouble(min, max), RandomDouble(min, max), RandomDouble(min, max));
     }
 
-    inline std::ostream& operator<<(std::ostream& os, const Vec3& v)
+    std::ostream& operator<<(std::ostream& os, const Vec3& v)
     {
 	return os << v.x << ' ' << v.y  << ' ' << v.z;
     }
 
-    inline Vec3 operator+(const Vec3& u, const Vec3& v)
+    Vec3 operator+(const Vec3& u, const Vec3& v)
     {
 	return Vec3((u.x + v.x), (u.y + v.y), (u.z + v.z));
     }
 
-    inline Vec3 operator-(const Vec3& u, const Vec3& v)
+    Vec3 operator-(const Vec3& u, const Vec3& v)
     {
 	return Vec3((u.x - v.x), (u.y - v.y), (u.z - v.z));
     }
 
-    inline Vec3 operator*(double t, const Vec3& v)
+    Vec3 operator*(double t, const Vec3& v)
     {
 	return Vec3(t * v.x, t * v.y, t * v.z);
     }
 
-    inline Vec3 operator*(const Vec3& u, const Vec3& v)
+    Vec3 operator*(const Vec3& u, const Vec3& v)
     {
 	return Vec3(u.x * v.x, u.y * v.y, u.z * v.z);
     }
 
-    inline Vec3 operator/(const Vec3& v, double t)
+    Vec3 operator/(const Vec3& v, double t)
     {
 	return (1/t) * v;
     }
 
-    inline double Dot(const Vec3& u, const Vec3& v)
+    double Dot(const Vec3& u, const Vec3& v)
     {
 	return (u.x * v.x) + (u.y * v.y) + (u.z * v.z);
     }
 
-    inline Vec3 Cross(const Vec3& u, const Vec3& v)
+    Vec3 Cross(const Vec3& u, const Vec3& v)
     {
 	return Vec3(u.y * v.z - u.z * v.y,
 		u.z * v.x - u.x * v.z,
@@ -108,12 +108,12 @@ namespace RYT
 		);
     }
 
-    inline Vec3 UnitVector(const Vec3& v)
+    Vec3 UnitVector(const Vec3& v)
     {
 	return v/v.Length();
     }
 
-    inline Vec3 RandomUnitVector()
+    Vec3 RandomUnitVector()
     {
 	while(true)
 	{
@@ -124,7 +124,7 @@ namespace RYT
 	}
     }
 
-    inline Vec3 RandomOnHemisphere(const Vec3& normal)
+    Vec3 RandomOnHemisphere(const Vec3& normal)
     {
 	Vec3 onUnitSphere = RandomUnitVector();
 
@@ -132,7 +132,7 @@ namespace RYT
 	else return -onUnitSphere;
     }
 
-    inline Vec3 Reflect(const Vec3& v, const Vec3& n)
+    Vec3 Reflect(const Vec3& v, const Vec3& n)
     {
 	return v - (2 * Dot(v,n) * n);
     }
