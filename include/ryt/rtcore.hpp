@@ -105,8 +105,8 @@ namespace RYT
     // ********** Color ********** // 
     using Color = Vec3; // alias for rt::Vec3 as color as an context - might need to modify
 
-    inline void LinearToGamma(double& linearComponent);
-    inline void WriteColor(std::ostream& os, const Color& pixelColor);
+    void LinearToGamma(double& linearComponent);
+    void WriteColor(std::ostream& os, const Color& pixelColor);
 
     // ********** HitRecord ********** //
     class Material; // Forward Declarations
