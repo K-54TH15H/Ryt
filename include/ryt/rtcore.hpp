@@ -88,7 +88,7 @@ namespace RYT
 	    // Range based constructor
 	    Interval(double min, double max);
 
-	    double Size(); 
+	    double Size() const; 
 	    bool Contains(double x) const;
 	    bool Surrounds(double x) const;
 	    
