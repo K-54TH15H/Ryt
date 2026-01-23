@@ -33,14 +33,14 @@ namespace RYT
     void Camera::Initialize()
     {
 	aspectRatio = 16.0 / 9.0;
-	imgW = 800;
+	imgW = 1440;
 
 	// calculate img_h and clamp to 1
 	imgH = int(imgW / aspectRatio);
 	imgH = (imgH < 1) ? 1 : imgH;
 
 	center = Vec3(0, 0, 0);
-	samplesPerPixels = 10; // anti-aliasing on by default
+	samplesPerPixels = 100; // anti-aliasing on by default
 	pixelSamplesScale = 1.0 / samplesPerPixels;
 	maxDepth = 10;
 

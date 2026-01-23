@@ -136,4 +136,13 @@ namespace RYT
     {
 	return v - (2 * Dot(v,n) * n);
     }
+    
+    Vec3 Refract(const Vec3 &uv, const Vec3 &n, double etaiOverEtat)
+    {
+	double cosTheta = std::fmin(Dot(-uv, n), 1.0);
+	Vec3 rOutPerp = etaiOverEtat * (uv + cosTheta * n);
+	Vec3 rOutParallel = -std::sqrt(std::fabs(1.0 - rOutPerp.LengthSquared())) * n;
+
+	return rOutPerp + rOutParallel;
+    }
 }

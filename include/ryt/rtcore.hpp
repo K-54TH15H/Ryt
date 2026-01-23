@@ -50,7 +50,8 @@ namespace RYT
     Vec3 RandomUnitVector();
     Vec3 RandomOnHemisphere(const Vec3& normal);
     Vec3 Reflect(const Vec3& v, const Vec3& n);
-    
+    Vec3 Refract(const Vec3& uv, const Vec3& n, double etai_over_etat);
+
     // ********** RAY ********** //
     class Ray
     {
@@ -127,7 +128,8 @@ namespace RYT
     enum MaterialType
     {
 	LAMBERTIAN,
-	METAL
+	METAL,
+	DIELECTRIC
     };
 
     struct Lambertian
@@ -140,6 +142,11 @@ namespace RYT
 	Color albedo;
         double roughness;
     };
+    
+    struct Dielectric
+    {
+	double refractionIndex;
+    };
 
     class Material
     {
@@ -150,22 +157,23 @@ namespace RYT
 	    {
 		Lambertian lambertian;
 		Metal metal;
+		Dielectric dielectric;
 
 		MemberData() {};
 		~MemberData() {};
 	    } data;
 	    
 	    bool ScatterLambertian(const Ray& rIn, const HitRecord& rec, Color& attenuation, Ray& scattered) const;
-	    
-
 	    bool ScatterMetal(const Ray& rIn, const HitRecord& rec, Color& attenuation, Ray& scattered) const;
-	    
+	    bool ScatterDielectric(const Ray& rIn, const HitRecord& rec, Color& attenuation, Ray& scattered) const; 
+
 	public:
 	    
 	    // Constructors
 	    Material(const Lambertian lambertian);
 	    Material(const Metal metal);
-	    
+	    Material(const Dielectric dielectric);
+
 	    ~Material();
 	    
 	    bool Scatter(const Ray& rIn, const HitRecord& rec, Color& attenuation, Ray& scattered) const ;
