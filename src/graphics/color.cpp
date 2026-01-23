@@ -1,28 +1,19 @@
-#ifndef COLOR_H
-#define COLOR_H
-
+#include <ryt/rtcore.hpp>
 #include <cmath>
-#include <ryt/math/vec3.hpp>
-#include <ryt/math/interval.hpp>
 
-#include <iostream>
-
-
-namespace ryt
+namespace RYT
 {
-    using Color = Vec3; // alias for rt::Vec3 as color as an context - might need to modify
-
-    inline void LinearToGamma(double& linearComponent)
+    void LinearToGamma(double& linearComponent)
     {
 	linearComponent = (linearComponent > 0) ? std::sqrt(linearComponent) : 0;
     }
 
-    inline void WriteColor(std::ostream& os, const Color& pixelColor)
+    void WriteColor(std::ostream& os, const Color& pixelColor)
     {
 	auto r = pixelColor.x;
 	auto g = pixelColor.y;
 	auto b = pixelColor.z;
-	
+
 	// Gamma correction
 	LinearToGamma(r);
 	LinearToGamma(g);
@@ -37,5 +28,3 @@ namespace ryt
 	os << rb << ' ' << gb << ' ' << bb << std::endl;
     }
 }
-
-#endif
