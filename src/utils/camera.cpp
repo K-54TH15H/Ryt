@@ -1,4 +1,5 @@
 #include <ryt/rtcore.hpp>
+#include <cmath>
 
 namespace RYT
 {
@@ -43,9 +44,13 @@ namespace RYT
 	samplesPerPixels = 100; // anti-aliasing on by default
 	pixelSamplesScale = 1.0 / samplesPerPixels;
 	maxDepth = 10;
-
+	
+	vFov = 90; // Default set to 90^
 	double focalLength = 1.0;
-	double viewportHeight = 2.0;
+	double theta = DegreesToRadians(vFov);
+	double h = std::tan(theta / 2);
+
+	double viewportHeight = 2.0 * h * focalLength;
 	double viewportWidth = viewportHeight * (double(imgW) / imgH);
 
 	// Calculate vecs accross horizontal and vertical viewport edges

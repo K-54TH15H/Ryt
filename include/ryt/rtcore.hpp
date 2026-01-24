@@ -70,15 +70,17 @@ namespace RYT
 	    Vec3 At(double t) const;
     };
     
-    // ********** RANDOM ********** //
+    // ********** Common ********** //
     double RandomDouble();
     double RandomDouble(double min, double max);
-    
+    double DegreesToRadians(double degrees);
+
     // ********** Interval ********** //
     // Interval constants
     inline const double infinity = std::numeric_limits<double>::infinity();
     inline const double pi = 3.1415926535897932385;
-
+    
+    
     class Interval
     {
 	public:
@@ -262,6 +264,8 @@ namespace RYT
 	    int samplesPerPixels; // Count of random samples per pixels
 	    double pixelSamplesScale;
 	    int maxDepth; // Maximum no of Ray bounces into scene
+
+	    double vFov; // vertical view angle - FOV
 
 	    void Initialize();
 	    Vec3 SampleSquare() const;
