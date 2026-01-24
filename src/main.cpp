@@ -39,7 +39,7 @@ void RenderDefaultScene()
     RYT::PushHittable(&world, RYT::Sphere(RYT::Vec3(1, 0, -1.0), 0.5, metalRight));
 
     RYT::Camera cam;
-
+    
     cam.Render(&world);
 
     RYT::DestroyRaytracingContext(&world);

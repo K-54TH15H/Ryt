@@ -49,6 +49,7 @@ namespace RYT
     Vec3 UnitVector(const Vec3& v);
     Vec3 RandomUnitVector();
     Vec3 RandomOnHemisphere(const Vec3& normal);
+    Vec3 RandomInUnitDisk();
     Vec3 Reflect(const Vec3& v, const Vec3& n);
     Vec3 Refract(const Vec3& uv, const Vec3& n, double etai_over_etat);
 
@@ -271,6 +272,11 @@ namespace RYT
 	    int maxDepth; // Maximum no of Ray bounces into scene
 
 	    double vFov; // vertical view angle - FOV
+	    
+	    double defocusAngle;
+	    double focusDistance;
+	    Vec3 defocusDiskU;
+	    Vec3 defocusDiskV;
 
 	    void Initialize();
 	    Vec3 SampleSquare() const;
@@ -280,6 +286,7 @@ namespace RYT
 	    Ray GetRay(int i, int j) const;
 	    Color RayColor(const Ray& r, int depth, const RaytracingContext* world) const;
 	    
+	    Vec3 DefocusDiskSample() const;
     };
 }
 

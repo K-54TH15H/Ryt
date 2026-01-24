@@ -50,11 +50,14 @@ namespace RYT
 	maxDepth = 10;
 	
 	vFov = 20; // Default set to 90^
+	defocusAngle = 0;
+	focusDistance = 10;
+
 	double focalLength = (lookFrom - lookAt).Length();
 	double theta = DegreesToRadians(vFov);
 	double h = std::tan(theta / 2);
 
-	double viewportHeight = 2.0 * h * focalLength;
+	double viewportHeight = 2.0 * h * focusDistance;
 	double viewportWidth = viewportHeight * (double(imgW) / imgH);
 	
 	// Calculate Relative Frame Basis
@@ -70,13 +73,24 @@ namespace RYT
 	pixelDeltaU = viewportU / imgW;
 	pixelDeltaV = viewportV / imgH;
 
-	Vec3 viewportUpperLeft = center - (focalLength * w) - (viewportU/2) - (viewportV / 2);
+	Vec3 viewportUpperLeft = center - (focusDistance * w) - (viewportU/2) - (viewportV / 2);
 	pixel00Loc = viewportUpperLeft + 0.5 * ( pixelDeltaU + pixelDeltaV );
+
+	// Defocus disk basis vectors
+	double defocusRadius = focusDistance * std::tan(DegreesToRadians(defocusAngle / 2));
+	defocusDiskU = defocusRadius * u;
+	defocusDiskV = defocusRadius * v;
     }
 
     Vec3 Camera::SampleSquare() const
     {
 	return Vec3(RandomDouble() - 0.5, RandomDouble() - 0.5, 0);
+    }
+    
+    Vec3 Camera::DefocusDiskSample() const
+    {
+	Vec3 p = RandomInUnitDisk();
+	return center + (p.x * defocusDiskU) + (p.y * defocusDiskV);
     }
 
     // Constructs a camera Ray from origin to a randomly sampled pt i, j
@@ -87,7 +101,7 @@ namespace RYT
 	    + ((i + offset.x) * pixelDeltaU)
 	    + ((j + offset.y) * pixelDeltaV);
 
-	Vec3 rayOrigin = center;
+	Vec3 rayOrigin = (defocusAngle <= 0) ? center : DefocusDiskSample();
 	Vec3 rayDirection = pixelSample - rayOrigin;
 
 	return Ray(rayOrigin, rayDirection);
