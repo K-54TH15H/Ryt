@@ -1,4 +1,5 @@
 #include <ryt/rtcore.hpp>
+#include <cmath>
 
 namespace RYT
 {
@@ -38,25 +39,38 @@ namespace RYT
 	// calculate img_h and clamp to 1
 	imgH = int(imgW / aspectRatio);
 	imgH = (imgH < 1) ? 1 : imgH;
+	
+	// Set up Look From and Look at by default on Initialisation
+	lookFrom = Vec3(-2, 2, 1);
+	lookAt = Vec3(0, 0, -1);
+	center = lookFrom; 
 
-	center = Vec3(0, 0, 0);
 	samplesPerPixels = 100; // anti-aliasing on by default
 	pixelSamplesScale = 1.0 / samplesPerPixels;
 	maxDepth = 10;
+	
+	vFov = 20; // Default set to 90^
+	double focalLength = (lookFrom - lookAt).Length();
+	double theta = DegreesToRadians(vFov);
+	double h = std::tan(theta / 2);
 
-	double focalLength = 1.0;
-	double viewportHeight = 2.0;
+	double viewportHeight = 2.0 * h * focalLength;
 	double viewportWidth = viewportHeight * (double(imgW) / imgH);
+	
+	// Calculate Relative Frame Basis
+	w = UnitVector(lookFrom - lookAt);
+	u = UnitVector(Cross(Vec3(0, 1, 0), w));
+	v = UnitVector(Cross(w, u));
 
 	// Calculate vecs accross horizontal and vertical viewport edges
-	Vec3 viewportU = Vec3(viewportWidth, 0, 0);
-	Vec3 viewportV = Vec3(0, -viewportHeight, 0);
+	Vec3 viewportU = viewportWidth * u;
+	Vec3 viewportV = -viewportHeight * v;
 
 	// Calculate Offset vecs
 	pixelDeltaU = viewportU / imgW;
 	pixelDeltaV = viewportV / imgH;
 
-	Vec3 viewportUpperLeft = center - Vec3(0, 0, focalLength) - (viewportU/2) - (viewportV / 2);
+	Vec3 viewportUpperLeft = center - (focalLength * w) - (viewportU/2) - (viewportV / 2);
 	pixel00Loc = viewportUpperLeft + 0.5 * ( pixelDeltaU + pixelDeltaV );
     }
 

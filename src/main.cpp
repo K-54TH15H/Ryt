@@ -1,5 +1,5 @@
 #include <ryt/rtcore.hpp>
-
+#include <cmath>
 
 void RenderDesertScene()
 {
@@ -40,6 +40,25 @@ void RenderDefaultScene()
 
     RYT::Camera cam;
 
+    cam.Render(&world);
+
+    RYT::DestroyRaytracingContext(&world);
+}
+
+void RenderFovCheck()
+{
+    RYT::RaytracingContext world;
+    RYT::InitializeRaytracingContext(&world, 16);
+
+    RYT::Lambertian materialLeft = { RYT::Color(0, 0, 1)};
+    RYT::Lambertian materialRight = { RYT::Color(0, 1, 0)};
+    
+    double radians = std::cos(RYT::pi / 4);
+
+    RYT::PushHittable(&world, RYT::Sphere(RYT::Vec3(-radians, 0, -1), radians, materialLeft)); 
+    RYT::PushHittable(&world, RYT::Sphere(RYT::Vec3(radians, 0, -1), radians, materialRight)); 
+
+    RYT::Camera cam;
     cam.Render(&world);
 
     RYT::DestroyRaytracingContext(&world);

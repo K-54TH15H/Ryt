@@ -70,15 +70,17 @@ namespace RYT
 	    Vec3 At(double t) const;
     };
     
-    // ********** RANDOM ********** //
+    // ********** Common ********** //
     double RandomDouble();
     double RandomDouble(double min, double max);
-    
+    double DegreesToRadians(double degrees);
+
     // ********** Interval ********** //
     // Interval constants
     inline const double infinity = std::numeric_limits<double>::infinity();
     inline const double pi = 3.1415926535897932385;
-
+    
+    
     class Interval
     {
 	public:
@@ -255,6 +257,11 @@ namespace RYT
 	    int imgH; // Rendered image height
 
 	    Vec3 center; // Camera center
+	    Vec3 lookFrom; // Look from a point 
+	    Vec3 lookAt; // Look at a point
+	    
+	    Vec3 u, v, w; // Relative camera frame basis
+
 	    Vec3 pixel00Loc; // Location of pixel - [0, 0]
 	    Vec3 pixelDeltaU; // Offset for pixel to the right
 	    Vec3 pixelDeltaV; // Offset for pixel to the bottom
@@ -262,6 +269,8 @@ namespace RYT
 	    int samplesPerPixels; // Count of random samples per pixels
 	    double pixelSamplesScale;
 	    int maxDepth; // Maximum no of Ray bounces into scene
+
+	    double vFov; // vertical view angle - FOV
 
 	    void Initialize();
 	    Vec3 SampleSquare() const;

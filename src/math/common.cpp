@@ -13,4 +13,9 @@ namespace RYT
 	// returns random in [min, max)
 	return min + ((max - min) * RandomDouble());
     }
+
+    double DegreesToRadians(double degrees)
+    {
+	return degrees * pi / 180.0;
+    }
 }
