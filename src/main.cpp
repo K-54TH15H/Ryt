@@ -29,7 +29,7 @@ void RenderDefaultScene() {
   cam.SetLookFrom(RYT::Vec3(-2, 2, 1));
   cam.SetLookAt(RYT::Vec3(0, 0, -1));
   cam.SetFov(20);
-  cam.SetSamplesPerPixels(500);
+  cam.SetSamplesPerPixels(10);
   cam.SetDefocusAngle(10);
   cam.SetFocusDistance(3.5);
 
@@ -55,6 +55,35 @@ void RenderFovCheck() {
   cam.Render(&world);
 
   RYT::DestroyRaytracingContext(&world);
+}
+
+void RenderSample()
+{
+    RYT::RaytracingContext world;
+    RYT::InitializeRaytracingContext(&world, 16);
+
+    RYT::Lambertian red = { RYT::Color(0.75, 0.1, 0.1) };
+    RYT::Lambertian green = { RYT::Color(0.1, 0.75, 0.1) };
+    RYT::Lambertian yellow = { RYT::Color(0.75, 0.75, 0.05) };
+    RYT::Lambertian blue = { RYT::Color(0.1, 0.1, 0.75) };
+    RYT::Metal mirror = {RYT::Color(1, 1, 1), 0.15};
+
+    RYT::PushHittable(&world, RYT::Sphere(RYT::Vec3(0, 0.5, -2), 1, red));
+    RYT::PushHittable(&world, RYT::Sphere(RYT::Vec3(0, -200.5, -2), 200, mirror));
+    RYT::PushHittable(&world, RYT::Sphere(RYT::Vec3(-3, 0.5, -2), 1, yellow));
+    RYT::PushHittable(&world, RYT::Sphere(RYT::Vec3(-1.5, 0.5, -3.5), 1, blue));
+
+    RYT::Camera cam;
+    cam.SetLookFrom(RYT::Vec3(2.5, 7.5, 5));
+    cam.SetLookAt(RYT::Vec3(-1.5, 0.5, -2));
+    cam.SetFov(40);
+    cam.SetDefocusAngle(2.5);
+    cam.SetFocusDistance(10.5);
+    cam.SetSamplesPerPixels(500);
+
+    cam.Render(&world);
+
+    RYT::DestroyRaytracingContext(&world);
 }
 
 int main() {
