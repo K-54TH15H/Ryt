@@ -275,7 +275,7 @@ namespace RYT
 	    Vec3 pixelDeltaU; // Offset for pixel to the right
 	    Vec3 pixelDeltaV; // Offset for pixel to the bottom
 
-	    int samplesPerPixels; // Count of random samples per pixels
+	    int samplesPerPixels = 10; // Count of random samples per pixels
 	    double pixelSamplesScale;
 	    int maxDepth = 10; // Maximum no of Ray bounces into scene
 
