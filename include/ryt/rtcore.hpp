@@ -174,12 +174,15 @@ public:
 // ********** SPHERE ********** //
 class Sphere {
 private:
-  Vec3 center;
+  Ray center;
   double radius;
   Material mat;
 
 public:
-  Sphere(const Vec3 &center, double radius, Material mat);
+  // Static Sphere Constructor
+  Sphere(const Vec3 &staticCenter, double radius, Material mat);
+  // Moving Sphere Constructor
+  Sphere(const Vec3& center1, const Vec3& center2, double radius, Material mat);
 
   bool Hit(const Ray &r, Interval t, HitRecord &rec);
 };

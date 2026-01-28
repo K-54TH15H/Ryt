@@ -2,11 +2,17 @@
 #include <ryt/rtcore.hpp>
 
 namespace RYT {
-Sphere::Sphere(const Vec3 &center, double radius, Material mat)
-    : center(center), radius(std::fmax(0, radius)), mat(mat) {}
+
+Sphere::Sphere(const Vec3& staticCenter, double radius, Material mat)
+    : center(staticCenter, Vec3(0, 0, 0)), radius(std::fmax(0, radius)), mat(mat) {}
+
+Sphere::Sphere(const Vec3& center1, const Vec3& center2, double radius, Material mat)
+    : center(center1, center2 - center1), radius(std::fmax(0, radius)), mat(mat) {}
 
 bool Sphere::Hit(const Ray &r, Interval t, HitRecord &rec) {
-  Vec3 CQ = center - r.Origin();
+  Vec3 currentCenter = center.At(r.Time());
+
+  Vec3 CQ = currentCenter - r.Origin();
   auto a = r.Direction().LengthSquared();
   auto h = Dot(r.Direction(), CQ);
   auto c = CQ.LengthSquared() - radius * radius;
@@ -32,7 +38,7 @@ bool Sphere::Hit(const Ray &r, Interval t, HitRecord &rec) {
   rec.t = root;
   rec.p = r.At(rec.t);
 
-  Vec3 outward_normal = (rec.p - center) / radius;
+  Vec3 outward_normal = (rec.p - currentCenter) / radius;
   rec.SetFaceNormal(r, outward_normal);
   rec.mat = &mat;
 
