@@ -29,7 +29,7 @@ void RenderDefaultScene() {
   cam.SetLookFrom(RYT::Vec3(-2, 2, 1));
   cam.SetLookAt(RYT::Vec3(0, 0, -1));
   cam.SetFov(20);
-  cam.SetSamplesPerPixels(10);
+  cam.SetSamplesPerPixels(500);
   cam.SetDefocusAngle(10);
   cam.SetFocusDistance(3.5);
 
