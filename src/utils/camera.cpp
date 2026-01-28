@@ -88,8 +88,9 @@ Ray Camera::GetRay(int i, int j) const {
 
   Vec3 rayOrigin = (defocusAngle <= 0) ? center : DefocusDiskSample();
   Vec3 rayDirection = pixelSample - rayOrigin;
+  double rayTime = RandomDouble();
 
-  return Ray(rayOrigin, rayDirection);
+  return Ray(rayOrigin, rayDirection, rayTime);
 }
 
 Color Camera::RayColor(const Ray &r, int depth,
