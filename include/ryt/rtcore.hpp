@@ -172,6 +172,19 @@ public:
                Ray &scattered) const;
 };
 
+// ********** AABB ********** //
+class AABB {
+public:
+  Interval x, y, z;
+  // constructors
+  AABB();
+  AABB(const Interval &x, const Interval &y, const Interval &z);
+  AABB(const Vec3 &a, const Vec3 &b);
+
+  const Interval &AxisInterval(int n) const;
+  bool Hit(const Ray &r, Interval rayT) const;
+};
+
 // ********** SPHERE ********** //
 class Sphere {
 private:

@@ -22,9 +22,8 @@ double Interval::Clamp(double x) const {
     return x;
 }
 
-Interval Interval::Expand(double delta) const
-{
-    double padd = delta / 2;
-    return Interval(min - padd, max + padd);
+Interval Interval::Expand(double delta) const {
+  double padd = delta / 2;
+  return Interval(min - padd, max + padd);
 }
 } // namespace RYT
