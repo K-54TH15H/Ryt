@@ -67,7 +67,8 @@ void RenderSample() {
   RYT::Lambertian blue = {RYT::Color(0.1, 0.1, 0.75)};
   RYT::Metal mirror = {RYT::Color(1, 1, 1), 0.15};
 
-  RYT::PushHittable(&world, RYT::Sphere(RYT::Vec3(0, 0.5, -2), RYT::Vec3(0, -0.25, -2), 1, red));
+  RYT::PushHittable(&world, RYT::Sphere(RYT::Vec3(0, 0.5, -2),
+                                        RYT::Vec3(0, -0.25, -2), 1, red));
   RYT::PushHittable(&world, RYT::Sphere(RYT::Vec3(0, -200.5, -2), 200, mirror));
   RYT::PushHittable(&world, RYT::Sphere(RYT::Vec3(-3, 0.5, -2), 1, yellow));
   RYT::PushHittable(&world, RYT::Sphere(RYT::Vec3(-1.5, 0.5, -3.5), 1, blue));

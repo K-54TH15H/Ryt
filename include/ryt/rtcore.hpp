@@ -61,7 +61,7 @@ public:
   // constructors
   Ray();
   Ray(const Vec3 &origin, const Vec3 &direction);
-  Ray(const Vec3& origin, const Vec3 &direction, double time);
+  Ray(const Vec3 &origin, const Vec3 &direction, double time);
 
   // getters
   const Vec3 &Origin() const;
@@ -182,7 +182,7 @@ public:
   // Static Sphere Constructor
   Sphere(const Vec3 &staticCenter, double radius, Material mat);
   // Moving Sphere Constructor
-  Sphere(const Vec3& center1, const Vec3& center2, double radius, Material mat);
+  Sphere(const Vec3 &center1, const Vec3 &center2, double radius, Material mat);
 
   bool Hit(const Ray &r, Interval t, HitRecord &rec);
 };

@@ -6,7 +6,7 @@ Ray::Ray() {}
 Ray::Ray(const Vec3 &origin, const Vec3 &direction)
     : orig(origin), dir(direction) {}
 
-Ray::Ray(const Vec3& origin, const Vec3 &direction, double time)
+Ray::Ray(const Vec3 &origin, const Vec3 &direction, double time)
     : orig(origin), dir(direction), time(time) {}
 
 // getters

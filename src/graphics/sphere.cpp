@@ -3,11 +3,14 @@
 
 namespace RYT {
 
-Sphere::Sphere(const Vec3& staticCenter, double radius, Material mat)
-    : center(staticCenter, Vec3(0, 0, 0)), radius(std::fmax(0, radius)), mat(mat) {}
+Sphere::Sphere(const Vec3 &staticCenter, double radius, Material mat)
+    : center(staticCenter, Vec3(0, 0, 0)), radius(std::fmax(0, radius)),
+      mat(mat) {}
 
-Sphere::Sphere(const Vec3& center1, const Vec3& center2, double radius, Material mat)
-    : center(center1, center2 - center1), radius(std::fmax(0, radius)), mat(mat) {}
+Sphere::Sphere(const Vec3 &center1, const Vec3 &center2, double radius,
+               Material mat)
+    : center(center1, center2 - center1), radius(std::fmax(0, radius)),
+      mat(mat) {}
 
 bool Sphere::Hit(const Ray &r, Interval t, HitRecord &rec) {
   Vec3 currentCenter = center.At(r.Time());
