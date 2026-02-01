@@ -14,6 +14,12 @@ AABB::AABB(const Vec3 &a, const Vec3 &b) {
   z = (a.z <= b.z) ? Interval(a.z, b.z) : Interval(b.z, a.z);
 }
 
+AABB::AABB(const AABB &boxA, const AABB &boxB) {
+  x = Interval(boxA.x, boxB.x);
+  y = Interval(boxA.y, boxB.y);
+  z = Interval(boxA.z, boxB.z);
+}
+
 const Interval &AABB::AxisInterval(int n) const {
   switch (n) {
   case 0:
