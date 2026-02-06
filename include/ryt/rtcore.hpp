@@ -211,22 +211,22 @@ public:
 };
 
 class Hittable; // Forward Declaration for Hittable class
-		
-// ********** BVHNode ********* //
-struct BVHNode
-{
-    AABB bBox;
-    int leftIndex;
-    int rightIndex;
-    bool isLeaf;
 
-    BVHNode() : leftIndex(-1), rightIndex(-1), isLeaf(false) {}
+// ********** BVHNode ********* //
+struct BVHNode {
+  AABB bBox;
+  int leftIndex;
+  int rightIndex;
+  bool isLeaf;
+
+  BVHNode() : leftIndex(-1), rightIndex(-1), isLeaf(false) {}
 };
 
-struct RaytracingContext; // forward Declaration 
+struct RaytracingContext; // forward Declaration
 
-int ConstructBVHTree(RaytracingContext* hittables, size_t start, size_t end);
-bool HitBVH(const RaytracingContext* context, int nodeIndex, const Ray &r,  Interval rayT, HitRecord& rec);
+int ConstructBVHTree(RaytracingContext *hittables, size_t start, size_t end);
+bool HitBVH(const RaytracingContext *context, int nodeIndex, const Ray &r,
+            Interval rayT, HitRecord &rec);
 
 // *********** HITTABLE ********** //
 // Tag for Geometry type
@@ -261,7 +261,7 @@ struct RaytracingContext {
   size_t hittableSize;
   size_t hittableCapacity;
 
-  BVHNode* bvhNodes;
+  BVHNode *bvhNodes;
   size_t bvhNodeSize;
   size_t bvhNodeCapacity;
 
@@ -272,7 +272,7 @@ struct RaytracingContext {
 
 // Context functions
 void InitializeRaytracingContext(RaytracingContext *context, size_t capacity);
-void OptimizeRaytracingContext(RaytracingContext* context);
+void OptimizeRaytracingContext(RaytracingContext *context);
 void DestroyRaytracingContext(RaytracingContext *context);
 Hittable *PushHittable(RaytracingContext *context, Hittable hittable);
 bool HitWorld(const RaytracingContext *context, const Ray &r, Interval t,

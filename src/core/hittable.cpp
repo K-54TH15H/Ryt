@@ -21,15 +21,16 @@ Hittable::~Hittable() {
 }
 
 bool Hittable::Hit(const Ray &r, Interval t, HitRecord &rec) {
-  if(!bBox.Hit(r, t)) return false;
+  if (!bBox.Hit(r, t))
+    return false;
 
   switch (type) {
-      case SPHERE:
-	  return ((data.sphere)).Hit(r, t, rec);
-    
-     // Hit None
-     default:
-		     return false;
+  case SPHERE:
+    return ((data.sphere)).Hit(r, t, rec);
+
+  // Hit None
+  default:
+    return false;
   }
 }
 
