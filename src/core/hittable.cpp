@@ -21,8 +21,6 @@ Hittable::~Hittable() {
 }
 
 bool Hittable::Hit(const Ray &r, Interval t, HitRecord &rec) {
-  if (!bBox.Hit(r, t))
-    return false;
 
   switch (type) {
   case SPHERE:

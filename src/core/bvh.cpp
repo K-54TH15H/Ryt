@@ -19,7 +19,14 @@ static bool BoxZCompare(const Hittable &a, const Hittable &b) {
 
 int ConstructBVHTree(RaytracingContext *context, size_t start, size_t end) {
   size_t span = end - start;
-  int axis = RandomInt(0, 2);
+  
+  AABB spanbBox;
+  for(size_t i = start; i < end; i++)
+  {
+	spanbBox = AABB(spanbBox, context->hittables[i].bBox);
+  }
+  int axis = spanbBox.LongestAxis();
+
   auto comparator = (axis == 0)   ? BoxXCompare
                     : (axis == 1) ? BoxYCompare
                                   : BoxZCompare;
@@ -27,10 +34,11 @@ int ConstructBVHTree(RaytracingContext *context, size_t start, size_t end) {
   int currentIndex = context->bvhNodeSize++;
   BVHNode *node = &context->bvhNodes[currentIndex];
 
+  node->bBox = spanbBox;
+
   if (span == 1) {
     node->isLeaf = true;
     node->leftIndex = (int)start;
-    node->bBox = context->hittables[start].bBox;
 
     return currentIndex;
   }
@@ -40,14 +48,9 @@ int ConstructBVHTree(RaytracingContext *context, size_t start, size_t end) {
 
   size_t mid = start + span / 2;
 
-  int left = ConstructBVHTree(context, start, mid);
-  int right = ConstructBVHTree(context, mid, end);
-
   node->isLeaf = false;
-  node->leftIndex = left;
-  node->rightIndex = right;
-  node->bBox =
-      AABB(context->bvhNodes[left].bBox, context->bvhNodes[right].bBox);
+  node->leftIndex = ConstructBVHTree(context, start, mid);
+  node->rightIndex = ConstructBVHTree(context, mid, end);
 
   return currentIndex;
 }

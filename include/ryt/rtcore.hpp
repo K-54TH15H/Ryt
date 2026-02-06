@@ -186,6 +186,7 @@ public:
   AABB(const Vec3 &a, const Vec3 &b);
   AABB(const AABB &boxA, const AABB &boxB);
 
+  int LongestAxis() const; 
   const Interval &AxisInterval(int n) const;
   bool Hit(const Ray &r, Interval rayT) const;
 };

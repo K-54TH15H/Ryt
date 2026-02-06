@@ -107,7 +107,7 @@ void RenderHeavy() {
   RYT::OptimizeRaytracingContext(&world);
 
   RYT::Camera cam;
-  cam.SetSamplesPerPixels(10);
+  cam.SetSamplesPerPixels(100);
   cam.SetMaxDepth(10);
   cam.SetFov(20);
   cam.SetLookFrom(RYT::Vec3(50, 50, 50));
