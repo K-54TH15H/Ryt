@@ -1,6 +1,5 @@
 #include <chrono>
 #include <cmath>
-#include <cstring>
 #include <ryt/rtcore.hpp>
 
 void RenderDefaultScene() {
@@ -75,7 +74,7 @@ void RenderSample() {
   RYT::PushHittable(&world, RYT::Sphere(RYT::Vec3(-3, 0.5, -2), 1, yellow));
   RYT::PushHittable(&world, RYT::Sphere(RYT::Vec3(-1.5, 0.5, -3.5), 1, blue));
   
-  world.bvhRoot = RYT::ConstructBVHTree(world.hittables, 0, world.hittableSize);
+  world.bvhRootIndex = RYT::ConstructBVHTree(&world, 0, world.hittableSize);
 
   RYT::Camera cam;
   cam.SetLookFrom(RYT::Vec3(2.5, 7.5, 5));
@@ -106,7 +105,7 @@ void RenderHeavy()
 	RYT::PushHittable(&world, RYT::Sphere(center, 5,mat)); 
     }
     // Optimise World By Constructing A BVH Tree
-    world.bvhRoot = RYT::ConstructBVHTree(world.hittables, 0, world.hittableSize);
+    RYT::OptimizeRaytracingContext(&world);
 
     RYT::Camera cam;
     cam.SetSamplesPerPixels(10);

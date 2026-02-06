@@ -9,13 +9,6 @@ Hittable::Hittable(Sphere s) {
   bBox = s.boundingBox();
 }
 
-Hittable::Hittable(BVHNode bvh)
-{
-    type = BVH_NODE;
-    data.bvh = bvh;
-    bBox = bvh.bBox;
-}
-
 Hittable::~Hittable() {
   switch (type) {
   case SPHERE:
@@ -33,17 +26,9 @@ bool Hittable::Hit(const Ray &r, Interval t, HitRecord &rec) {
   switch (type) {
       case SPHERE:
 	  return ((data.sphere)).Hit(r, t, rec);
-
-      case BVH_NODE: {
-			 bool hitLeft = data.bvh.left->Hit(r, t, rec);
-
-			 // If hitLeft care only about right-hits closer than left hit
-			 Interval rightInterval = hitLeft ? Interval(t.min, rec.t) : t;
-			 bool hitRight = data.bvh.right->Hit(r, rightInterval, rec);
-
-			 return hitLeft || hitRight;
-		     }
-      default: // Hit None
+    
+     // Hit None
+     default:
 		     return false;
   }
 }
