@@ -1,4 +1,5 @@
-#include <ryt/rtcore.hpp>
+#include <cstdlib>
+#include <ryt/math/common.hpp>
 
 namespace RYT {
 double RandomDouble() {

@@ -1,4 +1,4 @@
-#include <ryt/rtcore.hpp>
+#include <ryt/core/hitrecord.hpp>
 
 namespace RYT {
 void HitRecord::SetFaceNormal(const Ray &r, const Vec3 &outwardNormal) {

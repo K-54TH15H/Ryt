@@ -1,4 +1,5 @@
-#include <ryt/rtcore.hpp>
+#include <ryt/core/bvh.hpp>
+#include <ryt/core/rtcontext.hpp>
 
 namespace RYT {
 // Context functions

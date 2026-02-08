@@ -1,5 +1,5 @@
 #include <cmath>
-#include <ryt/rtcore.hpp>
+#include <ryt/utils/camera.hpp>
 
 namespace RYT {
 void Camera::Render(const RaytracingContext *world) {

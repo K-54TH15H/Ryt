@@ -1,5 +1,7 @@
 #include <cmath>
-#include <ryt/rtcore.hpp>
+
+#include <ryt/graphics/material.hpp>
+#include <ryt/math/common.hpp>
 
 namespace RYT {
 static double Reflectance(double cosine, double refractionIndex) {

@@ -1,5 +1,5 @@
 #include <cmath>
-#include <ryt/rtcore.hpp>
+#include <ryt/graphics/sphere.hpp>
 
 namespace RYT {
 

@@ -1,4 +1,4 @@
-#include <ryt/rtcore.hpp>
+#include <ryt/math/interval.hpp>
 
 namespace RYT {
 // Default interval [inf, -inf] ( empty )

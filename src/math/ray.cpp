@@ -1,4 +1,4 @@
-#include <ryt/rtcore.hpp>
+#include <ryt/math/ray.hpp>
 
 namespace RYT {
 // constructors

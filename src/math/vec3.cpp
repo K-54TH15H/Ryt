@@ -1,5 +1,7 @@
 #include <cmath>
-#include <ryt/rtcore.hpp>
+
+#include <ryt/math/common.hpp>
+#include <ryt/math/vec3.hpp>
 
 namespace RYT {
 // ********** MEMBER FUNCTIONS ********** //

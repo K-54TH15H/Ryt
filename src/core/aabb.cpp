@@ -1,4 +1,4 @@
-#include <ryt/rtcore.hpp>
+#include <ryt/core/aabb.hpp>
 
 namespace RYT {
 // Default Box is NULL Box (Interval default is the empty constructor)
@@ -18,6 +18,13 @@ AABB::AABB(const AABB &boxA, const AABB &boxB) {
   x = Interval(boxA.x, boxB.x);
   y = Interval(boxA.y, boxB.y);
   z = Interval(boxA.z, boxB.z);
+}
+
+int AABB::LongestAxis() const {
+  if (x.Size() > y.Size())
+    return (x.Size() > z.Size()) ? 0 : 2;
+  else
+    return (y.Size() > z.Size()) ? 1 : 2;
 }
 
 const Interval &AABB::AxisInterval(int n) const {

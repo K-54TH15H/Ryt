@@ -1,5 +1,6 @@
 #include <cmath>
-#include <ryt/rtcore.hpp>
+#include <ryt/graphics/color.hpp>
+#include <ryt/math/interval.hpp>
 
 namespace RYT {
 void LinearToGamma(double &linearComponent) {
