@@ -1,3 +1,4 @@
+#include "ryt/core/rtcontext.hpp"
 #include <chrono>
 #include <cmath>
 #include <ryt/rtcore.hpp>
@@ -25,12 +26,13 @@ void RenderDefaultScene() {
   RYT::PushHittable(&world,
                     RYT::Sphere(RYT::Vec3(1, 0, -1.0), 0.5, metalRight));
 
+  RYT::OptimizeRaytracingContext(&world);
   RYT::Camera cam;
 
   cam.SetLookFrom(RYT::Vec3(-2, 2, 1));
   cam.SetLookAt(RYT::Vec3(0, 0, -1));
-  cam.SetFov(20);
-  cam.SetSamplesPerPixels(10);
+  cam.SetFov(90);
+  cam.SetSamplesPerPixels(100);
   cam.SetDefocusAngle(0);
   cam.SetFocusDistance(10);
 
@@ -118,7 +120,7 @@ void RenderHeavy() {
 int main(int argc, char *argv[]) {
 
   auto start = std::chrono::high_resolution_clock::now();
-  RenderHeavy();
+  RenderDefaultScene();
 
   auto end = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - start);
