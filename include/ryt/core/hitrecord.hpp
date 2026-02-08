@@ -14,6 +14,10 @@ public:
   Material *mat; // This Doesn't Own the Material just points to it.
   double t;
   bool frontFace;
+  
+  // Surface co-ordinates of the ray-object intersection
+  double u;
+  double v;
 
   void SetFaceNormal(const Ray &r, const Vec3 &outwardNormal);
 };

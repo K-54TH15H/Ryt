@@ -23,6 +23,13 @@ namespace RYT
 	    Color albedo;
     };
 
+    class CheckerTexture
+    {
+	private:
+
+	public:
+    };
+
     class Texture
     {
 	public:
