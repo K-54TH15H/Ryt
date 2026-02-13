@@ -9,6 +9,7 @@ namespace RYT
     enum TextureType
     {
 	SOLID,
+	CHECKER,
     };
 
     class SolidColor
@@ -33,8 +34,19 @@ namespace RYT
     class Texture
     {
 	public:
-	    
+	    // Constructors
+	    Texture(SolidColor solidColor);
+	    Color Value(double u, double v, const Vec3& p) const; 
+
 	private:
+	    TextureType type;
+	    union MemberData
+	    {
+		SolidColor solidColor;
+
+		MemberData() {}
+		~MemberData() {}
+	    } data;
     };
 
 }
