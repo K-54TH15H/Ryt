@@ -156,7 +156,7 @@ void RandomScene()
     RYT::OptimizeRaytracingContext(&world);
 
     RYT::Camera cam;
-    cam.SetSamplesPerPixels(500);
+    cam.SetSamplesPerPixels(10);
     cam.SetMaxDepth(10);
     cam.SetFov(20);
     cam.SetLookFrom(RYT::Vec3(-50, 35, -40));

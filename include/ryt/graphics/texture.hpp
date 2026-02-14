@@ -6,6 +6,8 @@
 
 namespace RYT
 {
+    class Texture;
+
     enum TextureType
     {
 	SOLID,
@@ -27,8 +29,15 @@ namespace RYT
     class CheckerTexture
     {
 	private:
+	    double invScale;
+	    Texture* even;
+	    Texture* odd;
 
 	public:
+	    CheckerTexture(double scale, Texture* even, Texture* odd);
+	    CheckerTexture(double scale, const Color& c1, const Color& c2);
+
+	    Color Value(double u, double v, const Vec3& p) const;
     };
 
     class Texture
