@@ -1,8 +1,5 @@
-#include "ryt/core/rtcontext.hpp"
 #include "ryt/graphics/color.hpp"
-#include "ryt/graphics/material.hpp"
-#include "ryt/graphics/sphere.hpp"
-#include "ryt/math/vec3.hpp"
+#include "ryt/graphics/texture.hpp"
 #include <chrono>
 #include <cmath>
 #include <ryt/rtcore.hpp>
@@ -124,10 +121,17 @@ void RenderHeavy() {
 
 void RandomScene()
 {
+    std::srand(time(nullptr));
+
+    RYT::Texture blue(RYT::Color(0.2, 0.5, 0.8));
+    RYT::Texture red(RYT::Color(0.1, 0.1, 0.1));
+
+    RYT::CheckerTexture checker(5, &blue, &red);
+
     RYT::RaytracingContext world;
     RYT::InitializeRaytracingContext(&world, 100);
     
-    RYT::Lambertian groundMaterial = {RYT::Color(0.3, 0.8, 0.25)};
+    RYT::Lambertian groundMaterial = {checker};
     RYT::PushHittable(&world, RYT::Sphere(RYT::Vec3(0, -100000, 0), 100000, groundMaterial));
 
     RYT::Metal glassMaterial = {RYT::Color(1, 1, 1), 0};

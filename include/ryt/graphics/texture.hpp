@@ -14,11 +14,11 @@ namespace RYT
 	CHECKER,
     };
 
-    class SolidColor
+    class SolidTexture
     {
 	public:
-	    SolidColor(const Color& albedo);
-	    SolidColor(double r, double g, double b);
+	    SolidTexture(const Color& albedo);
+	    SolidTexture(double r, double g, double b);
 
 	    Color Value(double u, double v, const Vec3& p) const;
 
@@ -35,7 +35,7 @@ namespace RYT
 
 	public:
 	    CheckerTexture(double scale, Texture* even, Texture* odd);
-	    CheckerTexture(double scale, const Color& c1, const Color& c2);
+	    // CheckerTexture(double scale, const Color& c1, const Color& c2);
 
 	    Color Value(double u, double v, const Vec3& p) const;
     };
@@ -44,19 +44,22 @@ namespace RYT
     {
 	public:
 	    // Constructors
-	    Texture(SolidColor solidColor);
+	    Texture(const SolidTexture solidTexture);
+	    Texture(const CheckerTexture checkerTexture);
+	    Texture(const Color color);
+
 	    Color Value(double u, double v, const Vec3& p) const; 
 
 	private:
 	    TextureType type;
 	    union MemberData
 	    {
-		SolidColor solidColor;
+		SolidTexture solidTexture;
+		CheckerTexture checkerTexture;
 
 		MemberData() {}
 		~MemberData() {}
 	    } data;
     };
-
 }
 #endif

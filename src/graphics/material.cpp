@@ -20,7 +20,7 @@ bool Material::ScatterLambertian(const Ray &rIn, const HitRecord &rec,
     scatterDirection = rec.normal;
 
   scattered = Ray(rec.p, scatterDirection, rIn.Time());
-  attenuation = data.lambertian.albedo;
+  attenuation = data.lambertian.texture.Value(rec.u, rec.v, rec.p);
 
   return true;
 }
