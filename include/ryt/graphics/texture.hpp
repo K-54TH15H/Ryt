@@ -3,63 +3,62 @@
 
 #include <ryt/graphics/color.hpp>
 
+namespace RYT {
+// Forward declarations
+class RaytracingContext;
+class Texture;
 
-namespace RYT
-{
-    class Texture;
+enum TextureType {
+  NULLTEX,
+  SOLID,
+  CHECKER,
+};
 
-    enum TextureType
-    {
-	SOLID,
-	CHECKER,
-    };
+class SolidTexture {
+public:
+  SolidTexture(const Color &albedo);
+  SolidTexture(double r, double g, double b);
 
-    class SolidTexture
-    {
-	public:
-	    SolidTexture(const Color& albedo);
-	    SolidTexture(double r, double g, double b);
+  Color Value(double u, double v, const Vec3 &p) const;
 
-	    Color Value(double u, double v, const Vec3& p) const;
+private:
+  Color albedo;
+};
 
-	private:
-	    Color albedo;
-    };
+class CheckerTexture {
+private:
+  double invScale;
+  int evenId;
+  int oddId;
 
-    class CheckerTexture
-    {
-	private:
-	    double invScale;
-	    Texture* even;
-	    Texture* odd;
+public:
+  CheckerTexture(double scale, int evenId, int oddId);
+  // CheckerTexture(double scale, const Color& c1, const Color& c2);
 
-	public:
-	    CheckerTexture(double scale, Texture* even, Texture* odd);
-	    // CheckerTexture(double scale, const Color& c1, const Color& c2);
+  Color Value(double u, double v, const Vec3 &p,
+              const RaytracingContext *context) const;
+};
 
-	    Color Value(double u, double v, const Vec3& p) const;
-    };
+class Texture {
+public:
+  // Constructors
+  Texture();
+  Texture(const SolidTexture solidTexture);
+  Texture(const CheckerTexture checkerTexture);
+  Texture(const Color color);
 
-    class Texture
-    {
-	public:
-	    // Constructors
-	    Texture(const SolidTexture solidTexture);
-	    Texture(const CheckerTexture checkerTexture);
-	    Texture(const Color color);
+  Color Value(double u, double v, const Vec3 &p,
+              const RaytracingContext *context) const;
 
-	    Color Value(double u, double v, const Vec3& p) const; 
+private:
+  TextureType type;
+  union MemberData {
+    SolidTexture solidTexture;
+    CheckerTexture checkerTexture;
 
-	private:
-	    TextureType type;
-	    union MemberData
-	    {
-		SolidTexture solidTexture;
-		CheckerTexture checkerTexture;
-
-		MemberData() {}
-		~MemberData() {}
-	    } data;
-    };
-}
+    MemberData() {}
+    ~MemberData() {}
+  } data;
+};
+} // namespace RYT
 #endif

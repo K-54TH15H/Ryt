@@ -1,9 +1,11 @@
 #include <ryt/core/bvh.hpp>
 #include <ryt/core/rtcontext.hpp>
+#include <ryt/graphics/texture.hpp>
 
 namespace RYT {
 // Context functions
-void InitializeRaytracingContext(RaytracingContext *context, size_t capacity) {
+void InitializeRaytracingContext(RaytracingContext *context, size_t capacity,
+                                 size_t textureCapacity) {
   context->hittableCapacity = capacity;
   context->hittableSize = 0;
 
@@ -15,6 +17,11 @@ void InitializeRaytracingContext(RaytracingContext *context, size_t capacity) {
   context->bvhNodeCapacity = 2 * capacity;
   context->bvhNodeSize = 0;
   context->bvhRootIndex = -1;
+
+  // Textures
+  context->textureCapacity = textureCapacity;
+  context->textures = new Texture[textureCapacity];
+  context->textureSize = 0;
 }
 
 void OptimizeRaytracingContext(RaytracingContext *context) {
@@ -24,6 +31,7 @@ void OptimizeRaytracingContext(RaytracingContext *context) {
 void DestroyRaytracingContext(RaytracingContext *context) {
   delete[] context->hittables;
   delete[] context->bvhNodes;
+  delete[] context->textures;
 
   context->hittables = nullptr;
   context->bvhNodes = nullptr;
@@ -34,6 +42,9 @@ void DestroyRaytracingContext(RaytracingContext *context) {
   context->bvhNodeSize = 0;
   context->bvhNodeCapacity = 0;
   context->bvhRootIndex = -1;
+
+  context->textureCapacity = 0;
+  context->textureSize = 0;
 
   // Destroys AABB by replacing  it with empty bounding box
   context->bBox = AABB();
@@ -49,8 +60,21 @@ Hittable *PushHittable(RaytracingContext *context, Hittable hittable) {
   return &(context->hittables[context->hittableSize++]);
 }
 
+int PushTexture(RaytracingContext *context, Texture texture) {
+  if (context->textureSize >= context->textureCapacity)
+    return -1;
+
+  int textureId = (int)context->textureSize++;
+  context->textures[textureId] = texture;
+
+  return textureId;
+}
+
 bool HitWorld(const RaytracingContext *context, const Ray &r, Interval t,
               HitRecord &rec) {
+
+  // Store context
+  rec.context = context;
 
   if (context->bvhRootIndex != -1) {
     return HitBVH(context, context->bvhRootIndex, r, t, rec);

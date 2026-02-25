@@ -13,7 +13,7 @@ namespace RYT {
 enum MaterialType { LAMBERTIAN, METAL, DIELECTRIC };
 
 struct Lambertian {
-  Texture texture;
+  int textureId;
 };
 
 struct Metal {

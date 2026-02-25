@@ -1,5 +1,6 @@
 #include <cmath>
 
+#include <ryt/core/rtcontext.hpp>
 #include <ryt/graphics/material.hpp>
 #include <ryt/math/common.hpp>
 
@@ -20,7 +21,11 @@ bool Material::ScatterLambertian(const Ray &rIn, const HitRecord &rec,
     scatterDirection = rec.normal;
 
   scattered = Ray(rec.p, scatterDirection, rIn.Time());
-  attenuation = data.lambertian.texture.Value(rec.u, rec.v, rec.p);
+
+  int textureId = data.lambertian.textureId;
+  attenuation = (rec.context)
+                    ->textures[textureId]
+                    .Value(rec.u, rec.v, rec.p, rec.context);
 
   return true;
 }
