@@ -1,9 +1,35 @@
 #include "ryt/core/rtcontext.hpp"
-#include "ryt/graphics/color.hpp"
-#include "ryt/graphics/texture.hpp"
 #include <chrono>
 // #include <cmath>
 #include <ryt/rtcore.hpp>
+
+void CheckeredSphereScene()
+{
+    RYT::RaytracingContext world;
+    RYT::InitializeRaytracingContext(&world, 10, 10);
+
+    int greenId = RYT::PushTexture(&world, RYT::Texture(RYT::Color(0.1, 0.9, 0.1)));
+    int whiteId = RYT::PushTexture(&world, RYT::Texture(RYT::Color(0.9, 0.9, 0.9)));
+    
+    int checkerId = RYT::PushTexture(&world, RYT::CheckerTexture(0.25, greenId, whiteId));
+    RYT::Lambertian cmat = {checkerId};
+    
+
+    RYT::PushHittable(&world, RYT::Sphere(RYT::Vec3(0, -10, 0), 10, cmat));
+    RYT::PushHittable(&world, RYT::Sphere(RYT::Vec3(0, 10, 0), 10, cmat));
+
+    RYT::Camera cam;
+    RYT::OptimizeRaytracingContext(&world);
+
+    cam.SetSamplesPerPixels(10);
+    cam.SetMaxDepth(5);
+    cam.SetFov(20);
+    cam.SetLookFrom(RYT::Vec3(13, 2, 3));
+    cam.SetLookAt(RYT::Vec3(0, 0, 0));
+    cam.SetDefocusAngle(0);
+
+    cam.Render(&world);
+}
 
 void RandomScene() {
   std::srand(time(nullptr));
@@ -62,7 +88,7 @@ void RandomScene() {
 int main(int argc, char *argv[]) {
 
   auto start = std::chrono::high_resolution_clock::now();
-  RandomScene();
+  CheckeredSphereScene();
 
   auto end = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - start);

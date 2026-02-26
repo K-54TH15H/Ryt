@@ -1,3 +1,5 @@
+#include <ryt/core/hitrecord.hpp>
+#include <ryt/math/vec3.hpp>
 #include <cmath>
 #include <ryt/graphics/sphere.hpp>
 
@@ -51,10 +53,21 @@ bool Sphere::Hit(const Ray &r, Interval t, HitRecord &rec) {
 
   Vec3 outward_normal = (rec.p - currentCenter) / radius;
   rec.SetFaceNormal(r, outward_normal);
+  GetSphereUV(outward_normal, rec);
+
   rec.mat = &mat;
 
   return true;
 }
 
 AABB Sphere::boundingBox() const { return bBox; }
+
+void Sphere::GetSphereUV(const Vec3& p, HitRecord& hitRecord)
+{
+    double theta = std::acos(-p.y);
+    double phi = std::atan2(-p.z, p.x) + pi;
+
+    hitRecord.u = phi / (2 * pi);
+    hitRecord.v = theta / pi;
+}
 } // namespace RYT
