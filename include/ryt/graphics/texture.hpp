@@ -44,12 +44,12 @@ public:
 class ImageTexture
 {
     public:
-	ImageTexture(const char* fileName);
+	ImageTexture(int imaegId);
 
-	Color Value(double u, double v, const Vec3& p) const;
+	Color Value(double u, double v, const Vec3& p, const RaytracingContext* context) const;
     
     private:
-	Image image;		    
+	int imageId;		    
 };
 
 class Texture {

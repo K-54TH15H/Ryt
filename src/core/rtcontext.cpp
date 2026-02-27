@@ -5,7 +5,7 @@
 namespace RYT {
 // Context functions
 void InitializeRaytracingContext(RaytracingContext *context, size_t capacity,
-                                 size_t textureCapacity) {
+                                 size_t textureCapacity, size_t imageCapacity) {
   context->hittableCapacity = capacity;
   context->hittableSize = 0;
 
@@ -22,6 +22,11 @@ void InitializeRaytracingContext(RaytracingContext *context, size_t capacity,
   context->textureCapacity = textureCapacity;
   context->textures = new Texture[textureCapacity];
   context->textureSize = 0;
+
+  // Images
+  context->imageCapacity = imageCapacity;
+  context->imageSize = 0;
+  context->images = new Image[imageCapacity];
 }
 
 void OptimizeRaytracingContext(RaytracingContext *context) {
@@ -68,6 +73,14 @@ int PushTexture(RaytracingContext *context, Texture texture) {
   context->textures[textureId] = texture;
 
   return textureId;
+}
+
+int PushImage(RaytracingContext* context, const char* cFileName)
+{
+   int imageId = (int) context->imageSize++;
+   new (&(context->images[imageId])) Image(cFileName);
+
+   return imageId;
 }
 
 bool HitWorld(const RaytracingContext *context, const Ray &r, Interval t,

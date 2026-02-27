@@ -9,9 +9,10 @@
 void Earth()
 {
     RYT::RaytracingContext world;
-    RYT::InitializeRaytracingContext(&world, 10, 10);
+    RYT::InitializeRaytracingContext(&world, 10, 10, 10);
+    int earthId = RYT::PushImage(&world, "earthmap.jpg");
 
-    RYT::ImageTexture earthImage("earthmap.jpg");
+    RYT::ImageTexture earthImage(earthId);
     int earthTexId = RYT::PushTexture(&world, RYT::Texture(earthImage));
     
     RYT::Lambertian earthMat = { earthTexId };
@@ -32,7 +33,7 @@ void Earth()
 void CheckeredSphereScene()
 {
     RYT::RaytracingContext world;
-    RYT::InitializeRaytracingContext(&world, 10, 10);
+    RYT::InitializeRaytracingContext(&world, 10, 10, 10);
 
     int greenId = RYT::PushTexture(&world, RYT::Texture(RYT::Color(0.1, 0.9, 0.1)));
     int whiteId = RYT::PushTexture(&world, RYT::Texture(RYT::Color(0.9, 0.9, 0.9)));
@@ -61,7 +62,7 @@ void RandomScene() {
   std::srand(time(nullptr));
 
   RYT::RaytracingContext world;
-  RYT::InitializeRaytracingContext(&world, 100, 103);
+  RYT::InitializeRaytracingContext(&world, 100, 103, 10);
 
   RYT::Texture blue(RYT::Color(0.2, 0.5, 0.8));
   RYT::Texture red(RYT::Color(0.1, 0.1, 0.1));
