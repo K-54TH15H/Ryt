@@ -1,11 +1,47 @@
 #include "ryt/core/rtcontext.hpp"
+#include "ryt/graphics/color.hpp"
 #include "ryt/graphics/material.hpp"
-#include "ryt/graphics/texture.hpp"
+#include "ryt/graphics/quad.hpp"
+#include "ryt/math/vec3.hpp"
 #include "ryt/utils/camera.hpp"
 #include <chrono>
 // #include <cmath>
 #include <ryt/rtcore.hpp>
 
+void Quads()
+{
+    RYT::RaytracingContext world;
+    RYT::InitializeRaytracingContext(&world, 10, 10, 10);
+    int leftTexId = RYT::PushTexture(&world, RYT::SolidTexture(RYT::Color(1.0, 0.2, 0.2)));
+    int backTexId = RYT::PushTexture(&world, RYT::SolidTexture(RYT::Color(0.2, 1.0, 0.2)));
+    int upperTexId = RYT::PushTexture(&world, RYT::SolidTexture(RYT::Color(0.2, 0.2, 1.0)));
+    int lowerTexId = RYT::PushTexture(&world, RYT::SolidTexture(RYT::Color(0.2, 0.8, 0.8)));
+    int rightTexId = RYT::PushTexture(&world, RYT::SolidTexture(RYT::Color(0.2, 0.2, 1.0)));
+
+    RYT::Lambertian leftMat = { leftTexId };
+    RYT::Lambertian backMat= { backTexId };
+    RYT::Lambertian upperMat = { upperTexId };
+    RYT::Lambertian lowerMat = { lowerTexId };
+    RYT::Lambertian rightMat = { rightTexId };
+
+    RYT::PushHittable(&world, RYT::Quad(RYT::Vec3(-3, -2, 5), RYT::Vec3(0, 0, -4), RYT::Vec3(0, 4, 0), leftMat)); 
+    RYT::PushHittable(&world, RYT::Quad(RYT::Vec3(-2, -2, 0), RYT::Vec3(4, 0, 0), RYT::Vec3(0, 4, 0), backMat)); 
+    RYT::PushHittable(&world, RYT::Quad(RYT::Vec3(-3, -2, 1), RYT::Vec3(0, 0, 4), RYT::Vec3(0, 4, 0), rightMat)); 
+    RYT::PushHittable(&world, RYT::Quad(RYT::Vec3(-2, 3, 1), RYT::Vec3(4, 0, 0), RYT::Vec3(0, 0, 4), upperMat)); 
+    RYT::PushHittable(&world, RYT::Quad(RYT::Vec3(-2, -3, 5), RYT::Vec3(4, 0, 0), RYT::Vec3(0, 0, -4), lowerMat)); 
+
+    RYT::Camera cam;
+    
+    cam.SetSamplesPerPixels(100);
+    cam.SetMaxDepth(50);
+    cam.SetFov(80);
+    cam.SetLookFrom(RYT::Vec3(0, 0, 9));
+    cam.SetLookAt(RYT::Vec3(0, 0, 0));
+    cam.SetDefocusAngle(0);
+
+    cam.Render(&world);
+
+}
 void Earth() {
   RYT::RaytracingContext world;
   RYT::InitializeRaytracingContext(&world, 10, 10, 10);
@@ -115,7 +151,7 @@ void RandomScene() {
 int main(int argc, char *argv[]) {
 
   auto start = std::chrono::high_resolution_clock::now();
-  Earth();
+  Quads();
 
   auto end = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - start);
