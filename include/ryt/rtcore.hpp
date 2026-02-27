@@ -22,5 +22,6 @@
 
 // 4. Utils
 #include <ryt/utils/camera.hpp>
+#include <ryt/utils/rytimage.hpp>
 
 #endif

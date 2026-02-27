@@ -25,6 +25,24 @@ Color CheckerTexture::Value(double u, double v, const Vec3 &p,
   return context->textures[targetId].Value(u, v, p, context);
 }
 
+ImageTexture::ImageTexture(const char* fileName) : image(fileName) {}
+
+Color ImageTexture::Value(double u, double v, const Vec3& p) const
+{
+    // No Image hence cyan color [debug]
+    if(image.Height() <= 0) return Color(0, 1, 1); 
+
+    u = Interval(0, 1).Clamp(u);
+    v = 1.0 - Interval(0, 1).Clamp(v);
+
+    int i = int(u * image.Width());
+    int j = int(v * image.Height());
+    const unsigned char* pixel = image.PixelData(i, j);
+
+    double colorScale = 1.0 / 255.0;
+    return Color(colorScale * pixel[0], colorScale * pixel[1], colorScale * pixel[2]);
+}
+
 Texture::Texture() : type(NULLTEX) {}
 Texture::Texture(const SolidTexture solidTexture) : type(SOLID) {
   data.solidTexture = solidTexture;
@@ -36,6 +54,10 @@ Texture::Texture(const Color color) : type(SOLID) {
   data.solidTexture = SolidTexture(color);
 }
 
+Texture::Texture(const ImageTexture imageTexture) : type(IMAGE) {
+    data.imageTexture = imageTexture;
+}
+
 Color Texture::Value(double u, double v, const Vec3 &p,
                      const RaytracingContext *context) const {
   switch (type) {
@@ -45,8 +67,54 @@ Color Texture::Value(double u, double v, const Vec3 &p,
   case CHECKER:
     return data.checkerTexture.Value(u, v, p, context);
 
+  case IMAGE:
+    return data.imageTexture.Value(u, v, p);
+
   default:
     return {0, 0, 0};
   }
+}
+
+Texture::Texture(const Texture& other) : type(other.type)
+{
+    switch(type)
+    {
+	case SOLID:
+	    new (&data.solidTexture) SolidTexture(other.data.solidTexture);
+	    break;
+	case CHECKER:
+	    new (&data.checkerTexture) CheckerTexture(other.data.checkerTexture);
+	    break;
+	case IMAGE:
+	    new (&data.imageTexture) ImageTexture(other.data.imageTexture);
+	    break;
+	case NULLTEX:
+	    break;
+    }
+}
+
+Texture& Texture::operator=(const Texture& other)
+{
+    if(this == &other) return *this;
+
+    this->~Texture();
+    type = other.type;
+
+    switch(type)
+    {
+	case SOLID:
+	    new (&data.solidTexture) SolidTexture(other.data.solidTexture);
+	    break;
+	case CHECKER:
+	    new (&data.checkerTexture) CheckerTexture(other.data.checkerTexture);
+	    break;
+	case IMAGE:
+	    new (&data.imageTexture) ImageTexture(other.data.imageTexture);
+	    break;
+	case NULLTEX:
+	    break;
+    }
+
+    return *this;
 }
 } // namespace RYT

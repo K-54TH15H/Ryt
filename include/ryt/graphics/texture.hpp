@@ -2,6 +2,7 @@
 #define TEXTURE_HPP
 
 #include <ryt/graphics/color.hpp>
+#include <ryt/utils/rytimage.hpp>
 
 namespace RYT {
 // Forward declarations
@@ -12,6 +13,7 @@ enum TextureType {
   NULLTEX,
   SOLID,
   CHECKER,
+  IMAGE,
 };
 
 class SolidTexture {
@@ -39,13 +41,27 @@ public:
               const RaytracingContext *context) const;
 };
 
+class ImageTexture
+{
+    public:
+	ImageTexture(const char* fileName);
+
+	Color Value(double u, double v, const Vec3& p) const;
+    
+    private:
+	Image image;		    
+};
+
 class Texture {
 public:
   // Constructors
   Texture();
   Texture(const SolidTexture solidTexture);
   Texture(const CheckerTexture checkerTexture);
+  Texture(const ImageTexture imageTexture);
   Texture(const Color color);
+  Texture(const Texture& other);
+  Texture& operator=(const Texture& other);
 
   Color Value(double u, double v, const Vec3 &p,
               const RaytracingContext *context) const;
@@ -55,6 +71,7 @@ private:
   union MemberData {
     SolidTexture solidTexture;
     CheckerTexture checkerTexture;
+    ImageTexture imageTexture;
 
     MemberData() {}
     ~MemberData() {}

@@ -1,25 +1,28 @@
 #ifndef RYTIMAGE_HPP
 #define RYTIMAGE_HPP
 
-#define STB_IMAGE_IMPLEMENTATION
-#define STBI_FAILURE_USERMSG
-
-#include <stb/stb_image.h>
 #include <string>
 
-class RytImage
+namespace RYT
+{
+class Image
 {
     public:
 	// Constructors
-	RytImage();
-	RytImage(const char* fileName);
+	Image();
+	Image(const char* fileName);
+	
+	// Copy Constructors
+	Image(const Image& other);
+	Image& operator=(const Image& other);
 	
 	// Destructors
-	~RytImage();
+	~Image();
 
 	bool Load(const std::string& fileName);
 	int Width() const;
 	int Height() const;
+	const unsigned char* PixelData(int x, int y) const;
 
     private:
 	const int bytesPerPixel = 3;
@@ -29,9 +32,9 @@ class RytImage
 	int imageHeight = 0;
 	int bytesPerScanline = 0;
 
-	int Clamp(int x, int low, int high);
-	unsigned char floatToByte(float value);
-	void convertToBytes();
+	int Clamp(int x, int low, int high) const;
+	unsigned char FloatToByte(float value) const;
+	void ConvertToBytes();
 };
-
+}
 #endif
