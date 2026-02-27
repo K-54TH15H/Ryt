@@ -41,15 +41,15 @@ public:
               const RaytracingContext *context) const;
 };
 
-class ImageTexture
-{
-    public:
-	ImageTexture(int imaegId);
+class ImageTexture {
+public:
+  ImageTexture(int imaegId);
 
-	Color Value(double u, double v, const Vec3& p, const RaytracingContext* context) const;
-    
-    private:
-	int imageId;		    
+  Color Value(double u, double v, const Vec3 &p,
+              const RaytracingContext *context) const;
+
+private:
+  int imageId;
 };
 
 class Texture {

@@ -1,7 +1,7 @@
-#include <ryt/core/hitrecord.hpp>
-#include <ryt/math/vec3.hpp>
 #include <cmath>
+#include <ryt/core/hitrecord.hpp>
 #include <ryt/graphics/sphere.hpp>
+#include <ryt/math/vec3.hpp>
 
 namespace RYT {
 
@@ -62,12 +62,11 @@ bool Sphere::Hit(const Ray &r, Interval t, HitRecord &rec) {
 
 AABB Sphere::boundingBox() const { return bBox; }
 
-void Sphere::GetSphereUV(const Vec3& p, HitRecord& hitRecord)
-{
-    double theta = std::acos(-p.y);
-    double phi = std::atan2(-p.z, p.x) + pi;
+void Sphere::GetSphereUV(const Vec3 &p, HitRecord &hitRecord) {
+  double theta = std::acos(-p.y);
+  double phi = std::atan2(-p.z, p.x) + pi;
 
-    hitRecord.u = phi / (2 * pi);
-    hitRecord.v = theta / pi;
+  hitRecord.u = phi / (2 * pi);
+  hitRecord.v = theta / pi;
 }
 } // namespace RYT

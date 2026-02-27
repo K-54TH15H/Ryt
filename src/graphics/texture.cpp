@@ -27,20 +27,22 @@ Color CheckerTexture::Value(double u, double v, const Vec3 &p,
 
 ImageTexture::ImageTexture(int imageId) : imageId(imageId) {}
 
-Color ImageTexture::Value(double u, double v, const Vec3& p, const RaytracingContext* context) const
-{
-    // No Image hence cyan color [debug]
-    if(context->images[imageId].Height() <= 0) return Color(0, 1, 1); 
+Color ImageTexture::Value(double u, double v, const Vec3 &p,
+                          const RaytracingContext *context) const {
+  // No Image hence cyan color [debug]
+  if (context->images[imageId].Height() <= 0)
+    return Color(0, 1, 1);
 
-    u = Interval(0, 1).Clamp(u);
-    v = 1.0 - Interval(0, 1).Clamp(v);
+  u = Interval(0, 1).Clamp(u);
+  v = 1.0 - Interval(0, 1).Clamp(v);
 
-    int i = int(u * context->images[imageId].Width());
-    int j = int(v * context->images[imageId].Height());
-    const unsigned char* pixel = context->images[imageId].PixelData(i, j);
+  int i = int(u * context->images[imageId].Width());
+  int j = int(v * context->images[imageId].Height());
+  const unsigned char *pixel = context->images[imageId].PixelData(i, j);
 
-    double colorScale = 1.0 / 255.0;
-    return Color(colorScale * pixel[0], colorScale * pixel[1], colorScale * pixel[2]);
+  double colorScale = 1.0 / 255.0;
+  return Color(colorScale * pixel[0], colorScale * pixel[1],
+               colorScale * pixel[2]);
 }
 
 Texture::Texture() : type(NULLTEX) {}
@@ -55,7 +57,7 @@ Texture::Texture(const Color color) : type(SOLID) {
 }
 
 Texture::Texture(const ImageTexture imageTexture) : type(IMAGE) {
-    data.imageTexture = imageTexture;
+  data.imageTexture = imageTexture;
 }
 
 Color Texture::Value(double u, double v, const Vec3 &p,

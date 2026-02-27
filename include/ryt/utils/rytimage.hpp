@@ -3,34 +3,32 @@
 
 #include <string>
 
-namespace RYT
-{
-class Image
-{
-    public:
-	// Constructors
-	Image();
-	Image(const char* fileName);
-	
-	// Destructors
-	~Image();
+namespace RYT {
+class Image {
+public:
+  // Constructors
+  Image();
+  Image(const char *fileName);
 
-	bool Load(const std::string& fileName);
-	int Width() const;
-	int Height() const;
-	const unsigned char* PixelData(int x, int y) const;
+  // Destructors
+  ~Image();
 
-    private:
-	const int bytesPerPixel = 3;
-	float* fdata = nullptr;
-	unsigned char* bdata = nullptr;
-	int imageWidth = 0;
-	int imageHeight = 0;
-	int bytesPerScanline = 0;
+  bool Load(const std::string &fileName);
+  int Width() const;
+  int Height() const;
+  const unsigned char *PixelData(int x, int y) const;
 
-	int Clamp(int x, int low, int high) const;
-	unsigned char FloatToByte(float value) const;
-	void ConvertToBytes();
+private:
+  const int bytesPerPixel = 3;
+  float *fdata = nullptr;
+  unsigned char *bdata = nullptr;
+  int imageWidth = 0;
+  int imageHeight = 0;
+  int bytesPerScanline = 0;
+
+  int Clamp(int x, int low, int high) const;
+  unsigned char FloatToByte(float value) const;
+  void ConvertToBytes();
 };
-}
+} // namespace RYT
 #endif
