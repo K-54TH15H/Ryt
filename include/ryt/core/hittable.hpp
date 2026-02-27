@@ -2,12 +2,13 @@
 #define HITTABLE_HPP
 
 #include <ryt/core/aabb.hpp>
+#include <ryt/graphics/quad.hpp>
 #include <ryt/graphics/sphere.hpp>
 
 namespace RYT {
 // *********** HITTABLE ********** //
 // Tag for Geometry type
-enum GeometryType { SPHERE, NONE };
+enum GeometryType { SPHERE, QUAD, NONE };
 
 class Hittable {
 public:
@@ -16,6 +17,7 @@ public:
 
   union MemberData {
     Sphere sphere;
+    Quad quad;
     // default constructors get destroyed placeholder constructors and
     // destrcutors manually handled via class constructors and destrcutors
     MemberData() {}
@@ -25,6 +27,7 @@ public:
 
   Hittable();
   Hittable(Sphere s);
+  Hittable(Quad q);
 
   ~Hittable();
 

@@ -26,7 +26,7 @@ public:
   // Retrieve Bounding Box
   AABB boundingBox() const;
 
-  void GetSphereUV(const Vec3& p, HitRecord& hitrecord);
+  void GetSphereUV(const Vec3 &p, HitRecord &hitrecord);
 };
 } // namespace RYT
 

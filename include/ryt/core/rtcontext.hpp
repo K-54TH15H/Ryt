@@ -26,7 +26,7 @@ struct RaytracingContext {
   size_t textureCapacity;
 
   // Images
-  Image* images;
+  Image *images;
   size_t imageSize;
   size_t imageCapacity;
 
@@ -42,7 +42,7 @@ void DestroyRaytracingContext(RaytracingContext *context);
 
 Hittable *PushHittable(RaytracingContext *context, Hittable hittable);
 int PushTexture(RaytracingContext *context, Texture texture);
-int PushImage(RaytracingContext* context, const char* cFileName);
+int PushImage(RaytracingContext *context, const char *cFileName);
 
 bool HitWorld(const RaytracingContext *context, const Ray &r, Interval t,
               HitRecord &rec);

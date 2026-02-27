@@ -75,19 +75,15 @@ int PushTexture(RaytracingContext *context, Texture texture) {
   return textureId;
 }
 
-int PushImage(RaytracingContext* context, const char* cFileName)
-{
-   int imageId = (int) context->imageSize;
-   if(context->images[imageId].Load(cFileName))
-   {
-	context->imageSize++;
-	return imageId;
-   }
-   else
-   {
-	std::cerr << "[Error]: Failed to push/load image" << std::endl;	
-	return -1;
-   }
+int PushImage(RaytracingContext *context, const char *cFileName) {
+  int imageId = (int)context->imageSize;
+  if (context->images[imageId].Load(cFileName)) {
+    context->imageSize++;
+    return imageId;
+  } else {
+    std::cerr << "[Error]: Failed to push/load image" << std::endl;
+    return -1;
+  }
 }
 
 bool HitWorld(const RaytracingContext *context, const Ray &r, Interval t,

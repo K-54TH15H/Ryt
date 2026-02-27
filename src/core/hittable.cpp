@@ -9,10 +9,20 @@ Hittable::Hittable(Sphere s) {
   bBox = s.boundingBox();
 }
 
+Hittable::Hittable(Quad q) {
+  type = QUAD;
+  data.quad = q;
+  bBox = q.BoundingBox();
+}
+
 Hittable::~Hittable() {
   switch (type) {
   case SPHERE:
     ((data.sphere)).~Sphere(); // Calling Destructor Call Explicitly
+    break;
+
+  case QUAD:
+    ((data.quad)).~Quad();
     break;
 
   default: // None
@@ -25,7 +35,8 @@ bool Hittable::Hit(const Ray &r, Interval t, HitRecord &rec) {
   switch (type) {
   case SPHERE:
     return ((data.sphere)).Hit(r, t, rec);
-
+  case QUAD:
+    return ((data.quad)).Hit(r, t, rec);
   // Hit None
   default:
     return false;

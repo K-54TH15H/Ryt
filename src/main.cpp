@@ -1,61 +1,107 @@
 #include "ryt/core/rtcontext.hpp"
+#include "ryt/graphics/color.hpp"
 #include "ryt/graphics/material.hpp"
-#include "ryt/graphics/texture.hpp"
+#include "ryt/graphics/quad.hpp"
+#include "ryt/math/vec3.hpp"
 #include "ryt/utils/camera.hpp"
 #include <chrono>
 // #include <cmath>
 #include <ryt/rtcore.hpp>
 
-void Earth()
-{
-    RYT::RaytracingContext world;
-    RYT::InitializeRaytracingContext(&world, 10, 10, 10);
-    int earthId = RYT::PushImage(&world, "earthmap.jpg");
+void Quads() {
+  RYT::RaytracingContext world;
+  RYT::InitializeRaytracingContext(&world, 10, 10, 10);
+  int leftTexId =
+      RYT::PushTexture(&world, RYT::SolidTexture(RYT::Color(1.0, 0.2, 0.2)));
+  int backTexId =
+      RYT::PushTexture(&world, RYT::SolidTexture(RYT::Color(0.2, 1.0, 0.2)));
+  int rightTexId =
+      RYT::PushTexture(&world, RYT::SolidTexture(RYT::Color(0.2, 0.2, 1.0)));
+  int upperTexId =
+      RYT::PushTexture(&world, RYT::SolidTexture(RYT::Color(1.0, 0.5, 0.0)));
+  int lowerTexId =
+      RYT::PushTexture(&world, RYT::SolidTexture(RYT::Color(0.2, 0.8, 0.8)));
 
-    RYT::ImageTexture earthImage(earthId);
-    int earthTexId = RYT::PushTexture(&world, RYT::Texture(earthImage));
-    
-    RYT::Lambertian earthMat = { earthTexId };
-    RYT::PushHittable(&world, RYT::Sphere(RYT::Vec3(0, 0, 0), 2, earthMat));
-    RYT::OptimizeRaytracingContext(&world);
+  RYT::Lambertian leftMat = {leftTexId};
+  RYT::Lambertian backMat = {backTexId};
+  RYT::Lambertian upperMat = {upperTexId};
+  RYT::Lambertian lowerMat = {lowerTexId};
+  RYT::Lambertian rightMat = {rightTexId};
 
-    RYT::Camera cam;
-    cam.SetSamplesPerPixels(100);
-    cam.SetMaxDepth(50);
-    cam.SetFov(20);
-    cam.SetLookFrom(RYT::Vec3(0, 0, 12));
-    cam.SetLookAt(RYT::Vec3(0, 0, 0));
-    cam.SetDefocusAngle(0);
+  RYT::PushHittable(&world, RYT::Quad(RYT::Vec3(-3, -2, 5), RYT::Vec3(0, 0, -4),
+                                      RYT::Vec3(0, 4, 0), leftMat));
+  RYT::PushHittable(&world, RYT::Quad(RYT::Vec3(-2, -2, 0), RYT::Vec3(4, 0, 0),
+                                      RYT::Vec3(0, 4, 0), backMat));
+  RYT::PushHittable(&world, RYT::Quad(RYT::Vec3(3, -2, 1), RYT::Vec3(0, 0, 4),
+                                      RYT::Vec3(0, 4, 0), rightMat));
+  RYT::PushHittable(&world, RYT::Quad(RYT::Vec3(-2, 3, 1), RYT::Vec3(4, 0, 0),
+                                      RYT::Vec3(0, 0, 4), upperMat));
+  RYT::PushHittable(&world, RYT::Quad(RYT::Vec3(-2, -3, 5), RYT::Vec3(4, 0, 0),
+                                      RYT::Vec3(0, 0, -4), lowerMat));
 
-    cam.Render(&world);
+  RYT::OptimizeRaytracingContext(&world);
+
+  RYT::Camera cam;
+
+  cam.SetSamplesPerPixels(100);
+  cam.SetMaxDepth(50);
+  cam.SetFov(80);
+  cam.SetLookFrom(RYT::Vec3(0, 0, 9));
+  cam.SetLookAt(RYT::Vec3(0, 0, 0));
+  cam.SetDefocusAngle(0);
+
+  cam.Render(&world);
+}
+void Earth() {
+  RYT::RaytracingContext world;
+  RYT::InitializeRaytracingContext(&world, 10, 10, 10);
+  int earthId = RYT::PushImage(&world, "earthmap.jpg");
+
+  RYT::ImageTexture earthImage(earthId);
+  int earthTexId = RYT::PushTexture(&world, RYT::Texture(earthImage));
+
+  RYT::Lambertian earthMat = {earthTexId};
+  RYT::PushHittable(&world, RYT::Sphere(RYT::Vec3(0, 0, 0), 2, earthMat));
+  RYT::OptimizeRaytracingContext(&world);
+
+  RYT::Camera cam;
+  cam.SetSamplesPerPixels(100);
+  cam.SetMaxDepth(50);
+  cam.SetFov(20);
+  cam.SetLookFrom(RYT::Vec3(0, 0, 12));
+  cam.SetLookAt(RYT::Vec3(0, 0, 0));
+  cam.SetDefocusAngle(0);
+
+  cam.Render(&world);
 }
 
-void CheckeredSphereScene()
-{
-    RYT::RaytracingContext world;
-    RYT::InitializeRaytracingContext(&world, 10, 10, 10);
+void CheckeredSphereScene() {
+  RYT::RaytracingContext world;
+  RYT::InitializeRaytracingContext(&world, 10, 10, 10);
 
-    int greenId = RYT::PushTexture(&world, RYT::Texture(RYT::Color(0.1, 0.9, 0.1)));
-    int whiteId = RYT::PushTexture(&world, RYT::Texture(RYT::Color(0.9, 0.9, 0.9)));
-    
-    int checkerId = RYT::PushTexture(&world, RYT::CheckerTexture(0.25, greenId, whiteId));
-    RYT::Lambertian cmat = {checkerId};
-    
+  int greenId =
+      RYT::PushTexture(&world, RYT::Texture(RYT::Color(0.1, 0.9, 0.1)));
+  int whiteId =
+      RYT::PushTexture(&world, RYT::Texture(RYT::Color(0.9, 0.9, 0.9)));
 
-    RYT::PushHittable(&world, RYT::Sphere(RYT::Vec3(0, -10, 0), 10, cmat));
-    RYT::PushHittable(&world, RYT::Sphere(RYT::Vec3(0, 10, 0), 10, cmat));
+  int checkerId =
+      RYT::PushTexture(&world, RYT::CheckerTexture(0.25, greenId, whiteId));
+  RYT::Lambertian cmat = {checkerId};
 
-    RYT::Camera cam;
-    RYT::OptimizeRaytracingContext(&world);
+  RYT::PushHittable(&world, RYT::Sphere(RYT::Vec3(0, -10, 0), 10, cmat));
+  RYT::PushHittable(&world, RYT::Sphere(RYT::Vec3(0, 10, 0), 10, cmat));
 
-    cam.SetSamplesPerPixels(10);
-    cam.SetMaxDepth(5);
-    cam.SetFov(20);
-    cam.SetLookFrom(RYT::Vec3(13, 2, 3));
-    cam.SetLookAt(RYT::Vec3(0, 0, 0));
-    cam.SetDefocusAngle(0);
+  RYT::Camera cam;
+  RYT::OptimizeRaytracingContext(&world);
 
-    cam.Render(&world);
+  cam.SetSamplesPerPixels(10);
+  cam.SetMaxDepth(5);
+  cam.SetFov(20);
+  cam.SetLookFrom(RYT::Vec3(13, 2, 3));
+  cam.SetLookAt(RYT::Vec3(0, 0, 0));
+  cam.SetDefocusAngle(0);
+
+  cam.Render(&world);
 }
 
 void RandomScene() {
@@ -115,7 +161,7 @@ void RandomScene() {
 int main(int argc, char *argv[]) {
 
   auto start = std::chrono::high_resolution_clock::now();
-  Earth();
+  Quads();
 
   auto end = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - start);

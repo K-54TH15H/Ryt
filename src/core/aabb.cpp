@@ -5,19 +5,25 @@ namespace RYT {
 AABB::AABB() : x(Interval::empty), y(Interval::empty), z(Interval::empty) {}
 
 AABB::AABB(const Interval &x, const Interval &y, const Interval &z)
-    : x(x), y(y), z(z) {}
+    : x(x), y(y), z(z) {
+  PadToMins();
+}
 
 // Extremas of the box
 AABB::AABB(const Vec3 &a, const Vec3 &b) {
   x = (a.x <= b.x) ? Interval(a.x, b.x) : Interval(b.x, a.x);
   y = (a.y <= b.y) ? Interval(a.y, b.y) : Interval(b.y, a.y);
   z = (a.z <= b.z) ? Interval(a.z, b.z) : Interval(b.z, a.z);
+
+  PadToMins();
 }
 
 AABB::AABB(const AABB &boxA, const AABB &boxB) {
   x = Interval(boxA.x, boxB.x);
   y = Interval(boxA.y, boxB.y);
   z = Interval(boxA.z, boxB.z);
+
+  PadToMins();
 }
 
 int AABB::LongestAxis() const {
@@ -82,5 +88,15 @@ bool AABB::Hit(const Ray &r, Interval rayT) const {
     return false;
 
   return true;
+}
+
+void AABB::PadToMins() {
+  double delta = 0.0001;
+  if (x.Size() < delta)
+    x = x.Expand(delta);
+  if (y.Size() < delta)
+    y = y.Expand(delta);
+  if (z.Size() < delta)
+    z = z.Expand(delta);
 }
 } // namespace RYT
