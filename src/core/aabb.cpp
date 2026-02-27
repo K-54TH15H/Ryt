@@ -5,7 +5,10 @@ namespace RYT {
 AABB::AABB() : x(Interval::empty), y(Interval::empty), z(Interval::empty) {}
 
 AABB::AABB(const Interval &x, const Interval &y, const Interval &z)
-    : x(x), y(y), z(z) {}
+    : x(x), y(y), z(z) 
+{
+    PadToMins();
+}
 
 // Extremas of the box
 AABB::AABB(const Vec3 &a, const Vec3 &b) {
@@ -82,5 +85,13 @@ bool AABB::Hit(const Ray &r, Interval rayT) const {
     return false;
 
   return true;
+}
+
+void AABB::PadToMins()
+{
+    double delta = 0.0001;
+    if(x.Size() < delta) x = x.Expand(delta);
+    if(y.Size() < delta) y = y.Expand(delta);
+    if(z.Size() < delta) z = z.Expand(delta);
 }
 } // namespace RYT

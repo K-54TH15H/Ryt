@@ -19,6 +19,9 @@ public:
   int LongestAxis() const;
   const Interval &AxisInterval(int n) const;
   bool Hit(const Ray &r, Interval rayT) const;
+
+private:
+  void PadToMins();
 };
 } // namespace RYT
 #endif
