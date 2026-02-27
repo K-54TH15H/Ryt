@@ -10,7 +10,7 @@
 namespace RYT {
 
 // ********** Material ******** //
-enum MaterialType { LAMBERTIAN, METAL, DIELECTRIC };
+enum MaterialType { LAMBERTIAN, METAL, DIELECTRIC, EMMISIVE };
 
 struct Lambertian {
   int textureId;
@@ -25,6 +25,12 @@ struct Dielectric {
   double refractionIndex;
 };
 
+struct Emmisive 
+{
+    int textureId;
+    double strength;
+};
+
 class Material {
 private:
   MaterialType type;
@@ -33,6 +39,7 @@ private:
     Lambertian lambertian;
     Metal metal;
     Dielectric dielectric;
+    Emmisive emmisive;
 
     MemberData() {};
     ~MemberData() {};
@@ -50,11 +57,14 @@ public:
   Material(const Lambertian lambertian);
   Material(const Metal metal);
   Material(const Dielectric dielectric);
+  Material(const Emmisive emmisive);
 
   ~Material();
 
   bool Scatter(const Ray &rIn, const HitRecord &rec, Color &attenuation,
                Ray &scattered) const;
+  
+  Color Emit(HitRecord& rec) const;
 };
 
 } // namespace RYT
