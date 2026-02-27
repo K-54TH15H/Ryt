@@ -60,8 +60,6 @@ public:
   Texture(const CheckerTexture checkerTexture);
   Texture(const ImageTexture imageTexture);
   Texture(const Color color);
-  Texture(const Texture& other);
-  Texture& operator=(const Texture& other);
 
   Color Value(double u, double v, const Vec3 &p,
               const RaytracingContext *context) const;

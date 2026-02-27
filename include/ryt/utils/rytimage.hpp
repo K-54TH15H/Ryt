@@ -12,10 +12,6 @@ class Image
 	Image();
 	Image(const char* fileName);
 	
-	// Copy Constructors
-	Image(const Image& other);
-	Image& operator=(const Image& other);
-	
 	// Destructors
 	~Image();
 

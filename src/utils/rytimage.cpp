@@ -1,4 +1,3 @@
-#include <cstring>
 #include <ryt/utils/rytimage.hpp>
 #include <iostream>
 
@@ -23,59 +22,6 @@ namespace RYT
 	std::cerr << "[ERROR]: Could not find/load image file - " << sFileName << "." << std::endl;
     }
     
-    Image::Image(const Image& other)
-    {
-	imageWidth = other.imageWidth;
-	imageHeight = other.imageHeight;
-	bytesPerScanline = other.bytesPerScanline;
-
-	if(other.bdata)
-	{
-	    size_t size = imageWidth * imageHeight * bytesPerPixel;
-	    bdata = new unsigned char[size];
-	    std::memcpy(bdata, other.bdata, size);
-	}
-	else bdata = nullptr;
-
-	if(other.fdata)
-	{
-	    size_t size = imageWidth * imageHeight * bytesPerPixel * sizeof(float);
-	    fdata = new float[imageWidth * imageHeight * bytesPerPixel];
-	    std::memcpy(fdata, other.fdata, size);
-	}
-	else fdata = nullptr;
-    }
-    
-    Image& Image::operator=(const Image& other)
-    {
-	if(this == &other) return *this;
-
-	delete[] bdata;
-	STBI_FREE(fdata);
-
-	imageWidth = other.imageWidth;
-	imageHeight = other.imageHeight;
-	bytesPerScanline = other.bytesPerScanline;
-	
-	if(other.bdata)
-	{
-	    size_t size = imageWidth * imageHeight * bytesPerPixel;
-	    bdata = new unsigned char[size];
-	    std::memcpy(bdata, other.bdata, size);
-	}
-	else bdata = nullptr;
-
-	if(other.fdata)
-	{
-	    size_t size = imageWidth * imageHeight * bytesPerPixel * sizeof(float);
-	    fdata = new float[imageWidth * imageHeight * bytesPerPixel];
-	    std::memcpy(fdata, other.fdata, size);
-	}
-	else fdata = nullptr;
-
-	return *this;
-    }
-
     Image::~Image()
     {
 	delete[] bdata;

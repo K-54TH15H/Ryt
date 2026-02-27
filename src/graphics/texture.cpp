@@ -75,46 +75,4 @@ Color Texture::Value(double u, double v, const Vec3 &p,
   }
 }
 
-Texture::Texture(const Texture& other) : type(other.type)
-{
-    switch(type)
-    {
-	case SOLID:
-	    new (&data.solidTexture) SolidTexture(other.data.solidTexture);
-	    break;
-	case CHECKER:
-	    new (&data.checkerTexture) CheckerTexture(other.data.checkerTexture);
-	    break;
-	case IMAGE:
-	    new (&data.imageTexture) ImageTexture(other.data.imageTexture);
-	    break;
-	case NULLTEX:
-	    break;
-    }
-}
-
-Texture& Texture::operator=(const Texture& other)
-{
-    if(this == &other) return *this;
-
-    this->~Texture();
-    type = other.type;
-
-    switch(type)
-    {
-	case SOLID:
-	    new (&data.solidTexture) SolidTexture(other.data.solidTexture);
-	    break;
-	case CHECKER:
-	    new (&data.checkerTexture) CheckerTexture(other.data.checkerTexture);
-	    break;
-	case IMAGE:
-	    new (&data.imageTexture) ImageTexture(other.data.imageTexture);
-	    break;
-	case NULLTEX:
-	    break;
-    }
-
-    return *this;
-}
 } // namespace RYT
