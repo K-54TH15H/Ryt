@@ -9,11 +9,10 @@ Hittable::Hittable(Sphere s) {
   bBox = s.boundingBox();
 }
 
-Hittable::Hittable(Quad q)
-{
-    type = QUAD;
-    data.quad = q;
-    bBox = q.BoundingBox();
+Hittable::Hittable(Quad q) {
+  type = QUAD;
+  data.quad = q;
+  bBox = q.BoundingBox();
 }
 
 Hittable::~Hittable() {

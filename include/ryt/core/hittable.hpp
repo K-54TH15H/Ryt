@@ -2,8 +2,8 @@
 #define HITTABLE_HPP
 
 #include <ryt/core/aabb.hpp>
-#include <ryt/graphics/sphere.hpp>
 #include <ryt/graphics/quad.hpp>
+#include <ryt/graphics/sphere.hpp>
 
 namespace RYT {
 // *********** HITTABLE ********** //

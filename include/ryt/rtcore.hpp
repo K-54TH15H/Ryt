@@ -17,9 +17,9 @@
 // 3. Graphics
 #include <ryt/graphics/color.hpp>
 #include <ryt/graphics/material.hpp>
+#include <ryt/graphics/quad.hpp>
 #include <ryt/graphics/sphere.hpp>
 #include <ryt/graphics/texture.hpp>
-#include <ryt/graphics/quad.hpp>
 
 // 4. Utils
 #include <ryt/utils/camera.hpp>
