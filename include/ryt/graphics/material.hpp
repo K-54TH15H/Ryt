@@ -3,6 +3,8 @@
 
 #include <ryt/core/hitrecord.hpp>
 #include <ryt/graphics/color.hpp>
+#include <ryt/graphics/texture.hpp>
+
 #include <ryt/math/ray.hpp>
 
 namespace RYT {
@@ -11,7 +13,7 @@ namespace RYT {
 enum MaterialType { LAMBERTIAN, METAL, DIELECTRIC };
 
 struct Lambertian {
-  Color albedo;
+  int textureId;
 };
 
 struct Metal {

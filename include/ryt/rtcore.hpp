@@ -18,8 +18,10 @@
 #include <ryt/graphics/color.hpp>
 #include <ryt/graphics/material.hpp>
 #include <ryt/graphics/sphere.hpp>
+#include <ryt/graphics/texture.hpp>
 
 // 4. Utils
 #include <ryt/utils/camera.hpp>
+#include <ryt/utils/rytimage.hpp>
 
 #endif
