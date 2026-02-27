@@ -15,12 +15,16 @@ AABB::AABB(const Vec3 &a, const Vec3 &b) {
   x = (a.x <= b.x) ? Interval(a.x, b.x) : Interval(b.x, a.x);
   y = (a.y <= b.y) ? Interval(a.y, b.y) : Interval(b.y, a.y);
   z = (a.z <= b.z) ? Interval(a.z, b.z) : Interval(b.z, a.z);
+
+  PadToMins();
 }
 
 AABB::AABB(const AABB &boxA, const AABB &boxB) {
   x = Interval(boxA.x, boxB.x);
   y = Interval(boxA.y, boxB.y);
   z = Interval(boxA.z, boxB.z);
+
+  PadToMins();
 }
 
 int AABB::LongestAxis() const {

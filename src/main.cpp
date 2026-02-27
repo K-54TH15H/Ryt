@@ -14,9 +14,9 @@ void Quads()
     RYT::InitializeRaytracingContext(&world, 10, 10, 10);
     int leftTexId = RYT::PushTexture(&world, RYT::SolidTexture(RYT::Color(1.0, 0.2, 0.2)));
     int backTexId = RYT::PushTexture(&world, RYT::SolidTexture(RYT::Color(0.2, 1.0, 0.2)));
-    int upperTexId = RYT::PushTexture(&world, RYT::SolidTexture(RYT::Color(0.2, 0.2, 1.0)));
-    int lowerTexId = RYT::PushTexture(&world, RYT::SolidTexture(RYT::Color(0.2, 0.8, 0.8)));
     int rightTexId = RYT::PushTexture(&world, RYT::SolidTexture(RYT::Color(0.2, 0.2, 1.0)));
+    int upperTexId = RYT::PushTexture(&world, RYT::SolidTexture(RYT::Color(1.0, 0.5, 0.0)));
+    int lowerTexId = RYT::PushTexture(&world, RYT::SolidTexture(RYT::Color(0.2, 0.8, 0.8)));
 
     RYT::Lambertian leftMat = { leftTexId };
     RYT::Lambertian backMat= { backTexId };
@@ -26,9 +26,11 @@ void Quads()
 
     RYT::PushHittable(&world, RYT::Quad(RYT::Vec3(-3, -2, 5), RYT::Vec3(0, 0, -4), RYT::Vec3(0, 4, 0), leftMat)); 
     RYT::PushHittable(&world, RYT::Quad(RYT::Vec3(-2, -2, 0), RYT::Vec3(4, 0, 0), RYT::Vec3(0, 4, 0), backMat)); 
-    RYT::PushHittable(&world, RYT::Quad(RYT::Vec3(-3, -2, 1), RYT::Vec3(0, 0, 4), RYT::Vec3(0, 4, 0), rightMat)); 
+    RYT::PushHittable(&world, RYT::Quad(RYT::Vec3(3, -2, 1), RYT::Vec3(0, 0, 4), RYT::Vec3(0, 4, 0), rightMat)); 
     RYT::PushHittable(&world, RYT::Quad(RYT::Vec3(-2, 3, 1), RYT::Vec3(4, 0, 0), RYT::Vec3(0, 0, 4), upperMat)); 
     RYT::PushHittable(&world, RYT::Quad(RYT::Vec3(-2, -3, 5), RYT::Vec3(4, 0, 0), RYT::Vec3(0, 0, -4), lowerMat)); 
+    
+    RYT::OptimizeRaytracingContext(&world);
 
     RYT::Camera cam;
     
