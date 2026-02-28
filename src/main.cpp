@@ -1,13 +1,45 @@
 #include "ryt/core/rtcontext.hpp"
-#include "ryt/graphics/color.hpp"
 #include "ryt/graphics/material.hpp"
-#include "ryt/graphics/quad.hpp"
 #include "ryt/math/vec3.hpp"
 #include "ryt/utils/camera.hpp"
 #include <chrono>
 // #include <cmath>
 #include <ryt/rtcore.hpp>
 
+void SimpleLight()
+{
+    RYT::RaytracingContext world;
+    RYT::InitializeRaytracingContext(&world, 10, 10, 10);
+    
+    int redTexId = RYT::PushTexture(&world, RYT::SolidTexture(RYT::Color(1.0, 0.2, 0.2)));
+    int grayTexId = RYT::PushTexture(&world, RYT::SolidTexture(RYT::Color(0.3, 0.3, 0.3)));
+    
+    RYT::Lambertian grayMat = { grayTexId };
+    RYT::Lambertian redMat = { redTexId };
+
+    RYT::PushHittable(&world, RYT::Sphere(RYT::Vec3(0, -1000, 0), 1000, grayMat));
+    RYT::PushHittable(&world, RYT::Sphere(RYT::Vec3(0, 2, 0), 2, redMat));
+    
+    int whiteTexId = RYT::PushTexture(&world, RYT::SolidTexture(RYT::Color(4, 4, 4)));
+    RYT::Emmisive emmMat = { whiteTexId, 1 };
+    
+    RYT::PushHittable(&world, RYT::Quad(RYT::Vec3(3, 1, -2), RYT::Vec3(2, 0, 0), RYT::Vec3(0, 2, 0), emmMat));
+    RYT::PushHittable(&world, RYT::Sphere(RYT::Vec3(0, 7, 0), 2, emmMat));
+
+    RYT::OptimizeRaytracingContext(&world);
+
+    RYT::Camera cam;
+    
+    cam.SetSamplesPerPixels(100);
+    cam.SetMaxDepth(50);
+    cam.SetBackGroundColor(RYT::Color(0, 0, 0));
+    cam.SetFov(20);
+    cam.SetLookFrom(RYT::Vec3(26, 3, 6));
+    cam.SetLookAt(RYT::Vec3(0, 2, 0));
+
+    cam.SetDefocusAngle(0);
+    cam.Render(&world);
+}
 void Quads() {
   RYT::RaytracingContext world;
   RYT::InitializeRaytracingContext(&world, 10, 10, 10);
@@ -49,7 +81,7 @@ void Quads() {
   cam.SetLookFrom(RYT::Vec3(0, 0, 9));
   cam.SetLookAt(RYT::Vec3(0, 0, 0));
   cam.SetDefocusAngle(0);
-
+  cam.SetBackGroundColor(RYT::Color(1, 1, 1));
   cam.Render(&world);
 }
 void Earth() {
@@ -161,7 +193,7 @@ void RandomScene() {
 int main(int argc, char *argv[]) {
 
   auto start = std::chrono::high_resolution_clock::now();
-  Quads();
+  SimpleLight();
 
   auto end = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - start);

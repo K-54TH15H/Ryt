@@ -1,3 +1,4 @@
+#include "ryt/graphics/color.hpp"
 #include <cmath>
 #include <ryt/utils/camera.hpp>
 
@@ -106,12 +107,15 @@ Color Camera::RayColor(const Ray &r, int depth,
     if (HitWorld(world, currentRay, Interval(0.001, infinity), rec)) {
       Ray scattered;
       Color attenuation;
+      
+      // accumulate emiited light into accumulation
+      accumulatedLight += throughput * rec.mat->Emit(rec);
 
       if (rec.mat->Scatter(currentRay, rec, attenuation, scattered)) {
         throughput = throughput * attenuation;
         currentRay = scattered;
       } else
-        return Color(0, 0, 0);
+        return accumulatedLight;
 
     } else {
       Vec3 unitDirection = UnitVector(currentRay.Direction());
@@ -120,7 +124,7 @@ Color Camera::RayColor(const Ray &r, int depth,
       Color skyColor =
           (1.0 - a) * Color(1.0, 1.0, 1.0) + a * Color(0.5, 0.7, 1.0);
 
-      accumulatedLight = throughput * skyColor;
+      accumulatedLight = throughput * backGround;
 
       return accumulatedLight;
     }
@@ -143,4 +147,6 @@ void Camera::SetMaxDepth(int n) { maxDepth = n; }
 void Camera::SetDefocusAngle(double degree) { defocusAngle = degree; }
 
 void Camera::SetFocusDistance(double distance) { focusDistance = distance; }
+
+void Camera::SetBackGroundColor(Color color) { backGround = color; }
 } // namespace RYT
