@@ -41,7 +41,9 @@ private:
   int samplesPerPixels = 10; // Count of random samples per pixels
   double pixelSamplesScale;
   int maxDepth = 10; // Maximum no of Ray bounces into scene
-
+  int sqrtSpp; // Square root of number of samples per pixel
+  double recipSqrtSpp; // 1 / sqrtSpp
+		       
   double vFov = 90; // vertical view angle - FOV | default : [90]
 
   Color backGround; // background color if no ray hits
@@ -55,10 +57,11 @@ private:
   Vec3 SampleSquare() const;
 
   // Constructs a camera Ray from origin to a randomly sampled pt i, j
-  Ray GetRay(int i, int j) const;
+  Ray GetRay(int i, int j, int si, int sj) const;
   Color RayColor(const Ray &r, int depth, const RaytracingContext *world) const;
 
   Vec3 DefocusDiskSample() const;
+  Vec3 SampleSquareStratified(int si, int sj) const;
 };
 } // namespace RYT
 

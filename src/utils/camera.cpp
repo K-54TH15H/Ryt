@@ -1,4 +1,5 @@
 #include "ryt/graphics/color.hpp"
+#include "ryt/math/common.hpp"
 #include <cmath>
 #include <ryt/utils/camera.hpp>
 
@@ -19,9 +20,12 @@ void Camera::Render(const RaytracingContext *world) {
     for (int j = 0; j < imgW; j++) {
       Color pixelColor(0, 0, 0);
 
-      for (int sample = 0; sample < samplesPerPixels; sample++) {
-        Ray r = GetRay(j, i);
-        pixelColor += RayColor(r, maxDepth, world);
+      for (int sj = 0; sj < sqrtSpp; sj++) {
+	  for(int si = 0; si < sqrtSpp; si++)
+	  {
+	    Ray r = GetRay(j, i, si, sj);
+	    pixelColor += RayColor(r, maxDepth, world);
+	  }
       }
       WriteColor(std::cout, pixelSamplesScale * pixelColor);
     }
@@ -40,7 +44,9 @@ void Camera::Initialize() {
   // Set up Look From and Look at by default on Initialisation
   center = lookFrom;
 
-  pixelSamplesScale = 1.0 / samplesPerPixels;
+  sqrtSpp = (int) std::sqrt(samplesPerPixels);
+  pixelSamplesScale = 1.0 / (sqrtSpp * sqrtSpp);
+  recipSqrtSpp = 1.0 / sqrtSpp;
 
   double theta = DegreesToRadians(vFov);
   double h = std::tan(theta / 2);
@@ -82,8 +88,8 @@ Vec3 Camera::DefocusDiskSample() const {
 }
 
 // Constructs a camera Ray from origin to a randomly sampled pt i, j
-Ray Camera::GetRay(int i, int j) const {
-  Vec3 offset = SampleSquare();
+Ray Camera::GetRay(int i, int j, int si, int sj) const {
+  Vec3 offset = SampleSquareStratified(si, sj);
   Vec3 pixelSample = pixel00Loc + ((i + offset.x) * pixelDeltaU) +
                      ((j + offset.y) * pixelDeltaV);
 
@@ -131,6 +137,14 @@ Color Camera::RayColor(const Ray &r, int depth,
   }
   // Ray is absorbed(trapped) [returns black]
   return Color(0, 0, 0);
+}
+
+Vec3 Camera::SampleSquareStratified(int si, int sj) const
+{
+    double px = ((si + RandomDouble()) * recipSqrtSpp) - 0.5;
+    double py = ((sj + RandomDouble()) * recipSqrtSpp) - 0.5;
+
+    return Vec3(px, py, 0);
 }
 
 // Setters
