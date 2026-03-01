@@ -40,10 +40,10 @@ private:
 
   int samplesPerPixels = 10; // Count of random samples per pixels
   double pixelSamplesScale;
-  int maxDepth = 10; // Maximum no of Ray bounces into scene
-  int sqrtSpp; // Square root of number of samples per pixel
+  int maxDepth = 10;   // Maximum no of Ray bounces into scene
+  int sqrtSpp;         // Square root of number of samples per pixel
   double recipSqrtSpp; // 1 / sqrtSpp
-		       
+
   double vFov = 90; // vertical view angle - FOV | default : [90]
 
   Color backGround; // background color if no ray hits

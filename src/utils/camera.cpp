@@ -21,11 +21,10 @@ void Camera::Render(const RaytracingContext *world) {
       Color pixelColor(0, 0, 0);
 
       for (int sj = 0; sj < sqrtSpp; sj++) {
-	  for(int si = 0; si < sqrtSpp; si++)
-	  {
-	    Ray r = GetRay(j, i, si, sj);
-	    pixelColor += RayColor(r, maxDepth, world);
-	  }
+        for (int si = 0; si < sqrtSpp; si++) {
+          Ray r = GetRay(j, i, si, sj);
+          pixelColor += RayColor(r, maxDepth, world);
+        }
       }
       WriteColor(std::cout, pixelSamplesScale * pixelColor);
     }
@@ -44,7 +43,7 @@ void Camera::Initialize() {
   // Set up Look From and Look at by default on Initialisation
   center = lookFrom;
 
-  sqrtSpp = (int) std::sqrt(samplesPerPixels);
+  sqrtSpp = (int)std::sqrt(samplesPerPixels);
   pixelSamplesScale = 1.0 / (sqrtSpp * sqrtSpp);
   recipSqrtSpp = 1.0 / sqrtSpp;
 
@@ -139,12 +138,11 @@ Color Camera::RayColor(const Ray &r, int depth,
   return Color(0, 0, 0);
 }
 
-Vec3 Camera::SampleSquareStratified(int si, int sj) const
-{
-    double px = ((si + RandomDouble()) * recipSqrtSpp) - 0.5;
-    double py = ((sj + RandomDouble()) * recipSqrtSpp) - 0.5;
+Vec3 Camera::SampleSquareStratified(int si, int sj) const {
+  double px = ((si + RandomDouble()) * recipSqrtSpp) - 0.5;
+  double py = ((sj + RandomDouble()) * recipSqrtSpp) - 0.5;
 
-    return Vec3(px, py, 0);
+  return Vec3(px, py, 0);
 }
 
 // Setters
