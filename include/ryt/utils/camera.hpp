@@ -21,6 +21,7 @@ public:
   void SetMaxDepth(int n);
   void SetDefocusAngle(double degree);
   void SetFocusDistance(double distance);
+  void SetBackGroundColor(Color color);
 
 private:
   double aspectRatio; // Ratio of image width to height
@@ -42,6 +43,8 @@ private:
   int maxDepth = 10; // Maximum no of Ray bounces into scene
 
   double vFov = 90; // vertical view angle - FOV | default : [90]
+
+  Color backGround; // background color if no ray hits
 
   double defocusAngle = 0;
   double focusDistance = 10;

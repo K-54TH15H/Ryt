@@ -1,3 +1,4 @@
+#include "ryt/core/hitrecord.hpp"
 #include <cmath>
 
 #include <ryt/core/rtcontext.hpp>
@@ -75,6 +76,10 @@ Material::Material(const Dielectric dielectric) : type(DIELECTRIC) {
   data.dielectric = dielectric;
 }
 
+Material::Material(const Emmisive emmisive) : type(EMMISIVE) {
+  data.emmisive = emmisive;
+}
+
 Material::~Material() {
   switch (type) {
   case LAMBERTIAN:
@@ -87,6 +92,10 @@ Material::~Material() {
 
   case DIELECTRIC:
     (data.dielectric).~Dielectric();
+    break;
+
+  case EMMISIVE:
+    (data.emmisive).~Emmisive();
     break;
   }
 }
@@ -105,6 +114,17 @@ bool Material::Scatter(const Ray &rIn, const HitRecord &rec, Color &attenuation,
 
   default:
     return false;
+  }
+}
+
+Color Material::Emit(HitRecord &rec) const {
+  switch (type) {
+  case EMMISIVE:
+    return rec.context->textures[data.emmisive.textureId].Value(
+        rec.u, rec.v, rec.p, rec.context);
+
+  default:
+    return Color(0, 0, 0);
   }
 }
 } // namespace RYT
