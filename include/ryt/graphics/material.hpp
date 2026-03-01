@@ -25,10 +25,9 @@ struct Dielectric {
   double refractionIndex;
 };
 
-struct Emmisive 
-{
-    int textureId;
-    double strength;
+struct Emmisive {
+  int textureId;
+  double strength;
 };
 
 class Material {
@@ -63,8 +62,8 @@ public:
 
   bool Scatter(const Ray &rIn, const HitRecord &rec, Color &attenuation,
                Ray &scattered) const;
-  
-  Color Emit(HitRecord& rec) const;
+
+  Color Emit(HitRecord &rec) const;
 };
 
 } // namespace RYT

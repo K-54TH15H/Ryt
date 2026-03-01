@@ -76,7 +76,9 @@ Material::Material(const Dielectric dielectric) : type(DIELECTRIC) {
   data.dielectric = dielectric;
 }
 
-Material::Material(const Emmisive emmisive) : type(EMMISIVE) { data.emmisive = emmisive; }
+Material::Material(const Emmisive emmisive) : type(EMMISIVE) {
+  data.emmisive = emmisive;
+}
 
 Material::~Material() {
   switch (type) {
@@ -115,15 +117,14 @@ bool Material::Scatter(const Ray &rIn, const HitRecord &rec, Color &attenuation,
   }
 }
 
-Color Material::Emit(HitRecord& rec) const
-{
-    switch(type)
-    {
-	case EMMISIVE:
-	    return rec.context->textures[data.emmisive.textureId].Value(rec.u, rec.v, rec.p, rec.context);
+Color Material::Emit(HitRecord &rec) const {
+  switch (type) {
+  case EMMISIVE:
+    return rec.context->textures[data.emmisive.textureId].Value(
+        rec.u, rec.v, rec.p, rec.context);
 
-	default:
-	    return Color(0, 0, 0);
-    }
+  default:
+    return Color(0, 0, 0);
+  }
 }
 } // namespace RYT

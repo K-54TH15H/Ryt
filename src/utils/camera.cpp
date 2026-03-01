@@ -107,7 +107,7 @@ Color Camera::RayColor(const Ray &r, int depth,
     if (HitWorld(world, currentRay, Interval(0.001, infinity), rec)) {
       Ray scattered;
       Color attenuation;
-      
+
       // accumulate emiited light into accumulation
       accumulatedLight += throughput * rec.mat->Emit(rec);
 
