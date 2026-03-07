@@ -1,9 +1,9 @@
-#include "ryt/core/hitrecord.hpp"
 #include <cmath>
 
 #include <ryt/core/rtcontext.hpp>
 #include <ryt/graphics/material.hpp>
 #include <ryt/math/common.hpp>
+#include "ryt/core/hitrecord.hpp"
 
 namespace RYT {
 static double Reflectance(double cosine, double refractionIndex) {
