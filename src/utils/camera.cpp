@@ -1,15 +1,14 @@
 #include "ryt/graphics/color.hpp"
 #include "ryt/math/common.hpp"
+#include <ryt/utils/framebuffer.hpp>
 #include <cmath>
 #include <ryt/utils/camera.hpp>
 
 namespace RYT {
 void Camera::Render(const RaytracingContext *world) {
   Initialize();
-
-  std::cout << "P3" << std::endl
-            << imgW << ' ' << imgH << std::endl
-            << 255 << std::endl;
+  
+  FrameBuffer frameBuffer(imgW, imgH);
 
   for (int i = 0; i < imgH; i++) {
     // clear up line
@@ -26,9 +25,11 @@ void Camera::Render(const RaytracingContext *world) {
           pixelColor += RayColor(r, maxDepth, world);
         }
       }
-      WriteColor(std::cout, pixelSamplesScale * pixelColor);
+      frameBuffer.WriteToBuffer(pixelSamplesScale * pixelColor, i, j);
+      // WriteColor(std::cout, pixelSamplesScale * pixelColor);
     }
   }
+  frameBuffer.WriteToPPM(std::cout);
   std::clog << std::endl << "Render Complete" << std::endl;
 }
 
