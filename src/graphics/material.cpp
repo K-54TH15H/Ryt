@@ -1,4 +1,4 @@
-#include "ryt/core/hitrecord.hpp"
+#include <ryt/core/hitrecord.hpp>
 #include <cmath>
 
 #include <ryt/core/rtcontext.hpp>
@@ -66,6 +66,8 @@ bool Material::ScatterDielectric(const Ray &rIn, const HitRecord &rec,
   return true;
 }
 
+Material::Material() : type(NULLMAT) {}
+
 Material::Material(const Lambertian lambertian) : type(LAMBERTIAN) {
   data.lambertian = lambertian;
 }
@@ -96,6 +98,9 @@ Material::~Material() {
 
   case EMMISIVE:
     (data.emmisive).~Emmisive();
+    break;
+
+  default:
     break;
   }
 }

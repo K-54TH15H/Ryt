@@ -10,7 +10,7 @@
 namespace RYT {
 
 // ********** Material ******** //
-enum MaterialType { LAMBERTIAN, METAL, DIELECTRIC, EMMISIVE };
+enum MaterialType { LAMBERTIAN, METAL, DIELECTRIC, EMMISIVE, NULLMAT };
 
 struct Lambertian {
   int textureId;
@@ -53,6 +53,7 @@ private:
 
 public:
   // Constructors
+  Material();
   Material(const Lambertian lambertian);
   Material(const Metal metal);
   Material(const Dielectric dielectric);

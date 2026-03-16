@@ -5,17 +5,17 @@
 
 namespace RYT {
 
-Sphere::Sphere(const Vec3 &staticCenter, double radius, Material mat)
+Sphere::Sphere(const Vec3 &staticCenter, double radius, int materialId)
     : center(staticCenter, Vec3(0, 0, 0)), radius(std::fmax(0, radius)),
-      mat(mat) {
+      materialId(materialId) {
   Vec3 rVec = Vec3(radius, radius, radius);
   bBox = AABB(staticCenter - rVec, staticCenter + rVec);
 }
 
 Sphere::Sphere(const Vec3 &center1, const Vec3 &center2, double radius,
-               Material mat)
+               int materialId)
     : center(center1, center2 - center1), radius(std::fmax(0, radius)),
-      mat(mat) {
+      materialId(materialId) {
   Vec3 rVec = Vec3(radius, radius, radius);
   AABB bBoxA(center.At(0) - rVec, center.At(0) + rVec);
   AABB bBoxB(center.At(1) - rVec, center.At(1) + rVec);
@@ -55,7 +55,7 @@ bool Sphere::Hit(const Ray &r, Interval t, HitRecord &rec) {
   rec.SetFaceNormal(r, outward_normal);
   GetSphereUV(outward_normal, rec);
 
-  rec.mat = &mat;
+  rec.materialId = materialId;
 
   return true;
 }
