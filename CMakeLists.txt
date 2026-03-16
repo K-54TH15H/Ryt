@@ -10,5 +10,9 @@ include_directories(dependencies)
 
 file(GLOB_RECURSE source_files src/*.cpp)
 
+# OpenMP 
+find_package(OpenMP)
+target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_CXX)
+
 target_sources(${PROJECT_NAME} PRIVATE ${source_files})
 

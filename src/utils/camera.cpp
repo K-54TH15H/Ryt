@@ -1,20 +1,26 @@
-#include "ryt/graphics/color.hpp"
-#include "ryt/math/common.hpp"
+#include <ryt/math/common.hpp>
 #include <ryt/utils/framebuffer.hpp>
-#include <cmath>
 #include <ryt/utils/camera.hpp>
+
+#include <cmath>
+#include <omp.h>
 
 namespace RYT {
 void Camera::Render(const RaytracingContext *world) {
   Initialize();
   
   FrameBuffer frameBuffer(imgW, imgH);
-
+  
+  #pragma omp parallel for schedule(dynamic, 1)
   for (int i = 0; i < imgH; i++) {
-    // clear up line
-    std::clog << '\r' << std::string(25, ' ') << '\r';
-    // write progress
-    std::clog << "Progress : " << ((((double)i) / (imgH - 1)) * 100) << '%';
+
+    if(omp_get_thread_num() == 0)
+    {
+	// clear up line
+	std::clog << '\r' << std::string(25, ' ') << '\r';
+	// write progress
+	std::clog << "Progress : " << ((((double)i) / (imgH - 1)) * 100) << '%';
+    }
 
     for (int j = 0; j < imgW; j++) {
       Color pixelColor(0, 0, 0);
