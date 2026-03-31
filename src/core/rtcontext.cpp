@@ -41,7 +41,9 @@ void OptimizeRaytracingContext(RaytracingContext *context) {
 void DestroyRaytracingContext(RaytracingContext *context) {
   delete[] context->hittables;
   delete[] context->bvhNodes;
+  delete[] context->materials;
   delete[] context->textures;
+  delete[] context->images;
 
   context->hittables = nullptr;
   context->bvhNodes = nullptr;
@@ -53,8 +55,14 @@ void DestroyRaytracingContext(RaytracingContext *context) {
   context->bvhNodeCapacity = 0;
   context->bvhRootIndex = -1;
 
+  context->materialSize = 0;
+  context->materialCapacity = 0;
+
   context->textureCapacity = 0;
   context->textureSize = 0;
+    
+  context->imageSize = 0;
+  context->imageCapacity = 0;
 
   // Destroys AABB by replacing  it with empty bounding box
   context->bBox = AABB();

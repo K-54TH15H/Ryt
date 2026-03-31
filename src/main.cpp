@@ -61,8 +61,8 @@ void CornellBox() {
   RYT::OptimizeRaytracingContext(&world);
 
   RYT::Camera cam;
-
-  cam.SetSamplesPerPixels(250);
+    
+  cam.SetSamplesPerPixels(500);
   cam.SetMaxDepth(10);
   cam.SetBackGroundColor(RYT::Color(0, 0, 0));
   cam.SetFov(40);
@@ -71,6 +71,8 @@ void CornellBox() {
 
   cam.SetDefocusAngle(0);
   cam.Render(&world);
+
+  RYT::DestroyRaytracingContext(&world);
 }
 
 int main(int argc, char *argv[]) {
