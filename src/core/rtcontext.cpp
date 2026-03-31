@@ -4,7 +4,7 @@
 
 namespace RYT {
 // Context functions
-void InitializeRaytracingContext(RaytracingContext *context, size_t capacity,
+void InitializeRaytracingContext(RaytracingContext *context, size_t capacity, size_t materialCapacity,
                                  size_t textureCapacity, size_t imageCapacity) {
   context->hittableCapacity = capacity;
   context->hittableSize = 0;
@@ -17,6 +17,11 @@ void InitializeRaytracingContext(RaytracingContext *context, size_t capacity,
   context->bvhNodeCapacity = 2 * capacity;
   context->bvhNodeSize = 0;
   context->bvhRootIndex = -1;
+    
+  // Materials
+  context->materialCapacity = materialCapacity;
+  context->materials = new Material[materialCapacity];
+  context->materialSize = 0;
 
   // Textures
   context->textureCapacity = textureCapacity;
@@ -36,7 +41,9 @@ void OptimizeRaytracingContext(RaytracingContext *context) {
 void DestroyRaytracingContext(RaytracingContext *context) {
   delete[] context->hittables;
   delete[] context->bvhNodes;
+  delete[] context->materials;
   delete[] context->textures;
+  delete[] context->images;
 
   context->hittables = nullptr;
   context->bvhNodes = nullptr;
@@ -48,8 +55,14 @@ void DestroyRaytracingContext(RaytracingContext *context) {
   context->bvhNodeCapacity = 0;
   context->bvhRootIndex = -1;
 
+  context->materialSize = 0;
+  context->materialCapacity = 0;
+
   context->textureCapacity = 0;
   context->textureSize = 0;
+    
+  context->imageSize = 0;
+  context->imageCapacity = 0;
 
   // Destroys AABB by replacing  it with empty bounding box
   context->bBox = AABB();
@@ -63,6 +76,16 @@ Hittable *PushHittable(RaytracingContext *context, Hittable hittable) {
 
   context->bBox = AABB(context->bBox, hittable.bBox);
   return &(context->hittables[context->hittableSize++]);
+}
+
+int PushMaterial(RaytracingContext* context, Material material)
+{
+    if(context->materialSize >= context->materialCapacity) return -1;
+
+    int materialId = (int) context->materialSize++;
+    context->materials[materialId] = material;
+
+    return materialId;
 }
 
 int PushTexture(RaytracingContext *context, Texture texture) {

@@ -107,7 +107,7 @@ Ray Camera::GetRay(int i, int j, int si, int sj) const {
 }
 
 Color Camera::RayColor(const Ray &r, int depth,
-                       const RaytracingContext *world) const {
+                       const RaytracingContext *context) const {
   Ray currentRay = r;
 
   Color accumulatedLight(0, 0, 0);
@@ -116,14 +116,14 @@ Color Camera::RayColor(const Ray &r, int depth,
   for (int i = 0; i < maxDepth; i++) {
     HitRecord rec;
 
-    if (HitWorld(world, currentRay, Interval(0.001, infinity), rec)) {
+    if (HitWorld(context, currentRay, Interval(0.001, infinity), rec)) {
       Ray scattered;
       Color attenuation;
 
       // accumulate emiited light into accumulation
-      accumulatedLight += throughput * rec.mat->Emit(rec);
+      accumulatedLight += throughput * context->materials[rec.materialId].Emit(rec);
 
-      if (rec.mat->Scatter(currentRay, rec, attenuation, scattered)) {
+      if (context->materials[rec.materialId].Scatter(currentRay, rec, attenuation, scattered)) {
         throughput = throughput * attenuation;
         currentRay = scattered;
       } else

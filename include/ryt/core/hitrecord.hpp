@@ -5,14 +5,13 @@
 
 namespace RYT {
 // ********** HitRecord ********** //
-class Material;          // Forward Declarations
 class RaytracingContext; // Forward Declarations
 
 class HitRecord {
 public:
   Vec3 p;
   Vec3 normal;
-  Material *mat; // This Doesn't Own the Material just points to it.
+  int materialId; 
   double t;
   bool frontFace;
 

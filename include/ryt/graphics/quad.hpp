@@ -8,7 +8,7 @@
 namespace RYT {
 class Quad {
 public:
-  Quad(const Vec3 &q, const Vec3 &u, const Vec3 &v, Material mat);
+  Quad(const Vec3 &q, const Vec3 &u, const Vec3 &v, int materialId);
   void SetBoundingBox();
   AABB BoundingBox() const;
   bool Hit(const Ray &r, Interval rayT, HitRecord &rec);
@@ -21,7 +21,7 @@ private:
   Vec3 w;
 
   double D;
-  Material mat;
+  int materialId;
   AABB bBox;
 
   bool IsInterior(double alpha, double beta, HitRecord &rec) const;

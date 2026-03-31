@@ -4,8 +4,8 @@
 #include <ryt/math/vec3.hpp>
 
 namespace RYT {
-Quad::Quad(const Vec3 &q, const Vec3 &u, const Vec3 &v, Material mat)
-    : Q(q), u(u), v(v), mat(mat) {
+Quad::Quad(const Vec3 &q, const Vec3 &u, const Vec3 &v, int materialId)
+    : Q(q), u(u), v(v), materialId(materialId) {
   Vec3 n = Cross(u, v);
   normal = UnitVector(n);
   D = Dot(normal, Q);
@@ -47,7 +47,7 @@ bool Quad::Hit(const Ray &r, Interval rayT, HitRecord &rec) {
 
   rec.t = t;
   rec.p = intersection;
-  rec.mat = &mat;
+  rec.materialId = materialId;
   rec.SetFaceNormal(r, normal);
 
   return true;

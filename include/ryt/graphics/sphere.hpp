@@ -12,14 +12,14 @@ class Sphere {
 private:
   Ray center;
   double radius;
-  Material mat;
+  int materialId;
   AABB bBox;
 
 public:
   // Static Sphere Constructor
-  Sphere(const Vec3 &staticCenter, double radius, Material mat);
+  Sphere(const Vec3 &staticCenter, double radius, int materialId);
   // Moving Sphere Constructor
-  Sphere(const Vec3 &center1, const Vec3 &center2, double radius, Material mat);
+  Sphere(const Vec3 &center1, const Vec3 &center2, double radius, int materialId);
 
   bool Hit(const Ray &r, Interval t, HitRecord &rec);
 
