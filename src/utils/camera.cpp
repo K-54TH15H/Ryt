@@ -11,17 +11,8 @@ void Camera::Render(const RaytracingContext *world) {
   
   FrameBuffer frameBuffer(imgW, imgH);
   
-  #pragma omp parallel for schedule(dynamic, 1)
+  #pragma omp parallel for collapse(2) schedule(guided)
   for (int i = 0; i < imgH; i++) {
-
-    if(omp_get_thread_num() == 0)
-    {
-	// clear up line
-	std::clog << '\r' << std::string(25, ' ') << '\r';
-	// write progress
-	std::clog << "Progress : " << ((((double)i) / (imgH - 1)) * 100) << '%';
-    }
-
     for (int j = 0; j < imgW; j++) {
       Color pixelColor(0, 0, 0);
 
