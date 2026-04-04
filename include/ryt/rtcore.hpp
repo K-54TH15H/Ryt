@@ -13,6 +13,7 @@
 #include <ryt/core/hitrecord.hpp>
 #include <ryt/core/hittable.hpp>
 #include <ryt/core/rtcontext.hpp>
+#include <ryt/core/renderer.hpp>
 
 // 3. Graphics
 #include <ryt/graphics/color.hpp>

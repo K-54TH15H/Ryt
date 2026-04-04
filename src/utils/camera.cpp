@@ -3,33 +3,8 @@
 #include <ryt/utils/framebuffer.hpp>
 
 #include <cmath>
-#include <omp.h>
 
 namespace RYT {
-void Camera::Render(const RaytracingContext *world) {
-  Initialize();
-
-  FrameBuffer frameBuffer(imgW, imgH);
-
-#pragma omp parallel for collapse(2) schedule(guided)
-  for (int i = 0; i < imgH; i++) {
-    for (int j = 0; j < imgW; j++) {
-      Color pixelColor(0, 0, 0);
-
-      for (int sj = 0; sj < sqrtSpp; sj++) {
-        for (int si = 0; si < sqrtSpp; si++) {
-          Ray r = GetRay(j, i, si, sj);
-          pixelColor += RayColor(r, maxDepth, world);
-        }
-      }
-      frameBuffer.WriteToBuffer(pixelSamplesScale * pixelColor, i, j);
-      // WriteColor(std::cout, pixelSamplesScale * pixelColor);
-    }
-  }
-  frameBuffer.WriteToPPM(std::cout);
-  std::clog << std::endl << "Render Complete" << std::endl;
-}
-
 void Camera::Initialize() {
   aspectRatio = 16.0 / 9.0;
   imgW = 1440;

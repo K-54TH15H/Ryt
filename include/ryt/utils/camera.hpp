@@ -11,8 +11,7 @@ namespace RYT {
 // ********** Camera ********** //
 class Camera {
 public:
-  void Render(const RaytracingContext *world);
-
+    
   // Setters
   void SetLookFrom(Vec3 location);
   void SetLookAt(Vec3 location);
@@ -22,6 +21,9 @@ public:
   void SetDefocusAngle(double degree);
   void SetFocusDistance(double distance);
   void SetBackGroundColor(Color color);
+    
+  // Friend class declaration for renderer
+  friend class Renderer;
 
 private:
   double aspectRatio; // Ratio of image width to height
