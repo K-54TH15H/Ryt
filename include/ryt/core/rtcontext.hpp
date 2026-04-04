@@ -19,9 +19,9 @@ struct RaytracingContext {
   size_t bvhNodeCapacity;
 
   int bvhRootIndex;
-    
+
   // Materials
-  Material* materials;
+  Material *materials;
   size_t materialSize;
   size_t materialCapacity;
 
@@ -40,14 +40,15 @@ struct RaytracingContext {
 };
 
 // Context functions
-void InitializeRaytracingContext(RaytracingContext *context, size_t capacity, size_t materialCapacity, 
+void InitializeRaytracingContext(RaytracingContext *context, size_t capacity,
+                                 size_t materialCapacity,
                                  size_t textureCapacity, size_t imageCapacity);
 void OptimizeRaytracingContext(RaytracingContext *context);
 void DestroyRaytracingContext(RaytracingContext *context);
 
 Hittable *PushHittable(RaytracingContext *context, Hittable hittable);
 
-int PushMaterial(RaytracingContext* context, Material material);
+int PushMaterial(RaytracingContext *context, Material material);
 int PushTexture(RaytracingContext *context, Texture texture);
 int PushImage(RaytracingContext *context, const char *cFileName);
 

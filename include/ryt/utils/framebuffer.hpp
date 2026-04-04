@@ -3,31 +3,29 @@
 
 #include <ryt/graphics/color.hpp>
 
-namespace RYT
-{
-    class FrameBuffer
-    {
-	private:
-	    // The Main Buffer
-	    Color* buffer;
-	    
-	    // Properties of the buffer
-	    size_t imgW;
-	    size_t imgH;
-	    size_t size;
+namespace RYT {
+class FrameBuffer {
+private:
+  // The Main Buffer
+  Color *buffer;
 
-	public:
-	    // Constructors
-	    FrameBuffer(const int imgW, const int imgH);
+  // Properties of the buffer
+  size_t imgW;
+  size_t imgH;
+  size_t size;
 
-	    // Destructor
-	    ~FrameBuffer();
+public:
+  // Constructors
+  FrameBuffer(const int imgW, const int imgH);
 
-	    // Write to buffer
-	    void WriteToBuffer(Color color, const int i, const int j);
+  // Destructor
+  ~FrameBuffer();
 
-	    // Write to output stream in ppm format
-	    void WriteToPPM(std::ostream& outputStream);
-    };
-}
+  // Write to buffer
+  void WriteToBuffer(Color color, const int i, const int j);
+
+  // Write to output stream in ppm format
+  void WriteToPPM(std::ostream &outputStream);
+};
+} // namespace RYT
 #endif

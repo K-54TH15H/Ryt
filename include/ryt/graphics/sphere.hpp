@@ -19,7 +19,8 @@ public:
   // Static Sphere Constructor
   Sphere(const Vec3 &staticCenter, double radius, int materialId);
   // Moving Sphere Constructor
-  Sphere(const Vec3 &center1, const Vec3 &center2, double radius, int materialId);
+  Sphere(const Vec3 &center1, const Vec3 &center2, double radius,
+         int materialId);
 
   bool Hit(const Ray &r, Interval t, HitRecord &rec);
 

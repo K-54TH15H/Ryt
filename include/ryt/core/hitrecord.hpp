@@ -11,7 +11,7 @@ class HitRecord {
 public:
   Vec3 p;
   Vec3 normal;
-  int materialId; 
+  int materialId;
   double t;
   bool frontFace;
 
