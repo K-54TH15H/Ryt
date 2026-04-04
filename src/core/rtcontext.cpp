@@ -4,7 +4,8 @@
 
 namespace RYT {
 // Context functions
-void InitializeRaytracingContext(RaytracingContext *context, size_t capacity, size_t materialCapacity,
+void InitializeRaytracingContext(RaytracingContext *context, size_t capacity,
+                                 size_t materialCapacity,
                                  size_t textureCapacity, size_t imageCapacity) {
   context->hittableCapacity = capacity;
   context->hittableSize = 0;
@@ -17,7 +18,7 @@ void InitializeRaytracingContext(RaytracingContext *context, size_t capacity, si
   context->bvhNodeCapacity = 2 * capacity;
   context->bvhNodeSize = 0;
   context->bvhRootIndex = -1;
-    
+
   // Materials
   context->materialCapacity = materialCapacity;
   context->materials = new Material[materialCapacity];
@@ -60,7 +61,7 @@ void DestroyRaytracingContext(RaytracingContext *context) {
 
   context->textureCapacity = 0;
   context->textureSize = 0;
-    
+
   context->imageSize = 0;
   context->imageCapacity = 0;
 
@@ -78,14 +79,14 @@ Hittable *PushHittable(RaytracingContext *context, Hittable hittable) {
   return &(context->hittables[context->hittableSize++]);
 }
 
-int PushMaterial(RaytracingContext* context, Material material)
-{
-    if(context->materialSize >= context->materialCapacity) return -1;
+int PushMaterial(RaytracingContext *context, Material material) {
+  if (context->materialSize >= context->materialCapacity)
+    return -1;
 
-    int materialId = (int) context->materialSize++;
-    context->materials[materialId] = material;
+  int materialId = (int)context->materialSize++;
+  context->materials[materialId] = material;
 
-    return materialId;
+  return materialId;
 }
 
 int PushTexture(RaytracingContext *context, Texture texture) {

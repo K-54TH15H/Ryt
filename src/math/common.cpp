@@ -4,12 +4,12 @@
 namespace RYT {
 double RandomDouble() {
   // returns radom in [0, 1)
-    
+
   static thread_local std::mt19937 generator;
   std::uniform_real_distribution<double> distribution(0, 1);
   return distribution(generator);
 
-  // * Not Thread Safe * 
+  // * Not Thread Safe *
   // return std::rand() / (RAND_MAX + 1.0);
 }
 

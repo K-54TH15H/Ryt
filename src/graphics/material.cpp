@@ -1,5 +1,5 @@
-#include <ryt/core/hitrecord.hpp>
 #include <cmath>
+#include <ryt/core/hitrecord.hpp>
 
 #include <ryt/core/rtcontext.hpp>
 #include <ryt/graphics/material.hpp>

@@ -1,6 +1,6 @@
 #include <ryt/math/common.hpp>
-#include <ryt/utils/framebuffer.hpp>
 #include <ryt/utils/camera.hpp>
+#include <ryt/utils/framebuffer.hpp>
 
 #include <cmath>
 #include <omp.h>
@@ -8,10 +8,10 @@
 namespace RYT {
 void Camera::Render(const RaytracingContext *world) {
   Initialize();
-  
+
   FrameBuffer frameBuffer(imgW, imgH);
-  
-  #pragma omp parallel for collapse(2) schedule(guided)
+
+#pragma omp parallel for collapse(2) schedule(guided)
   for (int i = 0; i < imgH; i++) {
     for (int j = 0; j < imgW; j++) {
       Color pixelColor(0, 0, 0);
@@ -112,9 +112,11 @@ Color Camera::RayColor(const Ray &r, int depth,
       Color attenuation;
 
       // accumulate emiited light into accumulation
-      accumulatedLight += throughput * context->materials[rec.materialId].Emit(rec);
+      accumulatedLight +=
+          throughput * context->materials[rec.materialId].Emit(rec);
 
-      if (context->materials[rec.materialId].Scatter(currentRay, rec, attenuation, scattered)) {
+      if (context->materials[rec.materialId].Scatter(currentRay, rec,
+                                                     attenuation, scattered)) {
         throughput = throughput * attenuation;
         currentRay = scattered;
       } else

@@ -33,7 +33,7 @@ void CornellBox() {
   int lightMatId = RYT::PushMaterial(&world, lightMat);
 
   RYT::Metal glassMat = {RYT::Color(1.0, 1.0, 1.0), 0.0};
-    
+
   int glassMatId = RYT::PushMaterial(&world, glassMat);
 
   RYT::PushHittable(&world,
@@ -61,7 +61,7 @@ void CornellBox() {
   RYT::OptimizeRaytracingContext(&world);
 
   RYT::Camera cam;
-    
+
   cam.SetSamplesPerPixels(500);
   cam.SetMaxDepth(10);
   cam.SetBackGroundColor(RYT::Color(1, 1, 1));
