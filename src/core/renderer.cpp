@@ -1,3 +1,6 @@
+#include "ryt/core/rtcontext.hpp"
+#include <cuda_runtime_api.h>
+#include <ryt/core/cudasupport.cuh>
 #include <ryt/core/renderer.hpp>
 
 namespace RYT {
@@ -37,9 +40,24 @@ void Renderer::RenderCPU(const Camera &camera, const RaytracingContext *context,
   }
 }
 
-void Renderer::RenderGPU(const Camera &cam, const RaytracingContext *context,
+void Renderer::RenderGPU(const Camera &camera, const RaytracingContext *context,
                          FrameBuffer &fb) {
-  // To Be Implemented
-  std::cerr << "GPU Backend - To Be Implemented" << std::endl;
+
+  // Allocate Mempry on Device
+  RaytracingContext *gpuContext = CreateContextOnGPU(context);
+  FrameBuffer *gpuFb = CreateFrameBufferOnGPU(fb.GetWidth(), fb.GetHeight());
+
+  // Launch Render Kernel
+  LaunchRenderKerenel(camera, gpuContext, gpuFb);
+
+  // Synchronize with GPU Kernel
+  cudaDeviceSynchronize();
+
+  // Copy GPUFrameBuffer onto CPUFrameBuffer
+  CopyFrameBufferFromDeviceToHost(gpuFb, &fb);
+
+  // Free Up Memory on Device
+  DestroyContextOnGPU(gpuContext);
+  DestroyFrameBufferOnGPU(gpuFb);
 }
 } // namespace RYT

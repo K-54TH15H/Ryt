@@ -26,6 +26,11 @@ public:
 
   // Write to output stream in ppm format
   void WriteToPPM(std::ostream &outputStream);
+
+  // Getters
+  size_t GetWidth();
+  size_t GetHeight();
+  size_t GetSize();
 };
 } // namespace RYT
 #endif

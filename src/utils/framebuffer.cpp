@@ -34,4 +34,9 @@ void FrameBuffer::WriteToPPM(std::ostream &os) {
     os << std::endl;
   }
 }
+
+size_t FrameBuffer::GetSize() { return this->size; }
+size_t FrameBuffer::GetWidth() { return this->imgW; }
+size_t FrameBuffer::GetHeight() { return this->imgH; }
+
 } // namespace RYT
