@@ -56,6 +56,20 @@ const unsigned char *Image::PixelData(int x, int y) const {
   return bdata + y * bytesPerScanline + x * bytesPerPixel;
 }
 
+bool Image::HasFloatData() const {
+  if (fdata == nullptr)
+    return false;
+  else
+    return true;
+}
+
+bool Image::HasBinaryData() const {
+  if (bdata == nullptr)
+    return false;
+  else
+    return true;
+}
+
 int Image::Clamp(int x, int low, int high) const {
   if (x < low)
     return low;

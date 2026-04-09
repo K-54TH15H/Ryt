@@ -16,9 +16,10 @@ public:
   bool Load(const std::string &fileName);
   int Width() const;
   int Height() const;
+  bool HasFloatData() const;
+  bool HasBinaryData() const;
   const unsigned char *PixelData(int x, int y) const;
 
-private:
   const int bytesPerPixel = 3;
   float *fdata = nullptr;
   unsigned char *bdata = nullptr;
@@ -26,6 +27,7 @@ private:
   int imageHeight = 0;
   int bytesPerScanline = 0;
 
+private:
   int Clamp(int x, int low, int high) const;
   unsigned char FloatToByte(float value) const;
   void ConvertToBytes();
