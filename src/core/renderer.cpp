@@ -1,7 +1,8 @@
-#include "ryt/core/rtcontext.hpp"
 #include <cuda_runtime_api.h>
-#include <ryt/core/cudasupport.cuh>
+#include <ryt/core/backend/cudasupport.cuh>
 #include <ryt/core/renderer.hpp>
+#include <ryt/core/rtcontext.hpp>
+#include <ryt/utils/gpucontextmanager.hpp>
 
 namespace RYT {
 Renderer::Renderer(RenderMode mode) : mode(mode) {}
@@ -40,24 +41,27 @@ void Renderer::RenderCPU(const Camera &camera, const RaytracingContext *context,
   }
 }
 
-void Renderer::RenderGPU(const Camera &camera, const RaytracingContext *context,
+void Renderer::RenderGPU(const Camera &camera,
+                         const RaytracingContext *hostContext,
                          FrameBuffer &fb) {
 
-  // Allocate Mempry on Device
-  RaytracingContext *gpuContext = CreateContextOnGPU(context);
-  FrameBuffer *gpuFb = CreateFrameBufferOnGPU(fb.GetWidth(), fb.GetHeight());
+  GPUContextManager gpuContextManager;
+  gpuContextManager.Upload(hostContext);
+
+  int imageWidth = camera.GetImageWidth();
+  int imageHeight = camera.GetImageHeight();
+
+  GPUFrameBuffer deviceFb = CreateFrameBufferOnGPU(imageHeight, imageWidth);
+  const RaytracingContext *deviceContext = gpuContextManager.deviceContext;
 
   // Launch Render Kernel
-  LaunchRenderKerenel(camera, gpuContext, gpuFb);
+  LaunchKernel(camera, deviceContext, deviceFb);
 
-  // Synchronize with GPU Kernel
+  // Synchronize with Device
+  // to retrieve finishded results
   cudaDeviceSynchronize();
 
-  // Copy GPUFrameBuffer onto CPUFrameBuffer
-  CopyFrameBufferFromDeviceToHost(gpuFb, &fb);
-
-  // Free Up Memory on Device
-  DestroyContextOnGPU(gpuContext);
-  DestroyFrameBufferOnGPU(gpuFb);
+  // Retrieve results
+  CopyFrameBufferFromDeviceToHost(deviceFb, fb);
 }
 } // namespace RYT

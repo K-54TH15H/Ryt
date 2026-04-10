@@ -35,8 +35,8 @@ void FrameBuffer::WriteToPPM(std::ostream &os) {
   }
 }
 
-size_t FrameBuffer::GetSize() { return this->size; }
-size_t FrameBuffer::GetWidth() { return this->imgW; }
-size_t FrameBuffer::GetHeight() { return this->imgH; }
-
+size_t FrameBuffer::GetSize() const { return this->size; }
+size_t FrameBuffer::GetWidth() const { return this->imgW; }
+size_t FrameBuffer::GetHeight() const { return this->imgH; }
+Color **FrameBuffer::GetBufferAddress() { return &(this->buffer); }
 } // namespace RYT

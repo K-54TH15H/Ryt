@@ -7,7 +7,7 @@ namespace RYT {
 class FrameBuffer {
 private:
   // The Main Buffer
-  Color *buffer;
+  Color *buffer = nullptr;
 
   // Properties of the buffer
   size_t imgW;
@@ -17,7 +17,6 @@ private:
 public:
   // Constructors
   FrameBuffer(const int imgW, const int imgH);
-
   // Destructor
   ~FrameBuffer();
 
@@ -28,9 +27,10 @@ public:
   void WriteToPPM(std::ostream &outputStream);
 
   // Getters
-  size_t GetWidth();
-  size_t GetHeight();
-  size_t GetSize();
+  size_t GetWidth() const;
+  size_t GetHeight() const;
+  size_t GetSize() const;
+  Color **GetBufferAddress();
 };
 } // namespace RYT
 #endif

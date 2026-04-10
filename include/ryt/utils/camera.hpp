@@ -21,7 +21,7 @@ public:
   void SetFocusDistance(double distance);
   void SetBackGroundColor(Color color);
 
-  // Friend class declaration for renderer
+  // Friend class declaration for renderers
   friend class Renderer;
 
 private:
