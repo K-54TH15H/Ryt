@@ -121,6 +121,8 @@ __device__ __host__ bool HitWorld(const RaytracingContext *context,
   }
 
   HitRecord tempRec;
+  tempRec.context = context;
+
   bool hitAnything = false;
   double closestSoFar = t.max;
 
