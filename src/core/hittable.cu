@@ -30,7 +30,8 @@ Hittable::~Hittable() {
   }
 }
 
-bool Hittable::Hit(const Ray &r, Interval t, HitRecord &rec) {
+__host__ __device__ bool Hittable::Hit(const Ray &r, Interval t,
+                                       HitRecord &rec) {
 
   switch (type) {
   case SPHERE:

@@ -110,8 +110,8 @@ int PushImage(RaytracingContext *context, const char *cFileName) {
   }
 }
 
-bool HitWorld(const RaytracingContext *context, const Ray &r, Interval t,
-              HitRecord &rec) {
+__device__ __host__ bool HitWorld(const RaytracingContext *context,
+                                  const Ray &r, Interval t, HitRecord &rec) {
 
   // Store context
   rec.context = context;

@@ -5,7 +5,7 @@
 #include <cmath>
 
 namespace RYT {
-void Camera::Initialize() {
+__host__ void Camera::Initialize() {
   aspectRatio = 16.0 / 9.0;
   imgW = 1440;
 
@@ -50,17 +50,17 @@ void Camera::Initialize() {
   defocusDiskV = defocusRadius * v;
 }
 
-Vec3 Camera::SampleSquare() const {
+__host__ __device__ Vec3 Camera::SampleSquare() const {
   return Vec3(RandomDouble() - 0.5, RandomDouble() - 0.5, 0);
 }
 
-Vec3 Camera::DefocusDiskSample() const {
+__host__ __device__ Vec3 Camera::DefocusDiskSample() const {
   Vec3 p = RandomInUnitDisk();
   return center + (p.x * defocusDiskU) + (p.y * defocusDiskV);
 }
 
 // Constructs a camera Ray from origin to a randomly sampled pt i, j
-Ray Camera::GetRay(int i, int j, int si, int sj) const {
+__host__ __device__ Ray Camera::GetRay(int i, int j, int si, int sj) const {
   Vec3 offset = SampleSquareStratified(si, sj);
   Vec3 pixelSample = pixel00Loc + ((i + offset.x) * pixelDeltaU) +
                      ((j + offset.y) * pixelDeltaV);
@@ -72,8 +72,8 @@ Ray Camera::GetRay(int i, int j, int si, int sj) const {
   return Ray(rayOrigin, rayDirection, rayTime);
 }
 
-Color Camera::RayColor(const Ray &r, int depth,
-                       const RaytracingContext *context) const {
+__host__ __device__ Color Camera::RayColor(
+    const Ray &r, int depth, const RaytracingContext *context) const {
   Ray currentRay = r;
 
   Color accumulatedLight(0, 0, 0);
@@ -113,7 +113,7 @@ Color Camera::RayColor(const Ray &r, int depth,
   return Color(0, 0, 0);
 }
 
-Vec3 Camera::SampleSquareStratified(int si, int sj) const {
+__host__ __device__ Vec3 Camera::SampleSquareStratified(int si, int sj) const {
   double px = ((si + RandomDouble()) * recipSqrtSpp) - 0.5;
   double py = ((sj + RandomDouble()) * recipSqrtSpp) - 0.5;
 

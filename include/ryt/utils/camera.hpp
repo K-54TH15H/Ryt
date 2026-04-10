@@ -1,10 +1,9 @@
 #ifndef CAMERA_HPP
 #define CAMERA_HPP
 
-#include <ryt/core/hitrecord.hpp>
+#include <device_types.h>
 #include <ryt/core/rtcontext.hpp>
-#include <ryt/graphics/color.hpp>
-#include <ryt/math/ray.hpp>
+#include <ryt/utils/gpuframebuffer.hpp>
 
 namespace RYT {
 
@@ -21,8 +20,15 @@ public:
   void SetFocusDistance(double distance);
   void SetBackGroundColor(Color color);
 
-  // Friend class declaration for renderers
+  // Friend class and functions which
+  // are allowed to access private data of camera
   friend class Renderer;
+  friend void LaunchKernel(const Camera &camera,
+                           const RaytracingContext *deviceContext,
+                           GPUFrameBuffer devicefB);
+  friend __global__ void RenderKernel(const Camera camera,
+                                      const RaytracingContext *deviceContext,
+                                      GPUFrameBuffer deviceFb);
 
 private:
   double aspectRatio; // Ratio of image width to height
@@ -54,15 +60,16 @@ private:
   Vec3 defocusDiskU;
   Vec3 defocusDiskV;
 
-  void Initialize();
-  Vec3 SampleSquare() const;
+  __host__ void Initialize();
+  __host__ __device__ Vec3 SampleSquare() const;
 
   // Constructs a camera Ray from origin to a randomly sampled pt i, j
-  Ray GetRay(int i, int j, int si, int sj) const;
-  Color RayColor(const Ray &r, int depth, const RaytracingContext *world) const;
+  __host__ __device__ Ray GetRay(int i, int j, int si, int sj) const;
+  __host__ __device__ Color RayColor(const Ray &r, int depth,
+                                     const RaytracingContext *world) const;
 
-  Vec3 DefocusDiskSample() const;
-  Vec3 SampleSquareStratified(int si, int sj) const;
+  __host__ __device__ Vec3 DefocusDiskSample() const;
+  __host__ __device__ Vec3 SampleSquareStratified(int si, int sj) const;
 };
 } // namespace RYT
 

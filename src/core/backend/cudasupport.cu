@@ -5,23 +5,6 @@
 
 namespace RYT {
 
-GPUFrameBuffer CreateFrameBufferOnGPU(int width, int height) {
-  GPUFrameBuffer deviceFb;
-  size_t bytes = width * height * sizeof(Color);
-
-  cudaMalloc(&deviceFb, bytes);
-  return deviceFb;
-}
-
-void DestroyFrameBufferOnGPU(GPUFrameBuffer gpuFb) { cudaFree(gpuFb); }
-
-void CopyFrameBufferFromDeviceToHost(const GPUFrameBuffer deviceFb,
-                                     FrameBuffer *fb) {
-  size_t bytes = fb->GetSize() * sizeof(Color);
-
-  cudaMemcpy((fb->GetBufferAddress()), deviceFb, bytes, cudaMemcpyDeviceToHost);
-}
-
 void LaunchKernel(const Camera &camera, const RaytracingContext *deviceContext,
                   GPUFrameBuffer deviceFb) {
   int imageWidth = camera.imgW;
@@ -57,7 +40,7 @@ __global__ void RenderKernel(const Camera camera,
 
   for (int sj = 0; sj < camera.sqrtSpp; sj++) {
     for (int si = 0; si < camera.sqrtSpp; si++) {
-      Ray r = camera.GetRay(j, i, si, sj);
+      Ray r = camera.GetRay(workIndexX, workIndexY, si, sj);
       pixelColor += camera.RayColor(r, camera.maxDepth, deviceContext);
     }
   }

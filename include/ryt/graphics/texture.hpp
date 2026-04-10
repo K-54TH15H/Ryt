@@ -1,6 +1,7 @@
 #ifndef TEXTURE_HPP
 #define TEXTURE_HPP
 
+#include <device_types.h>
 #include <ryt/graphics/color.hpp>
 #include <ryt/utils/rytimage.hpp>
 
@@ -21,7 +22,7 @@ public:
   SolidTexture(const Color &albedo);
   SolidTexture(double r, double g, double b);
 
-  Color Value(double u, double v, const Vec3 &p) const;
+  __host__ __device__ Color Value(double u, double v, const Vec3 &p) const;
 
 private:
   Color albedo;
@@ -37,16 +38,16 @@ public:
   CheckerTexture(double scale, int evenId, int oddId);
   // CheckerTexture(double scale, const Color& c1, const Color& c2);
 
-  Color Value(double u, double v, const Vec3 &p,
-              const RaytracingContext *context) const;
+  __host__ __device__ Color Value(double u, double v, const Vec3 &p,
+                                  const RaytracingContext *context) const;
 };
 
 class ImageTexture {
 public:
   ImageTexture(int imaegId);
 
-  Color Value(double u, double v, const Vec3 &p,
-              const RaytracingContext *context) const;
+  __host__ __device__ Color Value(double u, double v, const Vec3 &p,
+                                  const RaytracingContext *context) const;
 
 private:
   int imageId;
@@ -61,8 +62,8 @@ public:
   Texture(const ImageTexture imageTexture);
   Texture(const Color color);
 
-  Color Value(double u, double v, const Vec3 &p,
-              const RaytracingContext *context) const;
+  __host__ __device__ Color Value(double u, double v, const Vec3 &p,
+                                  const RaytracingContext *context) const;
 
 private:
   TextureType type;

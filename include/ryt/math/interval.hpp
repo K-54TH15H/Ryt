@@ -11,18 +11,18 @@ public:
   double min, max;
 
   // Default interval [inf, -inf] ( empty )
-  Interval();
+  __host__ __device__ Interval();
   // Range based constructor
-  Interval(double min, double max);
+  __host__ __device__ Interval(double min, double max);
   // Intervals based tight constructor
-  Interval(const Interval &a, const Interval &b);
+  __host__ __device__ Interval(const Interval &a, const Interval &b);
 
-  double Size() const;
-  bool Contains(double x) const;
-  bool Surrounds(double x) const;
+  __host__ __device__ double Size() const;
+  __host__ __device__ bool Contains(double x) const;
+  __host__ __device__ bool Surrounds(double x) const;
 
-  double Clamp(double x) const;
-  Interval Expand(double delta) const;
+  __host__ __device__ double Clamp(double x) const;
+  __host__ __device__ Interval Expand(double delta) const;
 
   static const Interval empty, universe;
 };

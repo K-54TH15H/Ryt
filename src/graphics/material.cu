@@ -6,7 +6,8 @@
 #include <ryt/math/common.hpp>
 
 namespace RYT {
-static double Reflectance(double cosine, double refractionIndex) {
+__host__ __device__ static double Reflectance(double cosine,
+                                              double refractionIndex) {
   // Schlick's Approximation
   double r0 = (1 - refractionIndex) / (1 + refractionIndex);
   r0 *= r0;
@@ -14,8 +15,10 @@ static double Reflectance(double cosine, double refractionIndex) {
   return r0 + ((1 - r0) * std::pow((1 - cosine), 5));
 }
 
-bool Material::ScatterLambertian(const Ray &rIn, const HitRecord &rec,
-                                 Color &attenuation, Ray &scattered) const {
+__host__ __device__ bool Material::ScatterLambertian(const Ray &rIn,
+                                                     const HitRecord &rec,
+                                                     Color &attenuation,
+                                                     Ray &scattered) const {
   Vec3 scatterDirection = rec.normal + RandomUnitVector();
 
   if (scatterDirection.NearZero())
@@ -31,8 +34,10 @@ bool Material::ScatterLambertian(const Ray &rIn, const HitRecord &rec,
   return true;
 }
 
-bool Material::ScatterMetal(const Ray &rIn, const HitRecord &rec,
-                            Color &attenuation, Ray &scattered) const {
+__host__ __device__ bool Material::ScatterMetal(const Ray &rIn,
+                                                const HitRecord &rec,
+                                                Color &attenuation,
+                                                Ray &scattered) const {
   Vec3 reflected = Reflect(rIn.Direction(), rec.normal);
   reflected =
       (UnitVector(reflected)) + (data.metal.roughness * RandomUnitVector());
@@ -43,8 +48,10 @@ bool Material::ScatterMetal(const Ray &rIn, const HitRecord &rec,
   return (Dot(scattered.Direction(), rec.normal) > 0);
 }
 
-bool Material::ScatterDielectric(const Ray &rIn, const HitRecord &rec,
-                                 Color &attenuation, Ray &scattered) const {
+__host__ __device__ bool Material::ScatterDielectric(const Ray &rIn,
+                                                     const HitRecord &rec,
+                                                     Color &attenuation,
+                                                     Ray &scattered) const {
   attenuation = Color(1.0, 1.0, 1.0);
   double ri = rec.frontFace ? (1.0 / data.dielectric.refractionIndex)
                             : data.dielectric.refractionIndex;
@@ -105,8 +112,9 @@ Material::~Material() {
   }
 }
 
-bool Material::Scatter(const Ray &rIn, const HitRecord &rec, Color &attenuation,
-                       Ray &scattered) const {
+__host__ __device__ bool Material::Scatter(const Ray &rIn, const HitRecord &rec,
+                                           Color &attenuation,
+                                           Ray &scattered) const {
   switch (type) {
   case LAMBERTIAN:
     return this->ScatterLambertian(rIn, rec, attenuation, scattered);
@@ -122,7 +130,7 @@ bool Material::Scatter(const Ray &rIn, const HitRecord &rec, Color &attenuation,
   }
 }
 
-Color Material::Emit(HitRecord &rec) const {
+__host__ __device__ Color Material::Emit(HitRecord &rec) const {
   switch (type) {
   case EMMISIVE:
     return rec.context->textures[data.emmisive.textureId].Value(

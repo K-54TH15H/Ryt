@@ -1,4 +1,5 @@
 #include <ryt/core/aabb.hpp>
+#include <ryt/math/common.hpp>
 
 namespace RYT {
 // Default Box is NULL Box (Interval default is the empty constructor)
@@ -46,7 +47,7 @@ const Interval &AABB::AxisInterval(int n) const {
   }
 }
 
-bool AABB::Hit(const Ray &r, Interval rayT) const {
+__host__ __device__ bool AABB::Hit(const Ray &r, Interval rayT) const {
   const Vec3 &rayOrig = r.Origin();
   const Vec3 &rayDir = r.Direction();
 
@@ -59,9 +60,9 @@ bool AABB::Hit(const Ray &r, Interval rayT) const {
   t0C = (x.min - rayOrig.x) * invC;
   t1C = (x.max - rayOrig.x) * invC;
   if (invC < 0)
-    std::swap(t0C, t1C);
-  rayT.min = std::max(t0C, rayT.min);
-  rayT.max = std::min(t1C, rayT.max);
+    SwapDouble(t0C, t1C);
+  rayT.min = MaxDouble(t0C, rayT.min);
+  rayT.max = MinDouble(t1C, rayT.max);
   if (rayT.max <= rayT.min)
     return false;
 
@@ -70,9 +71,9 @@ bool AABB::Hit(const Ray &r, Interval rayT) const {
   t0C = (y.min - rayOrig.y) * invC;
   t1C = (y.max - rayOrig.y) * invC;
   if (invC < 0)
-    std::swap(t0C, t1C);
-  rayT.min = std::max(t0C, rayT.min);
-  rayT.max = std::min(t1C, rayT.max);
+    SwapDouble(t0C, t1C);
+  rayT.min = MaxDouble(t0C, rayT.min);
+  rayT.max = MinDouble(t1C, rayT.max);
   if (rayT.max <= rayT.min)
     return false;
 
@@ -81,9 +82,9 @@ bool AABB::Hit(const Ray &r, Interval rayT) const {
   t0C = (z.min - rayOrig.z) * invC;
   t1C = (z.max - rayOrig.z) * invC;
   if (invC < 0)
-    std::swap(t0C, t1C);
-  rayT.min = std::max(t0C, rayT.min);
-  rayT.max = std::min(t1C, rayT.max);
+    SwapDouble(t0C, t1C);
+  rayT.min = MaxDouble(t0C, rayT.min);
+  rayT.max = MinDouble(t1C, rayT.max);
   if (rayT.max <= rayT.min)
     return false;
 

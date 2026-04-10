@@ -22,7 +22,7 @@ Sphere::Sphere(const Vec3 &center1, const Vec3 &center2, double radius,
   bBox = AABB(bBoxA, bBoxB);
 }
 
-bool Sphere::Hit(const Ray &r, Interval t, HitRecord &rec) {
+__host__ __device__ bool Sphere::Hit(const Ray &r, Interval t, HitRecord &rec) {
   Vec3 currentCenter = center.At(r.Time());
 
   Vec3 CQ = currentCenter - r.Origin();
@@ -62,7 +62,8 @@ bool Sphere::Hit(const Ray &r, Interval t, HitRecord &rec) {
 
 AABB Sphere::boundingBox() const { return bBox; }
 
-void Sphere::GetSphereUV(const Vec3 &p, HitRecord &hitRecord) {
+__host__ __device__ void Sphere::GetSphereUV(const Vec3 &p,
+                                             HitRecord &hitRecord) {
   double theta = std::acos(-p.y);
   double phi = std::atan2(-p.z, p.x) + pi;
 

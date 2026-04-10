@@ -15,7 +15,7 @@ void LaunchKernel(const Camera &camera, const RaytracingContext *deviceContext,
 void CopyFrameBufferFromDeviceToHost(const GPUFrameBuffer deviceFb,
                                      const FrameBuffer &fb);
 
-__global__ void RenderKernel(const Camera &camera,
+__global__ void RenderKernel(const Camera camera,
                              const RaytracingContext *gpuContext,
                              GPUFrameBuffer deviceFb);
 } // namespace RYT

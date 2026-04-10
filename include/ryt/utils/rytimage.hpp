@@ -1,6 +1,7 @@
 #ifndef RYTIMAGE_HPP
 #define RYTIMAGE_HPP
 
+#include <device_types.h>
 #include <string>
 
 namespace RYT {
@@ -14,11 +15,11 @@ public:
   ~Image();
 
   bool Load(const std::string &fileName);
-  int Width() const;
-  int Height() const;
+  __host__ __device__ int Width() const;
+  __host__ __device__ int Height() const;
   bool HasFloatData() const;
   bool HasBinaryData() const;
-  const unsigned char *PixelData(int x, int y) const;
+  __host__ __device__ const unsigned char *PixelData(int x, int y) const;
 
   const int bytesPerPixel = 3;
   float *fdata = nullptr;
@@ -28,7 +29,7 @@ public:
   int bytesPerScanline = 0;
 
 private:
-  int Clamp(int x, int low, int high) const;
+  __host__ __device__ int Clamp(int x, int low, int high) const;
   unsigned char FloatToByte(float value) const;
   void ConvertToBytes();
 };

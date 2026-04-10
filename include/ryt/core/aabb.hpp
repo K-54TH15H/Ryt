@@ -18,7 +18,7 @@ public:
 
   int LongestAxis() const;
   const Interval &AxisInterval(int n) const;
-  bool Hit(const Ray &r, Interval rayT) const;
+  __host__ __device__ bool Hit(const Ray &r, Interval rayT) const;
 
 private:
   void PadToMins();

@@ -41,11 +41,15 @@ bool Image::Load(const std::string &sFileName) {
   return true;
 }
 
-int Image::Width() const { return (fdata == nullptr) ? 0 : imageWidth; }
+__host__ __device__ int Image::Width() const {
+  return (fdata == nullptr) ? 0 : imageWidth;
+}
 
-int Image::Height() const { return (fdata == nullptr) ? 0 : imageHeight; }
+__host__ __device__ int Image::Height() const {
+  return (fdata == nullptr) ? 0 : imageHeight;
+}
 
-const unsigned char *Image::PixelData(int x, int y) const {
+__host__ __device__ const unsigned char *Image::PixelData(int x, int y) const {
   static unsigned char magenta[] = {255, 0, 255};
   if (bdata == nullptr)
     return magenta;
@@ -70,7 +74,7 @@ bool Image::HasBinaryData() const {
     return true;
 }
 
-int Image::Clamp(int x, int low, int high) const {
+__host__ __device__ int Image::Clamp(int x, int low, int high) const {
   if (x < low)
     return low;
   if (x < high)

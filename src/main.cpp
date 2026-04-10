@@ -62,8 +62,8 @@ void CornellBox() {
 
   RYT::Camera cam;
 
-  cam.SetSamplesPerPixels(100);
-  cam.SetMaxDepth(10);
+  cam.SetSamplesPerPixels(10);
+  cam.SetMaxDepth(3);
   cam.SetBackGroundColor(RYT::Color(1, 1, 1));
   cam.SetFov(40);
   cam.SetLookFrom(RYT::Vec3(278, 278, -800));

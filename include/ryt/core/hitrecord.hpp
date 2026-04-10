@@ -22,7 +22,8 @@ public:
   double u;
   double v;
 
-  void SetFaceNormal(const Ray &r, const Vec3 &outwardNormal);
+  __host__ __device__ void SetFaceNormal(const Ray &r,
+                                         const Vec3 &outwardNormal);
 };
 
 } // namespace RYT

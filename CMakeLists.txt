@@ -12,6 +12,12 @@ target_include_directories(${PROJECT_NAME}
     PRIVATE ${PROJECT_SOURCE_DIR}/dependencies
 )
 
+# Force the separable compilation property on this specific target
+set_target_properties(${PROJECT_NAME} PROPERTIES 
+    CUDA_SEPARABLE_COMPILATION ON
+
+)
+
 file(GLOB_RECURSE source_files src/*.cpp src/*.cu)
 
 # OpenMP 

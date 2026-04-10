@@ -1,8 +1,10 @@
 #include <cuda_runtime_api.h>
+#include <driver_types.h>
 #include <ryt/core/backend/cudasupport.cuh>
 #include <ryt/core/renderer.hpp>
 #include <ryt/core/rtcontext.hpp>
 #include <ryt/utils/gpucontextmanager.hpp>
+#include <ryt/utils/gpuframebuffer.hpp>
 
 namespace RYT {
 Renderer::Renderer(RenderMode mode) : mode(mode) {}
@@ -48,10 +50,10 @@ void Renderer::RenderGPU(const Camera &camera,
   GPUContextManager gpuContextManager;
   gpuContextManager.Upload(hostContext);
 
-  int imageWidth = camera.GetImageWidth();
-  int imageHeight = camera.GetImageHeight();
+  int imageWidth = camera.imgW;
+  int imageHeight = camera.imgH;
 
-  GPUFrameBuffer deviceFb = CreateFrameBufferOnGPU(imageHeight, imageWidth);
+  GPUFrameBuffer deviceFb = CreateFrameBufferOnGPU(imageWidth, imageHeight);
   const RaytracingContext *deviceContext = gpuContextManager.deviceContext;
 
   // Launch Render Kernel
@@ -62,6 +64,6 @@ void Renderer::RenderGPU(const Camera &camera,
   cudaDeviceSynchronize();
 
   // Retrieve results
-  CopyFrameBufferFromDeviceToHost(deviceFb, fb);
+  CopyFrameBufferFromDeviceToHost(deviceFb, &fb);
 }
 } // namespace RYT
