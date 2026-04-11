@@ -16,6 +16,7 @@ void CopyFrameBufferFromDeviceToHost(const GPUFrameBuffer deviceFb,
                                      FrameBuffer *fb) {
   size_t bytes = fb->GetSize() * sizeof(Color);
 
-  cudaMemcpy((fb->GetBufferAddress()), deviceFb, bytes, cudaMemcpyDeviceToHost);
+  cudaMemcpy(*(fb->GetBufferAddress()), deviceFb, bytes,
+             cudaMemcpyDeviceToHost);
 }
 } // namespace RYT

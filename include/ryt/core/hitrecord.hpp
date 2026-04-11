@@ -9,6 +9,8 @@ class RaytracingContext; // Forward Declarations
 
 class HitRecord {
 public:
+  bool hit = false;
+
   Vec3 p;
   Vec3 normal;
   int materialId;

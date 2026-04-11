@@ -2,7 +2,8 @@
 
 namespace RYT {
 // Default interval [inf, -inf] ( empty )
-__host__ __device__ Interval::Interval() : min(+infinity), max(-infinity) {}
+__host__ __device__ Interval::Interval()
+    : min(+RYT_INFINITY), max(-RYT_INFINITY) {}
 
 // Range based constructor
 __host__ __device__ Interval::Interval(double min, double max)

@@ -117,7 +117,7 @@ __device__ __host__ bool HitWorld(const RaytracingContext *context,
   rec.context = context;
 
   if (context->bvhRootIndex != -1) {
-    return HitBVH(context, context->bvhRootIndex, r, t, rec);
+    return IterativeHitBVH(context, r, t, rec);
   }
 
   HitRecord tempRec;

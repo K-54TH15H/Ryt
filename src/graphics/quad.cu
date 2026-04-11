@@ -46,6 +46,7 @@ __host__ __device__ bool Quad::Hit(const Ray &r, Interval rayT,
   if (!(IsInterior(alpha, beta, rec)))
     return false;
 
+  rec.hit = true;
   rec.t = t;
   rec.p = intersection;
   rec.materialId = materialId;

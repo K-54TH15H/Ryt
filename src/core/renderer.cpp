@@ -61,8 +61,9 @@ void Renderer::RenderGPU(const Camera &camera,
 
   // Synchronize with Device
   // to retrieve finishded results
-  cudaDeviceSynchronize();
-
+  cudaError_t err = cudaDeviceSynchronize();
+  if (err != cudaSuccess)
+    printf("Kernel Error: %s\n", cudaGetErrorString(err));
   // Retrieve results
   CopyFrameBufferFromDeviceToHost(deviceFb, &fb);
 }

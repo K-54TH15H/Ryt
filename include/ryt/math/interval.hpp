@@ -1,6 +1,6 @@
 #ifndef INTERVAL_HPP
 #define INTERVAL_HPP
-
+#include <device_types.h>
 #include <ryt/math/common.hpp>
 
 namespace RYT {
@@ -28,7 +28,8 @@ public:
 };
 
 // Static Constant Intervals
-inline const Interval Interval::empty = Interval(+infinity, -infinity);
-inline const Interval Interval::universe = Interval(-infinity, +infinity);
+inline const Interval Interval::empty = Interval(+RYT_INFINITY, -RYT_INFINITY);
+inline const Interval Interval::universe =
+    Interval(-RYT_INFINITY, +RYT_INFINITY);
 } // namespace RYT
 #endif

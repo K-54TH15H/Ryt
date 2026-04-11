@@ -48,6 +48,7 @@ __host__ __device__ bool Sphere::Hit(const Ray &r, Interval t, HitRecord &rec) {
   }
 
   // record hit then return true
+  rec.hit = true;
   rec.t = root;
   rec.p = r.At(rec.t);
 
@@ -65,9 +66,9 @@ AABB Sphere::boundingBox() const { return bBox; }
 __host__ __device__ void Sphere::GetSphereUV(const Vec3 &p,
                                              HitRecord &hitRecord) {
   double theta = std::acos(-p.y);
-  double phi = std::atan2(-p.z, p.x) + pi;
+  double phi = std::atan2(-p.z, p.x) + RYT_PI;
 
-  hitRecord.u = phi / (2 * pi);
-  hitRecord.v = theta / pi;
+  hitRecord.u = phi / (2 * RYT_PI);
+  hitRecord.v = theta / RYT_PI;
 }
 } // namespace RYT

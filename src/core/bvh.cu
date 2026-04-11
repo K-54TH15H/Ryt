@@ -1,3 +1,4 @@
+#include "ryt/core/hitrecord.hpp"
 #include <algorithm>
 
 #include <ryt/core/bvh.hpp>
@@ -73,5 +74,50 @@ __host__ __device__ bool HitBVH(const RaytracingContext *context, int nodeIndex,
 
     return (hitLeft || hitRight);
   }
+}
+
+__host__ __device__ bool IterativeHitBVH(const RaytracingContext *context,
+                                         const Ray &r, Interval rayT,
+                                         HitRecord &rec) {
+  int rootIndex = context->bvhRootIndex;
+
+  // local stack
+  int stack[64];
+  int stackPtr = 0;
+
+  // Initialise stack;
+  stack[stackPtr++] = rootIndex;
+
+  // Temporary variables
+  int nodeIndex;
+  int leftIndex;
+  int rightIndex;
+
+  // Traverse till stack is not empty
+  while (stackPtr > 0) {
+    // Pop from stack
+    nodeIndex = stack[--stackPtr];
+
+    // If the index doesn't hit the bBox then continue
+    const BVHNode &node = context->bvhNodes[nodeIndex];
+    if (node.bBox.Hit(r, rayT) == false)
+      continue;
+    // If the index is a leaf check directly
+    if (node.isLeaf) {
+      if (context->hittables[node.leftIndex].Hit(r, rayT, rec))
+        rayT = Interval(rayT.min, rec.t);
+      continue;
+    }
+
+    // else push left and right Indexes onto stack
+    leftIndex = context->bvhNodes[nodeIndex].leftIndex;
+    rightIndex = context->bvhNodes[nodeIndex].rightIndex;
+
+    stack[stackPtr++] = leftIndex;
+    stack[stackPtr++] = rightIndex;
+  }
+  // return if record was recorded
+  // in HitRecord : rec
+  return rec.hit;
 }
 } // namespace RYT

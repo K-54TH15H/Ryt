@@ -82,7 +82,7 @@ __host__ __device__ Color Camera::RayColor(
   for (int i = 0; i < maxDepth; i++) {
     HitRecord rec;
 
-    if (HitWorld(context, currentRay, Interval(0.001, infinity), rec)) {
+    if (HitWorld(context, currentRay, Interval(0.001, RYT_INFINITY), rec)) {
       Ray scattered;
       Color attenuation;
 

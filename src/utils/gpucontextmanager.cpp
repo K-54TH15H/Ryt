@@ -27,6 +27,8 @@ void GPUContextManager::Upload(const RaytracingContext *hostContext) {
   localContext.bvhNodeSize = hostContext->bvhNodeSize;
   localContext.bvhNodeCapacity = hostContext->bvhNodeCapacity;
 
+  localContext.bvhRootIndex = hostContext->bvhRootIndex;
+
   // Materials
   AllocateAndCopy(&deviceInfo.materials, hostContext->materials,
                   hostContext->materialCapacity);
@@ -46,6 +48,9 @@ void GPUContextManager::Upload(const RaytracingContext *hostContext) {
   localContext.images = deviceInfo.images;
   localContext.imageSize = hostContext->imageSize;
   localContext.imageCapacity = hostContext->imageCapacity;
+
+  // AABB
+  localContext.bBox = hostContext->bBox;
 
   cudaMalloc(&deviceContext, sizeof(RaytracingContext));
   cudaMemcpy(deviceContext, &localContext, sizeof(RaytracingContext),

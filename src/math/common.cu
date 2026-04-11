@@ -1,4 +1,5 @@
 #include <cuda_runtime.h>
+#include <curand_kernel.h>
 #include <random>
 #include <ryt/math/common.hpp>
 
@@ -22,20 +23,9 @@ __host__ __device__ void SwapDouble(double &x, double &y) {
 }
 
 __host__ __device__ double RandomDouble() {
-  // returns radom in [0, 1)
-
 #if (defined(__CUDA_ARCH__) && (__CUDA_ARCH__ > 0))
-  // device code
-  long seed = threadIdx.x + blockIdx.x * blockDim.x;
-  long a = 1103515245;
-  long c = 12345;
-  long m = 1 << 31;
-
-  seed = (a * seed + c) % m;
-  double r = ((double)seed) / m;
-  return r;
+  return 0.5;
 #else
-  // host code
   static thread_local std::mt19937 generator;
   std::uniform_real_distribution<double> distribution(0, 1);
   return distribution(generator);
@@ -51,6 +41,6 @@ __host__ __device__ int RandomInt(int min, int max) {
   return int(RandomDouble(min, max + 1));
 }
 __host__ __device__ double DegreesToRadians(double degrees) {
-  return degrees * pi / 180.0;
+  return degrees * RYT_PI / 180.0;
 }
 } // namespace RYT
