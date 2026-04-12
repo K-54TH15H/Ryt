@@ -1,3 +1,4 @@
+#include "ryt/core/rtcontext.hpp"
 #include <ryt/math/common.hpp>
 #include <ryt/utils/camera.hpp>
 #include <ryt/utils/framebuffer.hpp>
@@ -50,30 +51,32 @@ __host__ void Camera::Initialize() {
   defocusDiskV = defocusRadius * v;
 }
 
-__host__ __device__ Vec3 Camera::SampleSquare() const {
-  return Vec3(RandomDouble() - 0.5, RandomDouble() - 0.5, 0);
+__host__ __device__ Vec3 Camera::SampleSquare(curandState *state) const {
+  return Vec3(RandomDouble(state) - 0.5, RandomDouble(state) - 0.5, 0);
 }
 
-__host__ __device__ Vec3 Camera::DefocusDiskSample() const {
-  Vec3 p = RandomInUnitDisk();
+__host__ __device__ Vec3 Camera::DefocusDiskSample(curandState *state) const {
+  Vec3 p = RandomInUnitDisk(state);
   return center + (p.x * defocusDiskU) + (p.y * defocusDiskV);
 }
 
 // Constructs a camera Ray from origin to a randomly sampled pt i, j
-__host__ __device__ Ray Camera::GetRay(int i, int j, int si, int sj) const {
-  Vec3 offset = SampleSquareStratified(si, sj);
+__host__ __device__ Ray Camera::GetRay(int i, int j, int si, int sj,
+                                       curandState *state) const {
+  Vec3 offset = SampleSquareStratified(si, sj, state);
   Vec3 pixelSample = pixel00Loc + ((i + offset.x) * pixelDeltaU) +
                      ((j + offset.y) * pixelDeltaV);
 
-  Vec3 rayOrigin = (defocusAngle <= 0) ? center : DefocusDiskSample();
+  Vec3 rayOrigin = (defocusAngle <= 0) ? center : DefocusDiskSample(state);
   Vec3 rayDirection = pixelSample - rayOrigin;
-  double rayTime = RandomDouble();
+  double rayTime = RandomDouble(state);
 
   return Ray(rayOrigin, rayDirection, rayTime);
 }
 
-__host__ __device__ Color Camera::RayColor(
-    const Ray &r, int depth, const RaytracingContext *context) const {
+__host__ __device__ Color Camera::RayColor(const Ray &r, int depth,
+                                           const RaytracingContext *context,
+                                           curandState *state) const {
   Ray currentRay = r;
 
   Color accumulatedLight(0, 0, 0);
@@ -90,8 +93,8 @@ __host__ __device__ Color Camera::RayColor(
       accumulatedLight +=
           throughput * context->materials[rec.materialId].Emit(rec);
 
-      if (context->materials[rec.materialId].Scatter(currentRay, rec,
-                                                     attenuation, scattered)) {
+      if (context->materials[rec.materialId].Scatter(
+              currentRay, rec, attenuation, scattered, state)) {
         throughput = throughput * attenuation;
         currentRay = scattered;
       } else
@@ -113,9 +116,10 @@ __host__ __device__ Color Camera::RayColor(
   return Color(0, 0, 0);
 }
 
-__host__ __device__ Vec3 Camera::SampleSquareStratified(int si, int sj) const {
-  double px = ((si + RandomDouble()) * recipSqrtSpp) - 0.5;
-  double py = ((sj + RandomDouble()) * recipSqrtSpp) - 0.5;
+__host__ __device__ Vec3
+Camera::SampleSquareStratified(int si, int sj, curandState *state) const {
+  double px = ((si + RandomDouble(state)) * recipSqrtSpp) - 0.5;
+  double py = ((sj + RandomDouble(state)) * recipSqrtSpp) - 0.5;
 
   return Vec3(px, py, 0);
 }

@@ -46,13 +46,14 @@ __host__ __device__ bool Vec3::NearZero() const {
   return (std::fabs(x) < co) && (std::fabs(y) < co) && (std::fabs(z) < co);
 }
 
-__host__ __device__ Vec3 Vec3::Random() {
-  return Vec3(RandomDouble(), RandomDouble(), RandomDouble());
+__host__ __device__ Vec3 Vec3::Random(curandState *state) {
+  return Vec3(RandomDouble(state), RandomDouble(state), RandomDouble(state));
 }
 
-__host__ __device__ Vec3 Vec3::Random(double min, double max) {
-  return Vec3(RandomDouble(min, max), RandomDouble(min, max),
-              RandomDouble(min, max));
+__host__ __device__ Vec3 Vec3::Random(double min, double max,
+                                      curandState *state) {
+  return Vec3(RandomDouble(min, max, state), RandomDouble(min, max, state),
+              RandomDouble(min, max, state));
 }
 
 __host__ std::ostream &operator<<(std::ostream &os, const Vec3 &v) {
@@ -90,9 +91,9 @@ __host__ __device__ Vec3 Cross(const Vec3 &u, const Vec3 &v) {
 
 __host__ __device__ Vec3 UnitVector(const Vec3 &v) { return v / v.Length(); }
 
-__host__ __device__ Vec3 RandomUnitVector() {
+__host__ __device__ Vec3 RandomUnitVector(curandState *state) {
   while (true) {
-    Vec3 p = Vec3::Random(-1, 1);
+    Vec3 p = Vec3::Random(-1, 1, state);
     double lenSq = p.LengthSquared();
 
     if (1e-160 < lenSq && lenSq <= 1)
@@ -100,8 +101,9 @@ __host__ __device__ Vec3 RandomUnitVector() {
   }
 }
 
-__host__ __device__ Vec3 RandomOnHemisphere(const Vec3 &normal) {
-  Vec3 onUnitSphere = RandomUnitVector();
+__host__ __device__ Vec3 RandomOnHemisphere(const Vec3 &normal,
+                                            curandState *state) {
+  Vec3 onUnitSphere = RandomUnitVector(state);
 
   if (Dot(onUnitSphere, normal) > 0.0)
     return onUnitSphere;
@@ -109,8 +111,9 @@ __host__ __device__ Vec3 RandomOnHemisphere(const Vec3 &normal) {
     return -onUnitSphere;
 }
 
-__host__ __device__ Vec3 RandomInUnitDisk() {
-  return Vec3(RandomDouble(-0.7, 0.7), RandomDouble(-0.7, 0.7), 0);
+__host__ __device__ Vec3 RandomInUnitDisk(curandState *state) {
+  return Vec3(RandomDouble(-0.7, 0.7, state), RandomDouble(-0.7, 0.7, state),
+              0);
 }
 
 __host__ __device__ Vec3 Reflect(const Vec3 &v, const Vec3 &n) {

@@ -11,6 +11,9 @@ struct DeviceContextInfo {
   Texture *textures = nullptr;
   Image *images = nullptr;
 
+  KernelContext *kernelContext = nullptr;
+  curandState *curandStates = nullptr;
+
   std::vector<void *> imageData;
 };
 
@@ -22,7 +25,7 @@ public:
   GPUContextManager();
   ~GPUContextManager();
 
-  void Upload(const RaytracingContext *context);
+  void Upload(const RaytracingContext *context, int dimensionX, int dimensionY);
   void Erase();
 
 private:

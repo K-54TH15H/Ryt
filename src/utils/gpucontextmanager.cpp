@@ -1,3 +1,4 @@
+#include "ryt/core/backend/kernelcontext.cuh"
 #include <cuda_runtime.h>
 #include <driver_types.h>
 #include <ryt/utils/gpucontextmanager.hpp>
@@ -6,7 +7,8 @@ namespace RYT {
 GPUContextManager::GPUContextManager() {}
 GPUContextManager::~GPUContextManager() { Erase(); }
 
-void GPUContextManager::Upload(const RaytracingContext *hostContext) {
+void GPUContextManager::Upload(const RaytracingContext *hostContext,
+                               int dimensionX, int dimensionY) {
   if (hostContext == NULL)
     return;
 
@@ -52,6 +54,10 @@ void GPUContextManager::Upload(const RaytracingContext *hostContext) {
   // AABB
   localContext.bBox = hostContext->bBox;
 
+  // KernelContext
+  localContext.kernelContext =
+      SetupKernelContext(dimensionX, dimensionY, &deviceInfo);
+
   cudaMalloc(&deviceContext, sizeof(RaytracingContext));
   cudaMemcpy(deviceContext, &localContext, sizeof(RaytracingContext),
              cudaMemcpyHostToDevice);
@@ -81,6 +87,14 @@ void GPUContextManager::Erase() {
   if (deviceInfo.images) {
     cudaFree(deviceInfo.images);
     deviceInfo.images = nullptr;
+  }
+  if (deviceInfo.curandStates) {
+    cudaFree(deviceInfo.curandStates);
+    deviceInfo.curandStates = nullptr;
+  }
+  if (deviceInfo.kernelContext) {
+    cudaFree(deviceInfo.kernelContext);
+    deviceInfo.kernelContext = nullptr;
   }
 
   for (size_t index = 0; index < deviceInfo.imageData.size(); index++)

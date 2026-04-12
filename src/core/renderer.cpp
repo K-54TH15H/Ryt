@@ -10,7 +10,7 @@ namespace RYT {
 Renderer::Renderer(RenderMode mode) : mode(mode) {}
 Renderer::~Renderer() {}
 
-void Renderer::Render(Camera &camera, const RaytracingContext *context) const {
+void Renderer::Render(Camera &camera, RaytracingContext *context) const {
   camera.Initialize();
   FrameBuffer frameBuffer(camera.imgW, camera.imgH);
 
@@ -25,8 +25,13 @@ void Renderer::Render(Camera &camera, const RaytracingContext *context) const {
 
 void Renderer::SetMode(RenderMode mode) { this->mode = mode; }
 
-void Renderer::RenderCPU(const Camera &camera, const RaytracingContext *context,
+void Renderer::RenderCPU(const Camera &camera, RaytracingContext *context,
                          FrameBuffer &frameBuffer) {
+
+  // Initialize context backend
+  context->renderMode = RenderMode::CPU;
+  context->kernelContext = nullptr;
+
 #pragma omp parallel for collapse(2) schedule(guided)
   for (int i = 0; i < camera.imgH; i++) {
     for (int j = 0; j < camera.imgW; j++) {
@@ -43,18 +48,17 @@ void Renderer::RenderCPU(const Camera &camera, const RaytracingContext *context,
   }
 }
 
-void Renderer::RenderGPU(const Camera &camera,
-                         const RaytracingContext *hostContext,
+void Renderer::RenderGPU(const Camera &camera, RaytracingContext *hostContext,
                          FrameBuffer &fb) {
-
-  GPUContextManager gpuContextManager;
-  gpuContextManager.Upload(hostContext);
 
   int imageWidth = camera.imgW;
   int imageHeight = camera.imgH;
 
+  GPUContextManager gpuContextManager;
+  gpuContextManager.Upload(hostContext, imageWidth, imageHeight);
+
   GPUFrameBuffer deviceFb = CreateFrameBufferOnGPU(imageWidth, imageHeight);
-  const RaytracingContext *deviceContext = gpuContextManager.deviceContext;
+  RaytracingContext *deviceContext = gpuContextManager.deviceContext;
 
   // Launch Render Kernel
   LaunchKernel(camera, deviceContext, deviceFb);

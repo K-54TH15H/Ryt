@@ -9,7 +9,8 @@
 #include <ryt/utils/gpuframebuffer.hpp>
 
 namespace RYT {
-void LaunchKernel(const Camera &camera, const RaytracingContext *deviceContext,
+
+void LaunchKernel(const Camera &camera, RaytracingContext *deviceContext,
                   GPUFrameBuffer fb);
 
 void CopyFrameBufferFromDeviceToHost(const GPUFrameBuffer deviceFb,

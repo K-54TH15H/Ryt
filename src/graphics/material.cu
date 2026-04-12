@@ -1,4 +1,5 @@
 #include <cmath>
+#include <curand_kernel.h>
 #include <ryt/core/hitrecord.hpp>
 
 #include <ryt/core/rtcontext.hpp>
@@ -18,8 +19,9 @@ __host__ __device__ static double Reflectance(double cosine,
 __host__ __device__ bool Material::ScatterLambertian(const Ray &rIn,
                                                      const HitRecord &rec,
                                                      Color &attenuation,
-                                                     Ray &scattered) const {
-  Vec3 scatterDirection = rec.normal + RandomUnitVector();
+                                                     Ray &scattered,
+                                                     curandState *state) const {
+  Vec3 scatterDirection = rec.normal + RandomUnitVector(state);
 
   if (scatterDirection.NearZero())
     scatterDirection = rec.normal;
@@ -34,13 +36,12 @@ __host__ __device__ bool Material::ScatterLambertian(const Ray &rIn,
   return true;
 }
 
-__host__ __device__ bool Material::ScatterMetal(const Ray &rIn,
-                                                const HitRecord &rec,
-                                                Color &attenuation,
-                                                Ray &scattered) const {
+__host__ __device__ bool
+Material::ScatterMetal(const Ray &rIn, const HitRecord &rec, Color &attenuation,
+                       Ray &scattered, curandState *state) const {
   Vec3 reflected = Reflect(rIn.Direction(), rec.normal);
-  reflected =
-      (UnitVector(reflected)) + (data.metal.roughness * RandomUnitVector());
+  reflected = (UnitVector(reflected)) +
+              (data.metal.roughness * RandomUnitVector(state));
 
   scattered = Ray(rec.p, reflected, rIn.Time());
   attenuation = data.metal.albedo;
@@ -51,7 +52,8 @@ __host__ __device__ bool Material::ScatterMetal(const Ray &rIn,
 __host__ __device__ bool Material::ScatterDielectric(const Ray &rIn,
                                                      const HitRecord &rec,
                                                      Color &attenuation,
-                                                     Ray &scattered) const {
+                                                     Ray &scattered,
+                                                     curandState *state) const {
   attenuation = Color(1.0, 1.0, 1.0);
   double ri = rec.frontFace ? (1.0 / data.dielectric.refractionIndex)
                             : data.dielectric.refractionIndex;
@@ -64,7 +66,7 @@ __host__ __device__ bool Material::ScatterDielectric(const Ray &rIn,
   bool cannotRefract = (ri * sinTheta > 1);
   Vec3 direction;
 
-  if (cannotRefract || Reflectance(cosTheta, ri) > RandomDouble())
+  if (cannotRefract || Reflectance(cosTheta, ri) > RandomDouble(state))
     direction = Reflect(unitDirection, rec.normal);
   else
     direction = Refract(unitDirection, rec.normal, ri);
@@ -113,17 +115,17 @@ Material::~Material() {
 }
 
 __host__ __device__ bool Material::Scatter(const Ray &rIn, const HitRecord &rec,
-                                           Color &attenuation,
-                                           Ray &scattered) const {
+                                           Color &attenuation, Ray &scattered,
+                                           curandState *state) const {
   switch (type) {
   case LAMBERTIAN:
-    return this->ScatterLambertian(rIn, rec, attenuation, scattered);
+    return this->ScatterLambertian(rIn, rec, attenuation, scattered, state);
 
   case METAL:
-    return this->ScatterMetal(rIn, rec, attenuation, scattered);
+    return this->ScatterMetal(rIn, rec, attenuation, scattered, state);
 
   case DIELECTRIC:
-    return this->ScatterDielectric(rIn, rec, attenuation, scattered);
+    return this->ScatterDielectric(rIn, rec, attenuation, scattered, state);
 
   default:
     return false;

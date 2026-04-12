@@ -6,6 +6,10 @@
 #include <ryt/graphics/texture.hpp>
 
 namespace RYT {
+// ********** RENDER-MODE **********
+enum RenderMode { CPU, GPU };
+// ********** Forward Declarations **********
+struct KernelContext;
 // ********** RAYTRACING-CONTEXT **********
 struct RaytracingContext {
   Hittable *hittables;
@@ -37,6 +41,10 @@ struct RaytracingContext {
 
   // bounding box for the entire context scene
   AABB bBox;
+
+  // Backend Context
+  RenderMode renderMode;
+  KernelContext *kernelContext;
 };
 
 // Context functions

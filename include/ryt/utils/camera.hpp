@@ -24,7 +24,7 @@ public:
   // are allowed to access private data of camera
   friend class Renderer;
   friend void LaunchKernel(const Camera &camera,
-                           const RaytracingContext *deviceContext,
+                           RaytracingContext *deviceContext,
                            GPUFrameBuffer devicefB);
   friend __global__ void RenderKernel(const Camera camera,
                                       const RaytracingContext *deviceContext,
@@ -61,15 +61,19 @@ private:
   Vec3 defocusDiskV;
 
   __host__ void Initialize();
-  __host__ __device__ Vec3 SampleSquare() const;
+  __host__ __device__ Vec3 SampleSquare(curandState *state = nullptr) const;
 
   // Constructs a camera Ray from origin to a randomly sampled pt i, j
-  __host__ __device__ Ray GetRay(int i, int j, int si, int sj) const;
+  __host__ __device__ Ray GetRay(int i, int j, int si, int sj,
+                                 curandState *state = nullptr) const;
   __host__ __device__ Color RayColor(const Ray &r, int depth,
-                                     const RaytracingContext *world) const;
+                                     const RaytracingContext *world,
+                                     curandState *state = nullptr) const;
 
-  __host__ __device__ Vec3 DefocusDiskSample() const;
-  __host__ __device__ Vec3 SampleSquareStratified(int si, int sj) const;
+  __host__ __device__ Vec3
+  DefocusDiskSample(curandState *state = nullptr) const;
+  __host__ __device__ Vec3
+  SampleSquareStratified(int si, int sj, curandState *state = nullptr) const;
 };
 } // namespace RYT
 

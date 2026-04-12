@@ -13,10 +13,12 @@ __host__ __device__ double MaxDouble(const double x, const double y);
 __host__ __device__ double MinDouble(const double x, const double y);
 __host__ __device__ void SwapDouble(double &x, double &y);
 
-__host__ __device__ double RandomDouble();
+__host__ __device__ double RandomDouble(curandState *state = nullptr);
 
-__host__ __device__ double RandomDouble(double min, double max);
-__host__ __device__ int RandomInt(int min, int max);
+__host__ __device__ double RandomDouble(double min, double max,
+                                        curandState *state = nullptr);
+__host__ __device__ int RandomInt(int min, int max,
+                                  curandState *state = nullptr);
 
 __host__ __device__ double DegreesToRadians(double degrees);
 

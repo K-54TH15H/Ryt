@@ -1,5 +1,6 @@
 #ifndef MATERIAL_HPP
 #define MATERIAL_HPP
+#include <curand_kernel.h>
 
 #include <ryt/core/hitrecord.hpp>
 #include <ryt/graphics/color.hpp>
@@ -46,15 +47,16 @@ private:
 
   __host__ __device__ bool ScatterLambertian(const Ray &rIn,
                                              const HitRecord &rec,
-                                             Color &attenuation,
-                                             Ray &scattered) const;
+                                             Color &attenuation, Ray &scattered,
+                                             curandState *state) const;
   __host__ __device__ bool ScatterMetal(const Ray &rIn, const HitRecord &rec,
-                                        Color &attenuation,
-                                        Ray &scattered) const;
+                                        Color &attenuation, Ray &scattered,
+                                        curandState *state) const;
+
   __host__ __device__ bool ScatterDielectric(const Ray &rIn,
                                              const HitRecord &rec,
-                                             Color &attenuation,
-                                             Ray &scattered) const;
+                                             Color &attenuation, Ray &scattered,
+                                             curandState *state) const;
 
 public:
   // Constructors
@@ -67,7 +69,8 @@ public:
   ~Material();
 
   __host__ __device__ bool Scatter(const Ray &rIn, const HitRecord &rec,
-                                   Color &attenuation, Ray &scattered) const;
+                                   Color &attenuation, Ray &scattered,
+                                   curandState *state) const;
 
   __host__ __device__ Color Emit(HitRecord &rec) const;
 };

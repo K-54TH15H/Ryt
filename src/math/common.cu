@@ -1,5 +1,6 @@
 #include <cuda_runtime.h>
 #include <curand_kernel.h>
+#include <curand_uniform.h>
 #include <random>
 #include <ryt/math/common.hpp>
 
@@ -22,9 +23,9 @@ __host__ __device__ void SwapDouble(double &x, double &y) {
   y = z;
 }
 
-__host__ __device__ double RandomDouble() {
+__host__ __device__ double RandomDouble(curandState *state) {
 #if (defined(__CUDA_ARCH__) && (__CUDA_ARCH__ > 0))
-  return 0.5;
+  return curand_uniform_double(state);
 #else
   static thread_local std::mt19937 generator;
   std::uniform_real_distribution<double> distribution(0, 1);
@@ -32,13 +33,14 @@ __host__ __device__ double RandomDouble() {
 #endif
 }
 
-__host__ __device__ double RandomDouble(double min, double max) {
+__host__ __device__ double RandomDouble(double min, double max,
+                                        curandState *state) {
   // returns random in [min, max)
-  return min + ((max - min) * RandomDouble());
+  return min + ((max - min) * RandomDouble(state));
 }
 
-__host__ __device__ int RandomInt(int min, int max) {
-  return int(RandomDouble(min, max + 1));
+__host__ __device__ int RandomInt(int min, int max, curandState *state) {
+  return int(RandomDouble(min, max + 1, state));
 }
 __host__ __device__ double DegreesToRadians(double degrees) {
   return degrees * RYT_PI / 180.0;
