@@ -57,25 +57,6 @@ int ConstructBVHTree(RaytracingContext *context, size_t start, size_t end) {
   return currentIndex;
 }
 
-__host__ __device__ bool HitBVH(const RaytracingContext *context, int nodeIndex,
-                                const Ray &r, Interval rayT, HitRecord &rec) {
-  const BVHNode &node = context->bvhNodes[nodeIndex];
-
-  if (!node.bBox.Hit(r, rayT))
-    return false;
-
-  if (node.isLeaf) {
-    return context->hittables[node.leftIndex].Hit(r, rayT, rec);
-  } else {
-    bool hitLeft = HitBVH(context, node.leftIndex, r, rayT, rec);
-
-    Interval newRange = hitLeft ? Interval(rayT.min, rec.t) : rayT;
-    bool hitRight = HitBVH(context, node.rightIndex, r, newRange, rec);
-
-    return (hitLeft || hitRight);
-  }
-}
-
 __host__ __device__ bool IterativeHitBVH(const RaytracingContext *context,
                                          const Ray &r, Interval rayT,
                                          HitRecord &rec) {

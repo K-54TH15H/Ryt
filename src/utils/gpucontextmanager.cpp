@@ -1,6 +1,6 @@
-#include "ryt/core/backend/kernelcontext.cuh"
 #include <cuda_runtime.h>
 #include <driver_types.h>
+#include <ryt/core/backend/cudasupport.cuh>
 #include <ryt/utils/gpucontextmanager.hpp>
 
 namespace RYT {
@@ -64,6 +64,11 @@ void GPUContextManager::Upload(const RaytracingContext *hostContext,
 }
 
 void GPUContextManager::Erase() {
+  // We could just have a one container for all device pointers
+  // for freeing the memory but this approach is followed because
+  // I feel this ContextManager could benefit from this in the future.
+  // But probably not, just a design decision can refactor once decided
+  // to scope the behaviour of this manager.
   if (deviceContext) {
     cudaFree(deviceContext);
     deviceContext = nullptr;
@@ -115,6 +120,12 @@ void GPUContextManager::AllocateAndCopy(T **devicePtr, T *hostPtr,
   cudaMemcpy(*devicePtr, hostPtr, bytes, cudaMemcpyHostToDevice);
 }
 
+// This definitely needs refactoring, The images is a struct with a pointer
+// as a field inside it and deep-copying that is really inefficient,
+// may be a pool of image data for the entire context and indices to map the
+// image data for that specific image which acts as the bounds. This would
+// require heavy refactor of the entire system for images current approach is
+// something that works but not something that is efficient.
 void GPUContextManager::AllocateImages(const RaytracingContext *hostContext) {
   if (hostContext == NULL || hostContext->imageSize <= 0)
     return;

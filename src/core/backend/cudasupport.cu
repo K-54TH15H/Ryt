@@ -1,14 +1,52 @@
-#include "ryt/core/hitrecord.hpp"
 #include <cuda_runtime.h>
 #include <curand_kernel.h>
 #include <driver_types.h>
 #include <ryt/core/backend/cudasupport.cuh>
-#include <ryt/core/backend/kernelcontext.cuh>
+#include <ryt/core/hitrecord.hpp>
 #include <ryt/core/rtcontext.hpp>
 #include <ryt/utils/framebuffer.hpp>
 #include <ryt/utils/gpucontextmanager.hpp>
 
 namespace RYT {
+
+__global__ void
+InitializeKernelRaytracingContext(RaytracingContext *deviceContext) {
+  int workIndexX = (blockDim.x * blockIdx.x) + threadIdx.x;
+  int workIndexY = (blockDim.y * blockIdx.y) + threadIdx.y;
+
+  KernelContext *kernelContext = deviceContext->kernelContext;
+
+  if (workIndexX >= kernelContext->dimensionX ||
+      workIndexY >= kernelContext->dimensionY)
+    return;
+
+  int workIndex = (workIndexY * kernelContext->dimensionX) + workIndexX;
+  // seed - 1234 | sequence - workIndex | offset - 0 | &(states[workIndex])
+  curand_init(1234, workIndex, 0, &(kernelContext->states[workIndex]));
+}
+
+KernelContext *SetupKernelContext(int dimensionX, int dimensionY,
+                                  DeviceContextInfo *deviceInfo) {
+
+  curandState *states;
+  cudaMalloc(&states, dimensionX * dimensionY * sizeof(curandState));
+
+  KernelContext localKernelContext;
+  localKernelContext.dimensionX = dimensionX;
+  localKernelContext.dimensionY = dimensionY;
+  localKernelContext.states = states;
+
+  KernelContext *kernelContext;
+  cudaMalloc(&kernelContext, sizeof(KernelContext));
+  cudaMemcpy(kernelContext, &localKernelContext, sizeof(KernelContext),
+             cudaMemcpyHostToDevice);
+
+  deviceInfo->curandStates = states;
+  deviceInfo->kernelContext = kernelContext;
+
+  return kernelContext;
+}
+
 void LaunchKernel(const Camera &camera, RaytracingContext *deviceContext,
                   GPUFrameBuffer deviceFb) {
   int dimensionX = camera.imgW;
@@ -21,7 +59,7 @@ void LaunchKernel(const Camera &camera, RaytracingContext *deviceContext,
   int gridY = (dimensionY + (blocks.y - 1)) / blocks.y; // round up gridY
 
   dim3 grids(gridX, gridY);
-  cudaDeviceSetLimit(cudaLimitStackSize, 8192 * 4);
+  cudaDeviceSetLimit(cudaLimitStackSize, 4096);
 
   // Set up the Kernel
   InitializeKernelRaytracingContext<<<grids, blocks>>>(deviceContext);

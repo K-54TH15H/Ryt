@@ -18,8 +18,6 @@ struct BVHNode {
 };
 
 int ConstructBVHTree(RaytracingContext *context, size_t start, size_t end);
-__host__ __device__ bool HitBVH(const RaytracingContext *context, int nodeIndex,
-                                const Ray &r, Interval rayT, HitRecord &rec);
 __host__ __device__ bool IterativeHitBVH(const RaytracingContext *context,
                                          const Ray &r, Interval rayT,
                                          HitRecord &rec);
