@@ -110,17 +110,19 @@ int PushImage(RaytracingContext *context, const char *cFileName) {
   }
 }
 
-bool HitWorld(const RaytracingContext *context, const Ray &r, Interval t,
-              HitRecord &rec) {
+__device__ __host__ bool HitWorld(const RaytracingContext *context,
+                                  const Ray &r, Interval t, HitRecord &rec) {
 
   // Store context
   rec.context = context;
 
   if (context->bvhRootIndex != -1) {
-    return HitBVH(context, context->bvhRootIndex, r, t, rec);
+    return IterativeHitBVH(context, r, t, rec);
   }
 
   HitRecord tempRec;
+  tempRec.context = context;
+
   bool hitAnything = false;
   double closestSoFar = t.max;
 

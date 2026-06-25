@@ -23,7 +23,8 @@ void Quad::SetBoundingBox() {
 
 AABB Quad::BoundingBox() const { return bBox; }
 
-bool Quad::Hit(const Ray &r, Interval rayT, HitRecord &rec) {
+__host__ __device__ bool Quad::Hit(const Ray &r, Interval rayT,
+                                   HitRecord &rec) {
   double denominator = Dot(normal, r.Direction());
 
   // No hit - if parallel
@@ -45,6 +46,7 @@ bool Quad::Hit(const Ray &r, Interval rayT, HitRecord &rec) {
   if (!(IsInterior(alpha, beta, rec)))
     return false;
 
+  rec.hit = true;
   rec.t = t;
   rec.p = intersection;
   rec.materialId = materialId;
@@ -53,7 +55,8 @@ bool Quad::Hit(const Ray &r, Interval rayT, HitRecord &rec) {
   return true;
 }
 
-bool Quad::IsInterior(double alpha, double beta, HitRecord &rec) const {
+__host__ __device__ bool Quad::IsInterior(double alpha, double beta,
+                                          HitRecord &rec) const {
   Interval UnitInerval = Interval(0, 1);
 
   if (!UnitInerval.Contains(alpha) || !UnitInerval.Contains(beta))

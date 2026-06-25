@@ -62,15 +62,55 @@ void CornellBox() {
 
   RYT::Camera cam;
 
-  cam.SetSamplesPerPixels(500);
+  cam.SetSamplesPerPixels(250);
   cam.SetMaxDepth(10);
+  cam.SetBackGroundColor(RYT::Color(0.0, 0.0, 0.0));
+  cam.SetFov(40);
+  cam.SetLookFrom(RYT::Vec3(278, 278, -800));
+  cam.SetLookAt(RYT::Vec3(278, 278, 0));
+  cam.SetDefocusAngle(0);
+
+  RYT::Renderer renderer(RYT::RenderMode::GPU);
+  renderer.Render(cam, &world);
+
+  RYT::DestroyRaytracingContext(&world);
+}
+
+void Void() {
+  RYT::RaytracingContext world;
+  RYT::InitializeRaytracingContext(&world, 10, 10, 10, 10);
+
+  int redTexId =
+      RYT::PushTexture(&world, RYT::SolidTexture(RYT::Color(0.65, 0.05, 0.05)));
+  int whiteTexId =
+      RYT::PushTexture(&world, RYT::SolidTexture(RYT::Color(0.73, 0.73, 0.73)));
+  int greenTexId =
+      RYT::PushTexture(&world, RYT::SolidTexture(RYT::Color(0.12, 0.45, 0.15)));
+  int lightTexId =
+      RYT::PushTexture(&world, RYT::SolidTexture(RYT::Color(15, 15, 15)));
+
+  RYT::Lambertian redMat = {redTexId};
+  RYT::Lambertian whiteMat = {whiteTexId};
+  RYT::Lambertian greenMat = {greenTexId};
+  RYT::Emmisive lightMat = {lightTexId};
+
+  int redMatId = RYT::PushMaterial(&world, redMat);
+  int whiteMatId = RYT::PushMaterial(&world, whiteMat);
+  int greenMatId = RYT::PushMaterial(&world, greenMat);
+  int lightMatId = RYT::PushMaterial(&world, lightMat);
+
+  RYT::Camera cam;
+
+  cam.SetSamplesPerPixels(10);
+  cam.SetMaxDepth(1);
   cam.SetBackGroundColor(RYT::Color(1, 1, 1));
   cam.SetFov(40);
   cam.SetLookFrom(RYT::Vec3(278, 278, -800));
   cam.SetLookAt(RYT::Vec3(278, 278, 0));
-
   cam.SetDefocusAngle(0);
-  cam.Render(&world);
+
+  RYT::Renderer renderer(RYT::RenderMode::GPU);
+  renderer.Render(cam, &world);
 
   RYT::DestroyRaytracingContext(&world);
 }

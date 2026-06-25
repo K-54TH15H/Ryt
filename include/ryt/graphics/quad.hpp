@@ -11,7 +11,7 @@ public:
   Quad(const Vec3 &q, const Vec3 &u, const Vec3 &v, int materialId);
   void SetBoundingBox();
   AABB BoundingBox() const;
-  bool Hit(const Ray &r, Interval rayT, HitRecord &rec);
+  __host__ __device__ bool Hit(const Ray &r, Interval rayT, HitRecord &rec);
 
 private:
   Vec3 Q;
@@ -24,7 +24,8 @@ private:
   int materialId;
   AABB bBox;
 
-  bool IsInterior(double alpha, double beta, HitRecord &rec) const;
+  __host__ __device__ bool IsInterior(double alpha, double beta,
+                                      HitRecord &rec) const;
 };
 } // namespace RYT
 #endif

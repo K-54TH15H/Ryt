@@ -13,15 +13,16 @@ private:
 
 public:
   // constructors
-  Ray();
-  Ray(const Vec3 &origin, const Vec3 &direction);
-  Ray(const Vec3 &origin, const Vec3 &direction, double time);
+  __host__ __device__ Ray();
+  __host__ __device__ Ray(const Vec3 &origin, const Vec3 &direction);
+  __host__ __device__ Ray(const Vec3 &origin, const Vec3 &direction,
+                          double time);
 
   // getters
-  const Vec3 &Origin() const;
-  const Vec3 &Direction() const;
-  double Time() const;
-  Vec3 At(double t) const;
+  __host__ __device__ const Vec3 &Origin() const;
+  __host__ __device__ const Vec3 &Direction() const;
+  __host__ __device__ double Time() const;
+  __host__ __device__ Vec3 At(double t) const;
 };
 } // namespace RYT
 

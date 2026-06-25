@@ -1,36 +1,12 @@
+#include "ryt/core/rtcontext.hpp"
 #include <ryt/math/common.hpp>
 #include <ryt/utils/camera.hpp>
 #include <ryt/utils/framebuffer.hpp>
 
 #include <cmath>
-#include <omp.h>
 
 namespace RYT {
-void Camera::Render(const RaytracingContext *world) {
-  Initialize();
-
-  FrameBuffer frameBuffer(imgW, imgH);
-
-#pragma omp parallel for collapse(2) schedule(guided)
-  for (int i = 0; i < imgH; i++) {
-    for (int j = 0; j < imgW; j++) {
-      Color pixelColor(0, 0, 0);
-
-      for (int sj = 0; sj < sqrtSpp; sj++) {
-        for (int si = 0; si < sqrtSpp; si++) {
-          Ray r = GetRay(j, i, si, sj);
-          pixelColor += RayColor(r, maxDepth, world);
-        }
-      }
-      frameBuffer.WriteToBuffer(pixelSamplesScale * pixelColor, i, j);
-      // WriteColor(std::cout, pixelSamplesScale * pixelColor);
-    }
-  }
-  frameBuffer.WriteToPPM(std::cout);
-  std::clog << std::endl << "Render Complete" << std::endl;
-}
-
-void Camera::Initialize() {
+__host__ void Camera::Initialize() {
   aspectRatio = 16.0 / 9.0;
   imgW = 1440;
 
@@ -75,30 +51,32 @@ void Camera::Initialize() {
   defocusDiskV = defocusRadius * v;
 }
 
-Vec3 Camera::SampleSquare() const {
-  return Vec3(RandomDouble() - 0.5, RandomDouble() - 0.5, 0);
+__host__ __device__ Vec3 Camera::SampleSquare(curandState *state) const {
+  return Vec3(RandomDouble(state) - 0.5, RandomDouble(state) - 0.5, 0);
 }
 
-Vec3 Camera::DefocusDiskSample() const {
-  Vec3 p = RandomInUnitDisk();
+__host__ __device__ Vec3 Camera::DefocusDiskSample(curandState *state) const {
+  Vec3 p = RandomInUnitDisk(state);
   return center + (p.x * defocusDiskU) + (p.y * defocusDiskV);
 }
 
 // Constructs a camera Ray from origin to a randomly sampled pt i, j
-Ray Camera::GetRay(int i, int j, int si, int sj) const {
-  Vec3 offset = SampleSquareStratified(si, sj);
+__host__ __device__ Ray Camera::GetRay(int i, int j, int si, int sj,
+                                       curandState *state) const {
+  Vec3 offset = SampleSquareStratified(si, sj, state);
   Vec3 pixelSample = pixel00Loc + ((i + offset.x) * pixelDeltaU) +
                      ((j + offset.y) * pixelDeltaV);
 
-  Vec3 rayOrigin = (defocusAngle <= 0) ? center : DefocusDiskSample();
+  Vec3 rayOrigin = (defocusAngle <= 0) ? center : DefocusDiskSample(state);
   Vec3 rayDirection = pixelSample - rayOrigin;
-  double rayTime = RandomDouble();
+  double rayTime = RandomDouble(state);
 
   return Ray(rayOrigin, rayDirection, rayTime);
 }
 
-Color Camera::RayColor(const Ray &r, int depth,
-                       const RaytracingContext *context) const {
+__host__ __device__ Color Camera::RayColor(const Ray &r, int depth,
+                                           const RaytracingContext *context,
+                                           curandState *state) const {
   Ray currentRay = r;
 
   Color accumulatedLight(0, 0, 0);
@@ -107,7 +85,7 @@ Color Camera::RayColor(const Ray &r, int depth,
   for (int i = 0; i < maxDepth; i++) {
     HitRecord rec;
 
-    if (HitWorld(context, currentRay, Interval(0.001, infinity), rec)) {
+    if (HitWorld(context, currentRay, Interval(0.001, RYT_INFINITY), rec)) {
       Ray scattered;
       Color attenuation;
 
@@ -115,8 +93,8 @@ Color Camera::RayColor(const Ray &r, int depth,
       accumulatedLight +=
           throughput * context->materials[rec.materialId].Emit(rec);
 
-      if (context->materials[rec.materialId].Scatter(currentRay, rec,
-                                                     attenuation, scattered)) {
+      if (context->materials[rec.materialId].Scatter(
+              currentRay, rec, attenuation, scattered, state)) {
         throughput = throughput * attenuation;
         currentRay = scattered;
       } else
@@ -138,9 +116,10 @@ Color Camera::RayColor(const Ray &r, int depth,
   return Color(0, 0, 0);
 }
 
-Vec3 Camera::SampleSquareStratified(int si, int sj) const {
-  double px = ((si + RandomDouble()) * recipSqrtSpp) - 0.5;
-  double py = ((sj + RandomDouble()) * recipSqrtSpp) - 0.5;
+__host__ __device__ Vec3
+Camera::SampleSquareStratified(int si, int sj, curandState *state) const {
+  double px = ((si + RandomDouble(state)) * recipSqrtSpp) - 0.5;
+  double py = ((sj + RandomDouble(state)) * recipSqrtSpp) - 0.5;
 
   return Vec3(px, py, 0);
 }

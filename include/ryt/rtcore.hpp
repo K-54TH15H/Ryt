@@ -12,6 +12,7 @@
 #include <ryt/core/bvh.hpp>
 #include <ryt/core/hitrecord.hpp>
 #include <ryt/core/hittable.hpp>
+#include <ryt/core/renderer.hpp>
 #include <ryt/core/rtcontext.hpp>
 
 // 3. Graphics
@@ -23,7 +24,7 @@
 
 // 4. Utils
 #include <ryt/utils/camera.hpp>
-#include <ryt/utils/rytimage.hpp>
 #include <ryt/utils/framebuffer.hpp>
+#include <ryt/utils/rytimage.hpp>
 
 #endif

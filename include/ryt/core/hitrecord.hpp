@@ -9,9 +9,11 @@ class RaytracingContext; // Forward Declarations
 
 class HitRecord {
 public:
+  bool hit = false;
+
   Vec3 p;
   Vec3 normal;
-  int materialId; 
+  int materialId;
   double t;
   bool frontFace;
 
@@ -22,7 +24,8 @@ public:
   double u;
   double v;
 
-  void SetFaceNormal(const Ray &r, const Vec3 &outwardNormal);
+  __host__ __device__ void SetFaceNormal(const Ray &r,
+                                         const Vec3 &outwardNormal);
 };
 
 } // namespace RYT

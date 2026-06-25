@@ -5,7 +5,8 @@ namespace RYT {
 SolidTexture::SolidTexture(const Color &albedo) : albedo(albedo) {}
 SolidTexture::SolidTexture(double r, double g, double b)
     : SolidTexture(Color(r, g, b)) {}
-Color SolidTexture::Value(double u, double v, const Vec3 &p) const {
+__host__ __device__ Color SolidTexture::Value(double u, double v,
+                                              const Vec3 &p) const {
   return albedo;
 }
 
@@ -13,8 +14,8 @@ CheckerTexture::CheckerTexture(double scale, int evenId, int oddId)
     : invScale(1.0 / scale), evenId(evenId), oddId(oddId) {}
 // CheckerTexture::CheckerTexture(double scale, const Color& c1, const Color&
 // c2) : invScale(1.0 / scale), even(Texture(c1)), odd(Texture(c2)) {}
-Color CheckerTexture::Value(double u, double v, const Vec3 &p,
-                            const RaytracingContext *context) const {
+__host__ __device__ Color CheckerTexture::Value(
+    double u, double v, const Vec3 &p, const RaytracingContext *context) const {
   int xPos = (invScale * p.x) / 1;
   int yPos = (invScale * p.y) / 1;
   int zPos = (invScale * p.z) / 1;
@@ -27,8 +28,8 @@ Color CheckerTexture::Value(double u, double v, const Vec3 &p,
 
 ImageTexture::ImageTexture(int imageId) : imageId(imageId) {}
 
-Color ImageTexture::Value(double u, double v, const Vec3 &p,
-                          const RaytracingContext *context) const {
+__host__ __device__ Color ImageTexture::Value(
+    double u, double v, const Vec3 &p, const RaytracingContext *context) const {
   // No Image hence cyan color [debug]
   if (context->images[imageId].Height() <= 0)
     return Color(0, 1, 1);
@@ -60,8 +61,8 @@ Texture::Texture(const ImageTexture imageTexture) : type(IMAGE) {
   data.imageTexture = imageTexture;
 }
 
-Color Texture::Value(double u, double v, const Vec3 &p,
-                     const RaytracingContext *context) const {
+__host__ __device__ Color Texture::Value(
+    double u, double v, const Vec3 &p, const RaytracingContext *context) const {
   switch (type) {
   case SOLID:
     return data.solidTexture.Value(u, v, p);

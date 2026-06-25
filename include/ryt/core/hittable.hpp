@@ -31,7 +31,7 @@ public:
 
   ~Hittable();
 
-  bool Hit(const Ray &r, Interval t, HitRecord &rec);
+  __host__ __device__ bool Hit(const Ray &r, Interval t, HitRecord &rec);
 };
 } // namespace RYT
 #endif
