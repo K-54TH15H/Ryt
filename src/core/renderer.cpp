@@ -5,6 +5,7 @@
 #include <ryt/core/rtcontext.hpp>
 #include <ryt/utils/gpucontextmanager.hpp>
 #include <ryt/utils/gpuframebuffer.hpp>
+#include <omp.h>
 
 namespace RYT {
 Renderer::Renderer(RenderMode mode) : mode(mode) {}
@@ -36,7 +37,6 @@ void Renderer::RenderCPU(const Camera &camera, RaytracingContext *context,
   for (int i = 0; i < camera.imgH; i++) {
     for (int j = 0; j < camera.imgW; j++) {
       Color pixelColor(0, 0, 0);
-
       for (int sj = 0; sj < camera.sqrtSpp; sj++) {
         for (int si = 0; si < camera.sqrtSpp; si++) {
           Ray r = camera.GetRay(j, i, si, sj);

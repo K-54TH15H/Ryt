@@ -5,30 +5,34 @@ enable_language(CXX CUDA)
 set(CMAKE_CUDA_ARCHITECTURES 89)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_executable(${PROJECT_NAME}) # Project Name is the executable
-
-target_include_directories(${PROJECT_NAME} 
-    PRIVATE ${PROJECT_SOURCE_DIR}/include
-    PRIVATE ${PROJECT_SOURCE_DIR}/dependencies
-)
-
-# Force the separable compilation property on this specific target
-set_target_properties(${PROJECT_NAME} PROPERTIES 
-    CUDA_SEPARABLE_COMPILATION ON
-
-)
-
-file(GLOB_RECURSE source_files src/*.cpp src/*.cu)
-
 # OpenMP 
 find_package(OpenMP)
 
 #CUDA ToolKit
 find_package(CUDAToolkit REQUIRED)
 
+file(GLOB_RECURSE RYT_SOURCES
+src/*.cpp
+src/*.cu
+)
+
+add_library(ryt SHARED ${RYT_SOURCES})
+
+target_include_directories(ryt PUBLIC
+include/
+dependencies/
+)
+
+set_target_properties(ryt PROPERTIES
+    CUDA_SEPARABLE_COMPILATION ON
+)
+
 # Link OpenMP and CUDA ToolKit
-target_link_libraries(${PROJECT_NAME} PRIVATE 
+target_link_libraries(ryt PUBLIC
     OpenMP::OpenMP_CXX CUDA::cudart)
 
-target_sources(${PROJECT_NAME} PRIVATE ${source_files})
+option(RYT_BUILD_EXAMPLES "Build Examples" ON)
 
+if(RYT_BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif()
