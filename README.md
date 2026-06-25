@@ -4,6 +4,8 @@
 
 A minimal educational raytracer implemented in C++ CUDA.
 
+![Cornell Box Render](docs/cornelbox.jpg)
+
 ## Features
 
 - CUDA based parallel rendering
