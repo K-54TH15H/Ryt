@@ -1,4 +1,4 @@
-#include "ryt/graphics/color.hpp"
+#include <ryt/graphics/color.hpp>
 #include <ryt/utils/framebuffer.hpp>
 
 namespace RYT {

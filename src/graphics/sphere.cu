@@ -1,7 +1,7 @@
-#include <cmath>
 #include <ryt/core/hitrecord.hpp>
 #include <ryt/graphics/sphere.hpp>
 #include <ryt/math/vec3.hpp>
+#include <cmath>
 
 namespace RYT {
 

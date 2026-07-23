@@ -1,10 +1,9 @@
-#include <cmath>
-#include <curand_kernel.h>
 #include <ryt/core/hitrecord.hpp>
-
 #include <ryt/core/rtcontext.hpp>
 #include <ryt/graphics/material.hpp>
 #include <ryt/math/common.hpp>
+#include <cmath>
+#include <curand_kernel.h>
 
 namespace RYT {
 __host__ __device__ static double Reflectance(double cosine,

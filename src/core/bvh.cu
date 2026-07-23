@@ -1,8 +1,5 @@
-#include "ryt/core/hitrecord.hpp"
-#include <algorithm>
-
-#include <ryt/core/bvh.hpp>
 #include <ryt/core/rtcontext.hpp>
+#include <algorithm>
 
 namespace RYT {
 static bool BoxCompare(const Hittable &a, const Hittable &b, int axisIndex) {
